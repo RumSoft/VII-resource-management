@@ -34,5 +34,18 @@ namespace TestApp.Api.Controllers
                 })
                 .ToArray();
         }
+
+        [HttpGet("all/{n}")]
+        public IEnumerable<WeatherForecast> Get([FromRoute] int n)
+        {
+            var rng = new Random();
+            return Enumerable.Range(1, n).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
     }
 }
