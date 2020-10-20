@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestApp.Api.Models.Base;
-
-namespace TestApp.Api.Models
+﻿namespace TestApp.Api.Models
 {
     //public enum TradeRequestStatus
     //{

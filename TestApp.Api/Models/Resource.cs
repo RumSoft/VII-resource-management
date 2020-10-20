@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestApp.Api.Models.Base;
 
 namespace TestApp.Api.Models
 {

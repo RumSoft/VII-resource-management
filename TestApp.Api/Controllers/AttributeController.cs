@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
-using TestApp.Api.Models.Base;
 
 namespace TestApp.Api.Controllers
 {

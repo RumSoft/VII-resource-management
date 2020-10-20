@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestApp.Api.Models.Base;
+﻿using System.Collections.Generic;
 
 namespace TestApp.Api.Models
 {

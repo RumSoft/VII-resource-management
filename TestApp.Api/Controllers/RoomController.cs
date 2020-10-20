@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
-using TestApp.Api.Models.Base;
 
 namespace TestApp.Api.Controllers
 {

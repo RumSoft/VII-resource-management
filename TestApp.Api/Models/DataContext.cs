@@ -37,11 +37,11 @@ namespace TestApp.Api.Models
             user.Property(x => x.Password).IsRequired();
 
             var attrib = modelBuilder.Entity<Attribute>();
-            attrib.HasKey(x => x.Id).IsClustered();
+            attrib.HasKey(x => x.Id);
             attrib.Property(x => x.Name).IsRequired();
 
             var room = modelBuilder.Entity<Room>();
-            room.HasKey(x => x.Id).IsClustered();
+            room.HasKey(x => x.Id);
             room.Property(x => x.Name).IsRequired();
         }
     }

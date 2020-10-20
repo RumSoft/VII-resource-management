@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using TestApp.Api.Models.Base;
+using TestApp.Api.Models;
 using TestApp.Api.Services;
 using TestApp.Api.Services.Impl;
 
