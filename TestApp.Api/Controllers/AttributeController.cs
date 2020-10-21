@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Controllers
@@ -11,44 +10,69 @@ namespace TestApp.Api.Controllers
     public class AttributeController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public AttributeController(DataContext context)
+        public AttributeController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("")]
-        public async Task<IEnumerable<Attribute>> GetRooms()
+        public ActionResult<AttributeDto[]> Get()
         {
-            return await _context.Attributes.ToListAsync();
+            var attrs = _context.Attributes.ToArray();
+            var dto = _mapper.Map<AttributeDto[]>(attrs);
+            return Ok(dto);
         }
 
         [HttpPost("")]
-        public IActionResult CreateNewAttribute([FromBody] CreateAttributeDto attributeDto)
+        public ActionResult<AttributeDto> Create([FromBody] CreateAttributeDto dto)
         {
-            var room = new Attribute
-            {
-                Name = attributeDto.Name
-            };
+            var attr = _mapper.Map<Attribute>(dto);
 
-            _context.Attributes.Add(room);
+            _context.Attributes.Add(attr);
             _context.SaveChanges();
 
-            return Ok(room);
+            var result = _mapper.Map<AttributeDto>(attr);
+            return Ok(result);
         }
 
-        [HttpPut("")]
-        public IActionResult UpdateAttribute([FromBody] Attribute attributeDto)
+        [HttpPut("{id}")]
+        public ActionResult<AttributeDto> Update([FromRoute] int id, [FromBody] CreateAttributeDto dto)
         {
-            _context.Attributes.Update(attributeDto);
+            var attr = _context.Attributes.Find(id);
+            if (attr == null)
+                return BadRequest();
+
+            attr.Name = dto.Name;
             _context.SaveChanges();
 
-            return Ok(attributeDto);
+            var result = _mapper.Map<AttributeDto>(attr);
+            return Ok(result);
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var attr = _context.Attributes.Find(id);
+            if (attr == null)
+                return BadRequest();
+
+            _context.Attributes.Remove(attr);
+            _context.SaveChanges();
+
+            return Ok();
+        }
 
         public class CreateAttributeDto
         {
+            public string Name { get; set; }
+        }
+
+        public class AttributeDto
+        {
+            public int Id { get; set; }
             public string Name { get; set; }
         }
     }

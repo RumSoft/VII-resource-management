@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestApp.Api.Controllers;
 using TestApp.Api.Models;
 using TestApp.Api.Services;
 using TestApp.Api.Services.Impl;
@@ -26,7 +28,15 @@ namespace TestApp.Api
         {
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+           
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Attribute, AttributeController.AttributeDto>().ReverseMap();
+                cfg.CreateMap<Attribute, AttributeController.CreateAttributeDto>().ReverseMap();
+            });
             
+            services.AddAutoMapper(typeof(MappingProfile));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -44,8 +54,6 @@ namespace TestApp.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

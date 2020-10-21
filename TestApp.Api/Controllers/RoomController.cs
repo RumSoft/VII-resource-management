@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Controllers
@@ -11,44 +10,69 @@ namespace TestApp.Api.Controllers
     public class RoomController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public RoomController(DataContext context)
+        public RoomController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("")]
-        public async Task<IEnumerable<Room>> GetRooms()
+        public ActionResult<RoomDto[]> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            var rooms = _context.Rooms.ToArray();
+            var dto = _mapper.Map<RoomDto[]>(rooms);
+            return Ok(dto);
         }
 
         [HttpPost("")]
-        public IActionResult CreateNewRoom([FromBody] CreateRoomDto roomDto)
+        public ActionResult<RoomDto> Create([FromBody] CreateRoomDto dto)
         {
-            var room = new Room
-            {
-                Name = roomDto.Name
-            };
+            var room = _mapper.Map<Room>(dto);
 
             _context.Rooms.Add(room);
             _context.SaveChanges();
 
-            return Ok(room);
+            var result = _mapper.Map<RoomDto>(room);
+            return Ok(result);
         }
 
-        [HttpPut("")]
-        public IActionResult UpdateRoom([FromBody] Room roomDto)
+        [HttpPut("{id}")]
+        public ActionResult<RoomDto> Update([FromRoute] int id, [FromBody] CreateRoomDto dto)
         {
-            _context.Rooms.Update(roomDto);
+            var room = _context.Rooms.Find(id);
+            if (room == null)
+                return BadRequest();
+
+            room.Name = dto.Name;
             _context.SaveChanges();
 
-            return Ok(roomDto);
+            var result = _mapper.Map<RoomDto>(room);
+            return Ok(result);
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var room = _context.Rooms.Find(id);
+            if (room == null)
+                return BadRequest();
+
+            _context.Rooms.Remove(room);
+            _context.SaveChanges();
+
+            return Ok();
+        }
 
         public class CreateRoomDto
         {
+            public string Name { get; set; }
+        }
+
+        public class RoomDto
+        {
+            public int Id { get; set; }
             public string Name { get; set; }
         }
     }
