@@ -21,7 +21,7 @@ namespace TestApp.Api.Models
         {
             var resource = modelBuilder.Entity<Resource>();
             resource.HasKey(x => x.Id).IsClustered(false);
-            resource.Property(x => x.Name).IsRequired();
+            resource.Property(x => x.Name).IsRequired().HasMaxLength(500);
             resource.HasMany(x => x.Attributes)
                 .WithMany(x => x.Resources);
             resource.HasOne(x => x.Owner)
@@ -31,18 +31,19 @@ namespace TestApp.Api.Models
 
             var user = modelBuilder.Entity<User>();
             user.HasKey(x => x.Id).IsClustered(false);
-            user.Property(x => x.FirstName).IsRequired();
-            user.Property(x => x.LastName).IsRequired();
-            user.Property(x => x.EmailAddress).IsRequired();
-            user.Property(x => x.Password).IsRequired();
+            user.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
+            user.Property(x => x.LastName).IsRequired().HasMaxLength(100);
+            user.Property(x => x.EmailAddress).IsRequired().HasMaxLength(100);
+            user.Property(x => x.Password).IsRequired().HasMaxLength(1024);
 
             var attrib = modelBuilder.Entity<Attribute>();
             attrib.HasKey(x => x.Id);
-            attrib.Property(x => x.Name).IsRequired();
+            attrib.Property(x => x.Name).IsRequired().HasMaxLength(100);
 
             var room = modelBuilder.Entity<Room>();
             room.HasKey(x => x.Id);
-            room.Property(x => x.Name).IsRequired();
+            room.Property(x => x.Name).IsRequired().HasMaxLength(100);
+
         }
     }
 }
