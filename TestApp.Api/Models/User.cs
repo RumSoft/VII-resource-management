@@ -12,6 +12,10 @@ namespace TestApp.Api.Models
         public bool IsGeneratedPassword { get; set; }
         public string Role { get; set; }
 
+        //todo:
+        //public DateTime lastActivity;
+        //public DateTime lastLogin;
+
         public virtual IList<Resource> Resources { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";

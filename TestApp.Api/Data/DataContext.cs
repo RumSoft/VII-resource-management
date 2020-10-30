@@ -15,6 +15,7 @@ namespace TestApp.Api.Data
         public DbSet<Room> Rooms { get; set; }
 
         public DbSet<Attribute> Attributes { get; set; }
+        //todo:
         //public DbSet<TradeRequest> TradeRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
