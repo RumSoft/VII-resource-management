@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
@@ -57,6 +58,9 @@ namespace TestApp.Api.Controllers
 
         private void CreateUser(CreateUserDto dto, string role)
         {
+            if(_context.Users.Any(x => x.EmailAddress.Equals(dto.EmailAddress, StringComparison.InvariantCultureIgnoreCase)))
+                throw new ArgumentException("taki uzytkownik juz istnieje kurwa");
+
             var user = new User
             {
                 EmailAddress =  dto.EmailAddress,
