@@ -51,7 +51,7 @@ namespace TestApp.Api.Controllers
 
         [HttpGet]
         [Route("info")]
-        public IActionResult<string> Info()
+        public ActionResult<string> Info()
         {
             var sb = new StringBuilder("hello! ");
             if (_userInfo.IsLogged)
