@@ -1,19 +1,19 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TestApp.Api.Models;
 
-namespace TestApp.Api.Models
+namespace TestApp.Api.Data
 {
     public class DataContext : DbContext
     {
-
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Resource> Resouces { get; set; }
+        public DbSet<Resource> Resources { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
+
         public DbSet<Attribute> Attributes { get; set; }
         //public DbSet<TradeRequest> TradeRequests { get; set; }
 
@@ -35,6 +35,7 @@ namespace TestApp.Api.Models
             user.Property(x => x.LastName).IsRequired().HasMaxLength(100);
             user.Property(x => x.EmailAddress).IsRequired().HasMaxLength(100);
             user.Property(x => x.Password).IsRequired().HasMaxLength(1024);
+            user.Property(x => x.Role).IsRequired().HasMaxLength(50).HasDefaultValue(Roles.User);
 
             var attrib = modelBuilder.Entity<Attribute>();
             attrib.HasKey(x => x.Id);
@@ -43,7 +44,6 @@ namespace TestApp.Api.Models
             var room = modelBuilder.Entity<Room>();
             room.HasKey(x => x.Id);
             room.Property(x => x.Name).IsRequired().HasMaxLength(100);
-
         }
     }
 }

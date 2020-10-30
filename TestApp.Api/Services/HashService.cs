@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TestApp.Api.Services
+﻿namespace TestApp.Api.Services
 {
     public interface IHashService
     {

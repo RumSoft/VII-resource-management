@@ -1,12 +1,15 @@
 ﻿using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TestApp.Api.Data;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("rooms")]
     public class RoomController : ControllerBase
     {
         private readonly DataContext _context;
@@ -26,6 +29,7 @@ namespace TestApp.Api.Controllers
             return Ok(dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("")]
         public ActionResult<RoomDto> Create([FromBody] CreateRoomDto dto)
         {
@@ -38,6 +42,7 @@ namespace TestApp.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<RoomDto> Update([FromRoute] int id, [FromBody] CreateRoomDto dto)
         {
@@ -52,6 +57,7 @@ namespace TestApp.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {

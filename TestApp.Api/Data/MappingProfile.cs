@@ -2,7 +2,7 @@ using AutoMapper;
 using TestApp.Api.Controllers;
 using TestApp.Api.Models;
 
-namespace TestApp.Api
+namespace TestApp.Api.Data
 {
     public class MappingProfile : Profile
     {
@@ -13,6 +13,8 @@ namespace TestApp.Api
 
             CreateMap<Room, RoomController.CreateRoomDto>().ReverseMap();
             CreateMap<Room, RoomController.RoomDto>().ReverseMap();
+
+            CreateMap<User, UserController.UserDto>().ReverseMap();
         }
     }
 }
