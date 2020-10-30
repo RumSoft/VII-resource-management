@@ -10,9 +10,16 @@ namespace TestApp.Api.Models
         public string LastName { get; set; }
         public string Password { get; set; }
         public bool IsGeneratedPassword { get; set; }
+        public string Role { get; set; }
 
         public virtual IList<Resource> Resources { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
+    }
+
+    public class Roles
+    {
+        public const string Admin = "Admin";
+        public const string User = "User";
     }
 }

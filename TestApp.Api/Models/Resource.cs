@@ -10,6 +10,5 @@ namespace TestApp.Api.Models
         public virtual User Owner { get; set; }
         public virtual IList<Attribute> Attributes { get; set; }
         public virtual Room Room { get; set; }
-
     }
 }

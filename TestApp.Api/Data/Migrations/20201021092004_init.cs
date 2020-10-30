@@ -8,41 +8,35 @@ namespace TestApp.Api.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Attributes",
-                columns: table => new
+                "Attributes",
+                table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>("int")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>("nvarchar(100)", maxLength: 100)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attributes", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Attributes", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
+                "Rooms",
+                table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>("int")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>("nvarchar(100)", maxLength: 100)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Rooms", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
+                "Users",
+                table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmailAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
-                    IsGeneratedPassword = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>("uniqueidentifier"),
+                    EmailAddress = table.Column<string>("nvarchar(100)", maxLength: 100),
+                    FirstName = table.Column<string>("nvarchar(100)", maxLength: 100),
+                    LastName = table.Column<string>("nvarchar(100)", maxLength: 100),
+                    Password = table.Column<string>("nvarchar(1024)", maxLength: 1024),
+                    IsGeneratedPassword = table.Column<bool>("bit")
                 },
                 constraints: table =>
                 {
@@ -51,89 +45,89 @@ namespace TestApp.Api.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Resouces",
-                columns: table => new
+                "Resouces",
+                table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RoomId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<Guid>("uniqueidentifier"),
+                    Name = table.Column<string>("nvarchar(500)", maxLength: 500),
+                    Quantity = table.Column<int>("int"),
+                    OwnerId = table.Column<Guid>("uniqueidentifier", nullable: true),
+                    RoomId = table.Column<int>("int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Resouces", x => x.Id)
                         .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK_Resouces_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "Id",
+                        "FK_Resouces_Rooms_RoomId",
+                        x => x.RoomId,
+                        "Rooms",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Resouces_Users_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_Resouces_Users_OwnerId",
+                        x => x.OwnerId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttributeResource",
-                columns: table => new
+                "AttributeResource",
+                table => new
                 {
-                    AttributesId = table.Column<int>(type: "int", nullable: false),
-                    ResourcesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AttributesId = table.Column<int>("int"),
+                    ResourcesId = table.Column<Guid>("uniqueidentifier")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttributeResource", x => new { x.AttributesId, x.ResourcesId });
+                    table.PrimaryKey("PK_AttributeResource", x => new {x.AttributesId, x.ResourcesId});
                     table.ForeignKey(
-                        name: "FK_AttributeResource_Attributes_AttributesId",
-                        column: x => x.AttributesId,
-                        principalTable: "Attributes",
-                        principalColumn: "Id",
+                        "FK_AttributeResource_Attributes_AttributesId",
+                        x => x.AttributesId,
+                        "Attributes",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AttributeResource_Resouces_ResourcesId",
-                        column: x => x.ResourcesId,
-                        principalTable: "Resouces",
-                        principalColumn: "Id",
+                        "FK_AttributeResource_Resouces_ResourcesId",
+                        x => x.ResourcesId,
+                        "Resouces",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttributeResource_ResourcesId",
-                table: "AttributeResource",
-                column: "ResourcesId");
+                "IX_AttributeResource_ResourcesId",
+                "AttributeResource",
+                "ResourcesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resouces_OwnerId",
-                table: "Resouces",
-                column: "OwnerId");
+                "IX_Resouces_OwnerId",
+                "Resouces",
+                "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resouces_RoomId",
-                table: "Resouces",
-                column: "RoomId");
+                "IX_Resouces_RoomId",
+                "Resouces",
+                "RoomId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AttributeResource");
+                "AttributeResource");
 
             migrationBuilder.DropTable(
-                name: "Attributes");
+                "Attributes");
 
             migrationBuilder.DropTable(
-                name: "Resouces");
+                "Resouces");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                "Users");
         }
     }
 }
