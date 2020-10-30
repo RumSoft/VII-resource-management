@@ -1,6 +1,7 @@
 using AutoMapper;
 using TestApp.Api.Controllers;
 using TestApp.Api.Models;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Data
 {
@@ -8,13 +9,14 @@ namespace TestApp.Api.Data
     {
         public MappingProfile()
         {
-            CreateMap<Attribute, AttributeController.AttributeDto>().ReverseMap();
-            CreateMap<Attribute, AttributeController.CreateAttributeDto>().ReverseMap();
+            CreateMap<Attribute, AttributeDto>().ReverseMap();
+            CreateMap<Attribute, CreateAttributeDto>().ReverseMap();
 
-            CreateMap<Room, RoomController.CreateRoomDto>().ReverseMap();
-            CreateMap<Room, RoomController.RoomDto>().ReverseMap();
+            CreateMap<Room, CreateRoomDto>().ReverseMap();
+            CreateMap<Room, RoomDto>().ReverseMap();
 
-            CreateMap<User, UserController.UserDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Resource, ResourceDto>().ReverseMap();
         }
     }
 }

@@ -10,10 +10,12 @@ namespace TestApp.Api.Services.Impl
     public class UserInfo : IUserInfo
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly DataContext _context;
 
-        public UserInfo(IHttpContextAccessor httpContextAccessor)
+        public UserInfo(IHttpContextAccessor httpContextAccessor, DataContext context)
         {
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         private IEnumerable<Claim> Claims => _httpContextAccessor?.HttpContext?.User?.Claims;
@@ -23,9 +25,9 @@ namespace TestApp.Api.Services.Impl
 
         public bool IsAdmin => IsLogged && Role == Roles.Admin;
 
-        public User GetCurrentUser(DataContext context)
+        public User GetCurrentUser()
         {
-            var user = context.Users.Find(Id);
+            var user = _context.Users.Find(Id);
             return user;
         }
 

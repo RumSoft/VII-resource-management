@@ -1,6 +1,6 @@
 ﻿using PasswordGenerator;
 
-namespace TestApp.Api.Services
+namespace TestApp.Api.Services.Impl
 {
     public class RandomPasswordGenerator : IRandomPasswordGenerator
     {

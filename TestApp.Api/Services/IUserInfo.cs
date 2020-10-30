@@ -10,6 +10,6 @@ namespace TestApp.Api.Services
         string EmailAddress { get; }
         string Id { get; }
 
-        User GetCurrentUser(DataContext context);
+        User GetCurrentUser();
     }
 }

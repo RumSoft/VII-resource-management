@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using TestApp.Api.Auth;
 using TestApp.Api.Controllers;
 using TestApp.Api.Data;
+using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 using TestApp.Api.Services.Impl;
 using Attribute = TestApp.Api.Models.Attribute;
@@ -35,12 +36,6 @@ namespace TestApp.Api
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Attribute, AttributeController.AttributeDto>().ReverseMap();
-                cfg.CreateMap<Attribute, AttributeController.CreateAttributeDto>().ReverseMap();
-            });
-
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddBearerAuthentication();
@@ -60,6 +55,7 @@ namespace TestApp.Api
                 });
 
                 c.OperationFilter<AuthOperationFilter>();
+                c.OperationFilter<OperationRoleFilter>();
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -81,7 +77,7 @@ namespace TestApp.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ITokenManager, TokenManager>();
             services.AddSingleton<IRandomPasswordGenerator, RandomPasswordGenerator>();
-            services.AddSingleton<IUserInfo, UserInfo>();
+            services.AddScoped<IUserInfo, UserInfo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

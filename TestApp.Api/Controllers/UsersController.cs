@@ -3,16 +3,18 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
+using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 
 namespace TestApp.Api.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public partial class UserController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IRandomPasswordGenerator _generator;
@@ -27,7 +29,6 @@ namespace TestApp.Api.Controllers
             _generator = generator;
         }
 
-        [Authorize(Roles = null)]
         [HttpGet]
         public ActionResult<UserDto[]> GetAllUsers()
         {
@@ -36,6 +37,7 @@ namespace TestApp.Api.Controllers
             return Ok(result);
         }
 
+        [OnlyAdmin]
         [HttpPost]
         public IActionResult CreateUser([FromBody] UserDto dto)
         {
@@ -55,6 +57,7 @@ namespace TestApp.Api.Controllers
             return Ok();
         }
 
+        [OnlyAdmin]
         [HttpPut("{userId}")]
         public IActionResult UpdateUser([FromBody] UserDto dto, [FromRoute] Guid userId)
         {
@@ -69,6 +72,7 @@ namespace TestApp.Api.Controllers
             return Ok();
         }
 
+        [OnlyAdmin]
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser([FromRoute] Guid userId)
         {
@@ -79,13 +83,6 @@ namespace TestApp.Api.Controllers
             _context.Users.Remove(user);
             _context.SaveChanges();
             return Ok();
-        }
-
-        public class UserDto
-        {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string EmailAddress { get; set; }
         }
     }
 }

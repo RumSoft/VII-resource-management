@@ -19,25 +19,19 @@ namespace TestApp.Api.Auth
                 ValidateAudience = true,
                 ValidateIssuer = true,
                 ValidateLifetime = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(TokenConstants.key)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenConstants.key)),
                 ValidIssuer = TokenConstants.Issuer,
                 ValidAudience = TokenConstants.Audience
             };
 
             var events = new JwtBearerEvents
             {
-                // invoked when the token validation fails
                 OnAuthenticationFailed = context =>
                 {
                     Console.WriteLine(context.Exception);
                     return Task.CompletedTask;
                 },
-
-                // invoked when a request is received
                 OnMessageReceived = context => Task.CompletedTask,
-
-                // invoked when token is validated
                 OnTokenValidated = context => Task.CompletedTask
             };
 

@@ -1,4 +1,4 @@
-﻿namespace TestApp.Api.Controllers
+﻿namespace TestApp.Api.Auth
 {
     public class AuthToken
     {

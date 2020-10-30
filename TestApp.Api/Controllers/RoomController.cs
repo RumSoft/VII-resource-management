@@ -1,16 +1,19 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("rooms")]
-    public class RoomController : ControllerBase
+    public partial class RoomController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -29,7 +32,7 @@ namespace TestApp.Api.Controllers
             return Ok(dto);
         }
 
-        [Authorize(Roles = "Admin")]
+        [OnlyAdmin]
         [HttpPost("")]
         public ActionResult<RoomDto> Create([FromBody] CreateRoomDto dto)
         {
@@ -42,7 +45,7 @@ namespace TestApp.Api.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        [OnlyAdmin]
         [HttpPut("{id}")]
         public ActionResult<RoomDto> Update([FromRoute] int id, [FromBody] CreateRoomDto dto)
         {
@@ -57,7 +60,7 @@ namespace TestApp.Api.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        [OnlyAdmin]
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
@@ -69,17 +72,6 @@ namespace TestApp.Api.Controllers
             _context.SaveChanges();
 
             return Ok();
-        }
-
-        public class CreateRoomDto
-        {
-            public string Name { get; set; }
-        }
-
-        public class RoomDto
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
         }
     }
 }
