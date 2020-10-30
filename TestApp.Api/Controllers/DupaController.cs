@@ -58,7 +58,8 @@ namespace TestApp.Api.Controllers
 
         private void CreateUser(CreateUserDto dto, string role)
         {
-            if(_context.Users.Any(x => x.EmailAddress.Equals(dto.EmailAddress, StringComparison.InvariantCultureIgnoreCase)))
+            var mail = dto.EmailAddress.ToLowerInvariant();
+            if(_context.Users.Any(x => x.EmailAddress == mail))
                 throw new ArgumentException("taki uzytkownik juz istnieje kurwa");
 
             var user = new User
