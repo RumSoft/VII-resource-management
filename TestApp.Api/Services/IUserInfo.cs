@@ -12,5 +12,7 @@ namespace TestApp.Api.Services
         Guid Id { get; }
 
         User GetCurrentUser();
+        public string Role { get; }
+        public string AuthToken { get; }
     }
 }

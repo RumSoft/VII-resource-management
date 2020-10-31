@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
@@ -10,8 +8,10 @@ namespace TestApp.Api.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthController : ControllerBase
+    public class AuthController : RumsoftController
     {
+        private const string UserDoesNotExistOrPasswordInvalid = "";
+
         private readonly DataContext _context;
         private readonly IHashService _hashService;
         private readonly ITokenManager _tokenManager;
@@ -27,19 +27,14 @@ namespace TestApp.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public ActionResult<AuthResult> Validate(LoginDto dto)
+        public ActionResult<AuthResult> Login(LoginDto dto)
         {
-            var badRequest = BadRequest(new AuthResult
-            {
-                IsSuccess = false
-            });
-
             var user = _context.Users.FirstOrDefault(x => x.EmailAddress == dto.EmailAddress);
             if (user == null)
-                return badRequest;
+                return BadRequest(UserDoesNotExistOrPasswordInvalid);
 
             if (!_hashService.VerifyPassword(dto.Password, user.Password))
-                return badRequest;
+                return BadRequest(UserDoesNotExistOrPasswordInvalid);
 
             return Ok(
                 new AuthResult
@@ -47,6 +42,20 @@ namespace TestApp.Api.Controllers
                     IsSuccess = true,
                     Token = _tokenManager.Generate(user),
                     Role = user.Role
+                });
+        }
+
+
+        [HttpPost]
+        [Route("refresh")]
+        public ActionResult<AuthResult> Refresh()
+        {
+            return Ok(
+                new AuthResult
+                {
+                    IsSuccess = true,
+                    Role = _userInfo.Role,
+                    Token = _tokenManager.Generate(_userInfo.GetCurrentUser())
                 });
         }
 

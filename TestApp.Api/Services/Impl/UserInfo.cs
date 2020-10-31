@@ -35,5 +35,8 @@ namespace TestApp.Api.Services.Impl
         public string EmailAddress => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         private string _id => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
         public Guid Id => _id == null ? Guid.Empty : new Guid(_id);
+
+        private string _authHeadr => _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+        public string AuthToken => _authHeadr[7..]; //Bearer_TOKEN
     }
 }
