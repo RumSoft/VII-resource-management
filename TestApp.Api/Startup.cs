@@ -4,6 +4,7 @@ using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,13 @@ namespace TestApp.Api
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddCors();
+
+            var policy = new CorsPolicyBuilder().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", policy);
+                options.AddDefaultPolicy(policy);
+            });
 
 
             services.AddAutoMapper(typeof(MappingProfile));
@@ -91,7 +98,7 @@ namespace TestApp.Api
             app.UseCors(x => x.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-
+            
             app.UseRouting();
 
             app.UseAuthentication();
@@ -99,8 +106,6 @@ namespace TestApp.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-           
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>
