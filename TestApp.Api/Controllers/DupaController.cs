@@ -13,7 +13,7 @@ namespace TestApp.Api.Controllers
     /// </summary>
     [ApiController]
     [Route("dupa")]
-    public class DupaController : ControllerBase
+    public class DupaController : RumsoftController
     {
         private readonly DataContext _context;
         private readonly IHashService _hashService;
@@ -46,7 +46,7 @@ namespace TestApp.Api.Controllers
         {
             try
             {
-                CreateUser(dto, Roles.Admin);
+                CreateUser(dto, Roles.User);
             }
             catch (Exception e)
             {

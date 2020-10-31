@@ -14,7 +14,7 @@ namespace TestApp.Api.Controllers
     [Authorize]
     [Route("users")]
     [ApiController]
-    public partial class UserController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IRandomPasswordGenerator _generator;

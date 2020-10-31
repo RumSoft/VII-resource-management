@@ -12,7 +12,7 @@ namespace TestApp.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("attributes")]
-    public partial class AttributeController : ControllerBase
+    public class AttributeController : RumsoftController
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -35,6 +35,9 @@ namespace TestApp.Api.Controllers
         [HttpPost("")]
         public ActionResult<AttributeDto> Create([FromBody] CreateAttributeDto dto)
         {
+            if (_context.Attributes.Any(x => x.Name == dto.Name))
+                return BadRequest($"Attribute already exists");
+
             var attr = _mapper.Map<Attribute>(dto);
 
             _context.Attributes.Add(attr);
@@ -50,7 +53,13 @@ namespace TestApp.Api.Controllers
         {
             var attr = _context.Attributes.Find(id);
             if (attr == null)
-                return BadRequest();
+                return BadRequest($"This attribute no longer exists");
+
+            if (dto.Name == attr.Name)
+                return Ok(attr);
+
+            if (_context.Attributes.Any(x => x.Name == dto.Name))
+                return BadRequest($"Attribute with same name already exists");
 
             attr.Name = dto.Name;
             _context.SaveChanges();
@@ -61,16 +70,16 @@ namespace TestApp.Api.Controllers
 
         [OnlyAdmin]
         [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             var attr = _context.Attributes.Find(id);
             if (attr == null)
-                return BadRequest();
+                return BadRequest($"This attribute no longer exists");
 
             _context.Attributes.Remove(attr);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("Attribute deleted");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TestApp.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("rooms")]
-    public partial class RoomController : ControllerBase
+    public class RoomController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;

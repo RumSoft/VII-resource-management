@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,7 @@ namespace TestApp.Api.Services.Impl
         }
 
         public string EmailAddress => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        public string Id => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+        private string _id => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+        public Guid Id => _id == null ? Guid.Empty : new Guid(_id);
     }
 }

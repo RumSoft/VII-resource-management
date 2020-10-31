@@ -37,14 +37,17 @@ namespace TestApp.Api.Data
             user.Property(x => x.EmailAddress).IsRequired().HasMaxLength(100);
             user.Property(x => x.Password).IsRequired().HasMaxLength(1024);
             user.Property(x => x.Role).IsRequired().HasMaxLength(50).HasDefaultValue(Roles.User);
+            user.HasIndex(x => x.EmailAddress).IsUnique();
 
             var attrib = modelBuilder.Entity<Attribute>();
             attrib.HasKey(x => x.Id);
             attrib.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            attrib.HasIndex(x => x.Name).IsUnique();
 
             var room = modelBuilder.Entity<Room>();
             room.HasKey(x => x.Id);
             room.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            room.HasIndex(x => x.Name).IsUnique();
         }
     }
 }

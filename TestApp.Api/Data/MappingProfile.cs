@@ -16,7 +16,9 @@ namespace TestApp.Api.Data
             CreateMap<Room, RoomDto>().ReverseMap();
 
             CreateMap<User, UserDto>().ReverseMap();
+
             CreateMap<Resource, ResourceDto>().ReverseMap();
+            CreateMap<Resource, CreateResourceDto>().ReverseMap();
         }
     }
 }

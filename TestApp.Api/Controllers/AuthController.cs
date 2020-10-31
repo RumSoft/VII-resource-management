@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
@@ -7,8 +8,8 @@ using TestApp.Api.Services;
 
 namespace TestApp.Api.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly DataContext _context;
@@ -44,38 +45,16 @@ namespace TestApp.Api.Controllers
                 new AuthResult
                 {
                     IsSuccess = true,
-                    Token = _tokenManager.Generate(user)
+                    Token = _tokenManager.Generate(user),
+                    Role = user.Role
                 });
         }
-
-
-        [HttpGet]
-        [Route("info")]
-        public ActionResult<string> Info()
-        {
-            var sb = new StringBuilder("hello! ");
-            if (_userInfo.IsLogged)
-            {
-                sb.AppendLine("i am logged");
-                if (_userInfo.IsAdmin)
-                    sb.AppendLine("i am admin");
-
-                sb.AppendLine($"my jwt email is: {_userInfo.EmailAddress}");
-                sb.AppendLine($"my jwt id is: {_userInfo.Id}");
-            }
-            else
-            {
-                sb.AppendLine("i am not logged");
-            }
-
-            return Ok(sb.ToString());
-        }
-
 
         public class AuthResult
         {
             public bool IsSuccess { get; set; }
             public AuthToken Token { get; set; }
+            public string Role { get; set; }
         }
 
         public class LoginDto
