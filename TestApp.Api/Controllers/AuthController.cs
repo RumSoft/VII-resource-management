@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
@@ -26,7 +27,7 @@ namespace TestApp.Api.Controllers
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("login")]
         public ActionResult<AuthResult> Login(LoginDto dto)
         {
             var user = _context.Users.FirstOrDefault(x => x.EmailAddress == dto.EmailAddress);
@@ -45,7 +46,7 @@ namespace TestApp.Api.Controllers
                 });
         }
 
-
+        [Authorize]
         [HttpPost]
         [Route("refresh")]
         public ActionResult<AuthResult> Refresh()

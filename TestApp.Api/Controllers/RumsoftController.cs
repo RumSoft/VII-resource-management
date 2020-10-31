@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TestApp.Api.Controllers
 {
@@ -17,6 +19,17 @@ namespace TestApp.Api.Controllers
             {
                 IsSuccess = false,
                 Message = message
+            });
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public BadRequestObjectResult BadRequest(Exception e)
+        { 
+            return BadRequest(new 
+            {
+                IsSuccess = false,
+                Message = e.Message,
+                Exception = e
             });
         }
 

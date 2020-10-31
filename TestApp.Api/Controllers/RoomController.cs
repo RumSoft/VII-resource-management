@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -13,8 +14,12 @@ namespace TestApp.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("rooms")]
-    public class RoomController : ControllerBase
+    public class RoomController : RumsoftController
     {
+        private const string Message_400_RoomContainsResources = "Room cannot be deleted. It contains resources.";
+        private const string Message_400_RoomNotFound = "Room cannot be found.";
+        private const string Message_400_RoomAlreadyExists = "Room with same name already exists.";
+        
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
@@ -51,7 +56,13 @@ namespace TestApp.Api.Controllers
         {
             var room = _context.Rooms.Find(id);
             if (room == null)
-                return BadRequest();
+                return BadRequest(Message_400_RoomNotFound);
+
+            if (room.Name.Equals(dto.Name, StringComparison.InvariantCultureIgnoreCase))
+                return Ok();
+
+            if (_context.Rooms.Any(x => x.Name == dto.Name))
+                return BadRequest(Message_400_RoomAlreadyExists);
 
             room.Name = dto.Name;
             _context.SaveChanges();
@@ -66,7 +77,10 @@ namespace TestApp.Api.Controllers
         {
             var room = _context.Rooms.Find(id);
             if (room == null)
-                return BadRequest();
+                return BadRequest(Message_400_RoomNotFound);
+
+            if (room.Resources.Any())
+                return BadRequest(Message_400_RoomContainsResources);
 
             _context.Rooms.Remove(room);
             _context.SaveChanges();

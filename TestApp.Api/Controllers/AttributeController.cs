@@ -1,19 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
-using TestApp.Api.Models;
 using TestApp.Api.Models.Dto;
+using Attribute = TestApp.Api.Models.Attribute;
 
 namespace TestApp.Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("attributes")]
-    public class AttributeController : RumsoftController
+    public partial class AttributeController : RumsoftController
     {
+        private const string Message_400_AttributeExists = "Attribute with same name already exists";
+        private const string Message_400_AttributeNotFound = "This attribute no longer exists";
+
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
@@ -36,7 +42,7 @@ namespace TestApp.Api.Controllers
         public ActionResult<AttributeDto> Create([FromBody] CreateAttributeDto dto)
         {
             if (_context.Attributes.Any(x => x.Name == dto.Name))
-                return BadRequest($"Attribute already exists");
+                return BadRequest(Message_400_AttributeExists);
 
             var attr = _mapper.Map<Attribute>(dto);
 
@@ -53,13 +59,13 @@ namespace TestApp.Api.Controllers
         {
             var attr = _context.Attributes.Find(id);
             if (attr == null)
-                return BadRequest($"This attribute no longer exists");
+                return BadRequest(Message_400_AttributeNotFound);
 
-            if (dto.Name == attr.Name)
+            if (dto.Name.Equals(attr.Name, StringComparison.CurrentCultureIgnoreCase))
                 return Ok(attr);
 
             if (_context.Attributes.Any(x => x.Name == dto.Name))
-                return BadRequest($"Attribute with same name already exists");
+                return BadRequest(Message_400_AttributeExists);
 
             attr.Name = dto.Name;
             _context.SaveChanges();
@@ -72,14 +78,16 @@ namespace TestApp.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
+            //todo: merge after attribute delete
+
             var attr = _context.Attributes.Find(id);
             if (attr == null)
-                return BadRequest($"This attribute no longer exists");
+                return BadRequest(Message_400_AttributeNotFound);
 
             _context.Attributes.Remove(attr);
             _context.SaveChanges();
 
-            return Ok("Attribute deleted");
+            return Ok();
         }
     }
 }

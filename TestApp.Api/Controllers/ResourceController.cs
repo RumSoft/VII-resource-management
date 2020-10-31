@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
+using TestApp.Api.Helpers;
 using TestApp.Api.Models;
 using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
+using Attribute = TestApp.Api.Models.Attribute;
 
 namespace TestApp.Api.Controllers
 {
@@ -20,9 +22,13 @@ namespace TestApp.Api.Controllers
     [Route("resources")]
     public class ResourceController : RumsoftController
     {
+        private const string Message_400_InvalidOwner = "Could not verify resource ownership";
+        private const string Message_400_ResourceNotFound = "Resource does not exist.";
+        private const string Message_Log_TransactionRollback = "Transaction failed, rollbacking";
+
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
         private readonly ILogger<ResourceController> _logger;
+        private readonly IMapper _mapper;
         private readonly IUserInfo _userInfo;
 
         public ResourceController(DataContext context, IUserInfo userInfo, IMapper mapper, ILogger<ResourceController> logger)
@@ -51,78 +57,101 @@ namespace TestApp.Api.Controllers
 
         [OnlyUser]
         [HttpPost]
-        public async Task<IActionResult> CreateResource([FromBody] CreateResourceDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateResourceDto dto)
         {
-            await using var insertTransaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var resource = new Resource
-                {
-                    Name = dto.Name,
-                    Quantity = dto.Quantity,
-                };
+                var resource = await CreateResource(dto);
 
-                var user = _userInfo.GetCurrentUser();
-                if (user == null)
-                    return BadRequest();
-                resource.Owner = user;
+                ResourceMerger.TryMergeByResource(resource, _context);
 
-                if (dto.Room != null)
-                {
-                    var room = await _context.Rooms.FindAsync(dto.Room);
-                    resource.Room = room;
-                }
-
-                if (dto.Attributes != null && dto.Attributes.Count > 0)
-                {
-                    var attributes = _context.Attributes.Where(x => dto.Attributes.Contains(x.Id));
-                    resource.Attributes = await attributes.ToListAsync();
-                }
-
-                await _context.Resources.AddAsync(resource);
-
-                await insertTransaction.CommitAsync();
-                await _context.SaveChangesAsync();
-
-                await using var mergeTransaction = await _context.Database.BeginTransactionAsync();
-                await TryMergeResource(resource);
-                await mergeTransaction.CommitAsync();
-                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
 
                 return Ok();
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return BadRequest(e.Message);
+                _logger.LogError(e, Message_Log_TransactionRollback);
+                await transaction.RollbackAsync();
+                return BadRequest(e);
             }
-
-
         }
 
-        private async Task TryMergeResource(Resource resource)
+        [OnlyUser]
+        [HttpPut]
+        public async Task<IActionResult> Modify(Guid id, CreateResourceDto dto)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var resource = await ModifyResource(id, dto);
 
-            //get exactly same resources (except attributes, see below)
-            var matchingResources = await _context.Resources.Where(x => x.Owner == resource.Owner
-                                                                        && x.Name == resource.Name
-                                                                        && x.Room == resource.Room).ToListAsync();
+                ResourceMerger.TryMergeByResource(resource, _context);
 
-            if (matchingResources.Count < 2)
-                return;
+                await transaction.CommitAsync();
 
-            //filter to have same attributes (must be after ToList())
-            matchingResources = matchingResources.Where(x => x.Attributes.SequenceEqual(resource.Attributes)).ToList();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, Message_Log_TransactionRollback);
+                await transaction.RollbackAsync();
+                return BadRequest(e);
+            }
+        }
 
-            //sum to resource
-            resource.Quantity = matchingResources.Sum(x => x.Quantity);
+        private async Task<Resource> CreateResource(CreateResourceDto dto)
+        {
+            var resource = new Resource
+            {
+                Name = dto.Name,
+                Quantity = dto.Quantity
+            };
 
-            var toDelete = matchingResources.Remove(resource);
+            var user = _userInfo.GetCurrentUser();
+            resource.Owner = user ?? throw new Exception(Message_400_InvalidOwner);
 
-            _context.Resources.RemoveRange(matchingResources);
+            if (dto.Room != null)
+                resource.Room = await _context.Rooms.FindAsync(dto.Room);
 
+            if (dto.Attributes != null && dto.Attributes.Count > 0)
+                resource.Attributes = await _context.Attributes
+                    .Where(x => dto.Attributes.Contains(x.Id))
+                    .ToListAsync();
+
+            await _context.Resources.AddAsync(resource);
+            await _context.SaveChangesAsync();
+
+            return resource;
+        }
+
+        private async Task<Resource> ModifyResource(Guid id, CreateResourceDto dto)
+        {
+            var resource = _context.Resources.Find(id);
+            if(resource == null)
+                throw new ArgumentNullException(Message_400_ResourceNotFound);
+
+            if(resource.Owner.Id != _userInfo.Id)
+                throw new Exception(Message_400_InvalidOwner);
+
+            resource.Name = dto.Name;
+            resource.Quantity = dto.Quantity;
+
+            if (dto.Room == null)
+                resource.Room = null;
+            else if (dto.Room != resource.Room.Id)
+                resource.Room = await _context.Rooms.FindAsync(dto.Room);
+
+            if (dto.Attributes == null || dto.Attributes.Count == 0)
+                resource.Attributes = new List<Attribute>();
+            else if (!dto.Attributes.SequenceEqual(resource.Attributes.Select(x => x.Id)))
+                resource.Attributes = await _context.Attributes.Where(x => dto.Attributes.Contains(x.Id)).ToListAsync();
+
+            _context.Resources.Update(resource);
+            await _context.SaveChangesAsync();
+
+            return resource;
         }
     }
-
-    
 }
