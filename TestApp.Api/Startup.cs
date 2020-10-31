@@ -36,6 +36,9 @@ namespace TestApp.Api
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddCors();
+
+
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddBearerAuthentication();
@@ -72,7 +75,7 @@ namespace TestApp.Api
                 });
             });
 
-            services.AddCors();
+
             services.AddTransient<IHashService, PBKDF2HashSerivce>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ITokenManager, TokenManager>();
@@ -85,6 +88,10 @@ namespace TestApp.Api
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            app.UseCors(x => x.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -93,9 +100,7 @@ namespace TestApp.Api
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseCors(x => x.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+           
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>
