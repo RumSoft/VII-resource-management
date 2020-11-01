@@ -27,4 +27,11 @@ namespace TestApp.Api.Models.Dto
         public int SplitAmount { get; set; }
         public CreateResourceDto Resource { get; set; }
     }
+
+    public class ResourceDetailsDto : ResourceDto
+    {
+        //todo details
+        public DateTime CreatedAt => DateTime.Today;
+        public DateTime ModifiedAt => DateTime.Now;
+    }
 }

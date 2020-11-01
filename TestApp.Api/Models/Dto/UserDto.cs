@@ -18,4 +18,11 @@ namespace TestApp.Api.Models.Dto
     {
         public Guid Id { get; set; }
     }
+
+    public class UserDetailsDto : UserWithIdDto
+    {
+        public string Role { get; set; }
+        public DateTime CreatedAt => DateTime.Today;
+        public DateTime LastLogin => DateTime.Now;
+    }
 }

@@ -8,7 +8,7 @@ using TestApp.Api.Services;
 namespace TestApp.Api.Controllers
 {
     [ApiController]
-    [Route("auth")]
+    [Route("[controller]")]
     public class AuthController : RumsoftController
     {
         private const string UserDoesNotExistOrPasswordInvalid = "";

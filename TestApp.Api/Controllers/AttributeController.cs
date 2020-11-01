@@ -14,8 +14,8 @@ namespace TestApp.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("attributes")]
-    public partial class AttributeController : RumsoftController
+    [Route("[controller]")]
+    public class AttributeController : RumsoftController
     {
         private const string Message_400_AttributeExists = "Attribute with same name already exists";
         private const string Message_400_AttributeNotFound = "This attribute no longer exists";
@@ -29,7 +29,7 @@ namespace TestApp.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("")]
+        [HttpGet("list")]
         public ActionResult<AttributeDto[]> Get()
         {
             var attrs = _context.Attributes.ToArray();

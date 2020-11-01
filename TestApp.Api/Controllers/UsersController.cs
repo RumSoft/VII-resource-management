@@ -14,7 +14,7 @@ using TestApp.Api.Services;
 namespace TestApp.Api.Controllers
 {
     [Authorize]
-    [Route("users")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : RumsoftController
     {
@@ -39,7 +39,25 @@ namespace TestApp.Api.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
+        public ActionResult<UserDetailsDto> GetUserDetails(Guid id)
+        {
+            try
+            {
+                var user = _context.Resources.Find(id)
+                               ?? throw new ArgumentNullException(Message_400_UserNotFound);
+
+                var result = _mapper.Map<UserDetailsDto>(user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet("list")]
         public ActionResult<UserWithIdDto[]> GetAllUsers()
         {
             var users = _context.Users.ToList();

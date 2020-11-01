@@ -17,9 +17,11 @@ namespace TestApp.Api.Data
 
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserWithIdDto>().ReverseMap();
+            CreateMap<User, UserDetailsDto>().ReverseMap();
 
             CreateMap<Resource, ResourceDto>().ReverseMap();
             CreateMap<Resource, CreateResourceDto>().ReverseMap();
+            CreateMap<Resource, ResourceDetailsDto>().ReverseMap();
         }
     }
 }

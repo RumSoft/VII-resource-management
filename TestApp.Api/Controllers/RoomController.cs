@@ -12,7 +12,7 @@ namespace TestApp.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("rooms")]
+    [Route("[controller]")]
     public class RoomController : RumsoftController
     {
         private const string Message_400_RoomContainsResources = "Room cannot be deleted. It contains resources.";
@@ -28,7 +28,7 @@ namespace TestApp.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("")]
+        [HttpGet("list")]
         public ActionResult<RoomDto[]> GetRooms()
         {
             var rooms = _context.Rooms.ToArray();

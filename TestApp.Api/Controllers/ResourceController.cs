@@ -19,7 +19,7 @@ namespace TestApp.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("resources")]
+    [Route("[controller]")]
     public class ResourceController : RumsoftController
     {
         private const string Message_400_InvalidOwner = "Could not verify resource ownership";
@@ -40,8 +40,28 @@ namespace TestApp.Api.Controllers
             _logger = logger;
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<ResourceDetailsDto> GetResourceDetails(Guid id)
+        {
+            try
+            {
+                var resource = _context.Resources.Find(id) 
+                               ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
 
-        [HttpGet]
+                if(resource.Owner.Id != _userInfo.Id)
+                    throw new Exception(Message_400_InvalidOwner);
+
+                var result = _mapper.Map<ResourceDetailsDto>(resource);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet("list")]
         public ActionResult GetMyResources()
         {
             IQueryable<Resource> resources = _context.Resources;
@@ -55,6 +75,8 @@ namespace TestApp.Api.Controllers
             var result = _mapper.Map<ResourceDto[]>(resources.ToList());
             return Ok(result);
         }
+
+
 
         [OnlyUser]
         [HttpPost]
