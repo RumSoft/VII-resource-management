@@ -24,6 +24,7 @@ namespace TestApp.Api.Controllers
     {
         private const string Message_400_InvalidOwner = "Could not verify resource ownership";
         private const string Message_400_ResourceNotFound = "Resource does not exist.";
+        private const string Message_400_TooBigSplitAmount = "Resource does not exist.";
         private const string Message_Log_TransactionRollback = "Transaction failed, rollbacking";
 
         private readonly DataContext _context;
@@ -79,13 +80,15 @@ namespace TestApp.Api.Controllers
         }
 
         [OnlyUser]
-        [HttpPut]
-        public async Task<IActionResult> Modify(Guid id, CreateResourceDto dto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Modify([FromRoute] Guid id, [FromBody] ModifyResourceDto dto)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var resource = await ModifyResource(id, dto);
+                var resource = dto.Split
+                    ? await ModifyPartOfResource(id, dto)
+                    : await ModifyResource(id, dto.Resource);
 
                 ResourceMerger.TryMergeByResource(resource, _context);
 
@@ -101,6 +104,20 @@ namespace TestApp.Api.Controllers
             }
         }
 
+        [OnlyUser]
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var resource = _context.Resources.Find(id);
+            if (resource == null)
+                return BadRequest(Message_400_ResourceNotFound);
+
+            _context.Resources.Remove(resource);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         private async Task<Resource> CreateResource(CreateResourceDto dto)
         {
             var resource = new Resource
@@ -109,8 +126,8 @@ namespace TestApp.Api.Controllers
                 Quantity = dto.Quantity
             };
 
-            var user = _userInfo.GetCurrentUser();
-            resource.Owner = user ?? throw new Exception(Message_400_InvalidOwner);
+            var user = _userInfo.GetCurrentUser() ?? throw new Exception(Message_400_InvalidOwner);
+            resource.Owner = user;
 
             if (dto.Room != null)
                 resource.Room = await _context.Rooms.FindAsync(dto.Room);
@@ -128,11 +145,9 @@ namespace TestApp.Api.Controllers
 
         private async Task<Resource> ModifyResource(Guid id, CreateResourceDto dto)
         {
-            var resource = _context.Resources.Find(id);
-            if(resource == null)
-                throw new ArgumentNullException(Message_400_ResourceNotFound);
+            var resource = _context.Resources.Find(id) ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
 
-            if(resource.Owner.Id != _userInfo.Id)
+            if (resource.Owner.Id != _userInfo.Id)
                 throw new Exception(Message_400_InvalidOwner);
 
             resource.Name = dto.Name;
@@ -149,6 +164,28 @@ namespace TestApp.Api.Controllers
                 resource.Attributes = await _context.Attributes.Where(x => dto.Attributes.Contains(x.Id)).ToListAsync();
 
             _context.Resources.Update(resource);
+            await _context.SaveChangesAsync();
+
+            return resource;
+        }
+
+        private async Task<Resource> ModifyPartOfResource(Guid id, ModifyResourceDto dto)
+        {
+            //deep copy
+            var dtoCopy = _mapper.Map<CreateResourceDto>(dto.Resource);
+            dtoCopy.Quantity = dto.SplitAmount;
+
+            var baseResource = _context.Resources.Find(id) ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
+
+            if (baseResource.Quantity < dto.SplitAmount)
+                throw new ArgumentOutOfRangeException(Message_400_TooBigSplitAmount);
+
+            baseResource.Quantity -= dto.SplitAmount;
+            _context.Resources.Update(baseResource);
+
+            var resource = await CreateResource(dtoCopy);
+            await _context.Resources.AddAsync(resource);
+
             await _context.SaveChangesAsync();
 
             return resource;

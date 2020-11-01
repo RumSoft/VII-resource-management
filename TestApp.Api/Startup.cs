@@ -53,7 +53,7 @@ namespace TestApp.Api
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TheCodeBuzz-Service", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Resource Manager", Version = "v1" });
                 c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",

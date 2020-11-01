@@ -20,4 +20,11 @@ namespace TestApp.Api.Models.Dto
         public List<int> Attributes { get; set; }
         public int? Room { get; set; }
     }
+
+    public class ModifyResourceDto
+    {
+        public bool Split { get; set; }
+        public int SplitAmount { get; set; }
+        public CreateResourceDto Resource { get; set; }
+    }
 }
