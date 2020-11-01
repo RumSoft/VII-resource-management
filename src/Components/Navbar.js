@@ -14,27 +14,27 @@ export default class Navbar extends Component {
       <div>
         <ul class="nav-ul">
           <li class="nav-li">
-            <Link class="link" to="/">
+            <Link class="nav-link" to="/">
               Home{" "}
             </Link>
           </li>
           <li class="nav-li">
             {!AuthService.checkIfLogged() && (
-              <Link class="link" to="/login">
+              <Link class="nav-link" to="/login">
                 Login{" "}
               </Link>
             )}
           </li>
           <li class="nav-li">
             {AuthService.checkIfLogged() && (
-              <Link class="link" to="/test">
+              <Link class="nav-link" to="/test">
                 Test{" "}
               </Link>
             )}
           </li>
           <li class="nav-li">
             {AuthService.checkIfLogged() && (
-              <Link class="link" to="/" onClick={() => this.logout()}>
+              <Link class="nav-link" to="/" onClick={() => this.logout()}>
                 Logout
               </Link>
             )}
