@@ -6,7 +6,6 @@ export default class Navbar extends Component {
   logout() {
     localStorage.clear();
 
-    alert("you logged out");
     this.forceUpdate();
   }
 
