@@ -25,11 +25,10 @@ namespace TestApp.Api.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public BadRequestObjectResult BadRequest(Exception e)
         { 
-            return BadRequest(new 
+            return BadRequest(new ResultObject
             {
                 IsSuccess = false,
-                Message = e.Message,
-                Exception = e
+                Message = e.Message
             });
         }
 

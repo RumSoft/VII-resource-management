@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Reflection.Metadata;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,7 @@ namespace TestApp.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            AppConfig.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -88,6 +90,7 @@ namespace TestApp.Api
             services.AddSingleton<ITokenManager, TokenManager>();
             services.AddSingleton<IRandomPasswordGenerator, RandomPasswordGenerator>();
             services.AddScoped<IUserInfo, UserInfo>();
+            services.AddScoped<IMailerService, MailerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

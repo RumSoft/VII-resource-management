@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using TestApp.Api.Controllers;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Auth
@@ -25,10 +24,10 @@ namespace TestApp.Api.Auth
             };
 
             var token = new TokenBuilder()
-                .AddAudience(TokenConstants.Audience)
-                .AddIssuer(TokenConstants.Issuer)
-                .AddExpiry(TokenConstants.ExpiryInMinutes)
-                .AddKey(TokenConstants.key)
+                .AddAudience(AppConfig.Auth_Audience)
+                .AddIssuer(AppConfig.Auth_Issuer)
+                .AddExpiry(AppConfig.Auth_ExpiryInMinutes)
+                .AddKey(AppConfig.Auth_Key)
                 .AddClaims(claims)
                 .Build();
 
@@ -38,7 +37,7 @@ namespace TestApp.Api.Auth
             return new AuthToken
             {
                 AccessToken = accessToken,
-                ExpiresIn = TokenConstants.ExpiryInMinutes
+                ExpiresIn = AppConfig.Auth_ExpiryInMinutes
             };
         }
     }

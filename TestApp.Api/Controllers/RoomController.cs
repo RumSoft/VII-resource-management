@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +18,7 @@ namespace TestApp.Api.Controllers
         private const string Message_400_RoomContainsResources = "Room cannot be deleted. It contains resources.";
         private const string Message_400_RoomNotFound = "Room cannot be found.";
         private const string Message_400_RoomAlreadyExists = "Room with same name already exists.";
-        
+
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 

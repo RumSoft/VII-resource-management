@@ -19,9 +19,9 @@ namespace TestApp.Api.Auth
                 ValidateAudience = true,
                 ValidateIssuer = true,
                 ValidateLifetime = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenConstants.key)),
-                ValidIssuer = TokenConstants.Issuer,
-                ValidAudience = TokenConstants.Audience
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConfig.Auth_Key)),
+                ValidIssuer = AppConfig.Auth_Issuer,
+                ValidAudience = AppConfig.Auth_Issuer
             };
 
             var events = new JwtBearerEvents
