@@ -12,14 +12,14 @@ namespace TestApp.Api.Auth
 
     public class OnlyAdminAttribute : OnlyRolesAttribute
     {
-        public OnlyAdminAttribute() : base(Models.Roles.Admin)
+        public OnlyAdminAttribute() : base(Models.UserRoles.Admin)
         {
         }
     }
 
     public class OnlyUserAttribute : OnlyRolesAttribute
     {
-        public OnlyUserAttribute() : base(Models.Roles.User)
+        public OnlyUserAttribute() : base(Models.UserRoles.User)
         {
         }
     }

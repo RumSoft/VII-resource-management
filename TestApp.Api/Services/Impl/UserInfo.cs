@@ -24,7 +24,7 @@ namespace TestApp.Api.Services.Impl
 
         public bool IsLogged => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 
-        public bool IsAdmin => IsLogged && Role == Roles.Admin;
+        public bool IsAdmin => IsLogged && Role == UserRoles.Admin;
 
         public User GetCurrentUser()
         {

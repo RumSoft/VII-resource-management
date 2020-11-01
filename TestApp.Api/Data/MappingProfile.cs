@@ -22,6 +22,7 @@ namespace TestApp.Api.Data
             CreateMap<Resource, ResourceDto>().ReverseMap();
             CreateMap<Resource, CreateResourceDto>().ReverseMap();
             CreateMap<Resource, ResourceDetailsDto>().ReverseMap();
+
         }
     }
 }

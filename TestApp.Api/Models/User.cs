@@ -21,7 +21,7 @@ namespace TestApp.Api.Models
         public string FullName => $"{FirstName} {LastName}";
     }
 
-    public class Roles
+    public class UserRoles
     {
         public const string Admin = "Admin";
         public const string User = "User";

@@ -10,7 +10,8 @@ namespace TestApp.Api.Auth
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var isAuthorized = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() ||
+            var isAuthorized = (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
+                               && !context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any()) ||
                                context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
 
             if (!isAuthorized) return;

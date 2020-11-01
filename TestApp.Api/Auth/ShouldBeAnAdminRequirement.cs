@@ -29,7 +29,7 @@ namespace TestApp.Api.Auth
 
             // check if the claim equals to either Admin or Editor
             // if satisfied, set the requirement as success
-            if (role == Roles.Admin)
+            if (role == UserRoles.Admin)
                 context.Succeed(requirement);
 
             return Task.CompletedTask;

@@ -30,7 +30,7 @@ namespace TestApp.Api.Controllers
         {
             try
             {
-                CreateUser(dto, Roles.Admin);
+                CreateUser(dto, UserRoles.Admin);
             }
             catch (Exception e)
             {
@@ -46,7 +46,7 @@ namespace TestApp.Api.Controllers
         {
             try
             {
-                CreateUser(dto, Roles.User);
+                CreateUser(dto, UserRoles.User);
             }
             catch (Exception e)
             {

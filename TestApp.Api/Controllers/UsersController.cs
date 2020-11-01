@@ -20,6 +20,7 @@ namespace TestApp.Api.Controllers
     {
         private const string Message_400_UserNotFound = "User does not exist.";
         private const string Message_400_UserExists = "User with same name already exists.";
+        private const string Message_400_UserCannotResetPassword = "Password reset request invalid.";
 
         private readonly DataContext _context;
         private readonly IRandomPasswordGenerator _generator;
@@ -45,7 +46,7 @@ namespace TestApp.Api.Controllers
             try
             {
                 var user = _context.Resources.Find(id)
-                               ?? throw new ArgumentNullException(Message_400_UserNotFound);
+                           ?? throw new ArgumentNullException(Message_400_UserNotFound);
 
                 var result = _mapper.Map<UserDetailsDto>(user);
                 return Ok(result);
@@ -92,7 +93,7 @@ namespace TestApp.Api.Controllers
         }
 
         [OnlyAdmin]
-        [HttpPut("{userId}")]
+        [HttpPut("{id}")]
         public IActionResult UpdateUser([FromBody] UserDto dto, [FromRoute] Guid userId)
         {
             try
@@ -116,7 +117,7 @@ namespace TestApp.Api.Controllers
         }
 
         [OnlyAdmin]
-        [HttpDelete("{userId}")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteUser([FromRoute] Guid userId)
         {
             try
@@ -135,9 +136,8 @@ namespace TestApp.Api.Controllers
             }
         }
 
-        [OnlyAdmin]
         [HttpPost("reset-password/{id}")]
-        public IActionResult ResetPassword(Guid id)
+        public IActionResult ResetPassword([FromRoute] Guid id)
         {
             try
             {
@@ -155,13 +155,56 @@ namespace TestApp.Api.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("new-password/{token}")]
+        public IActionResult SetNewPassword([FromRoute] string token, [FromBody] string password)
+        {
+            //find user by token
+            try
+            {
+                var tokenEntity = _context.Tokens.Find(token);
+                var user = _context.Users.Find(tokenEntity.ParentId)
+                           ?? throw new Exception(Message_400_UserCannotResetPassword);
+                if (!user.IsGeneratedPassword)
+                    throw new Exception(Message_400_UserCannotResetPassword);
+
+                user.Password = _hashService.HashPassword(password);
+                user.IsGeneratedPassword = false;
+
+                _context.Users.Update(user);
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return BadRequest(e);
+            }
+        }
+
         private void SetRandomPasswordAndSendMail(User user)
         {
             var password = _generator.Generate();
             user.Password = _hashService.HashPassword(password);
             user.IsGeneratedPassword = true;
 
-            MailingHelper.SendPasswordMail(user, _mailer);
+
+            var resetToken = new Token
+            {
+                CreatedAt = DateTime.Now,
+                ExpiresAt = DateTime.Now.AddDays(1),
+                IsUsed = false,
+                ParentId = user.Id,
+                Type = TokenType.PasswordReset,
+                Value = Guid.NewGuid().ToString()
+            };
+            _context.Tokens.Add(resetToken);
+            _context.SaveChanges();
+
+            //todo create password reset token
+
+            MailingHelper.SendPasswordMail(user, resetToken, _mailer);
         }
     }
 }

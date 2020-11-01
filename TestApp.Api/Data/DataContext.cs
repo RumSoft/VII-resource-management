@@ -13,8 +13,8 @@ namespace TestApp.Api.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
-
         public DbSet<Attribute> Attributes { get; set; }
+        public DbSet<Token> Tokens { get; set; }
         //todo:
         //public DbSet<TradeRequest> TradeRequests { get; set; }
 
@@ -36,7 +36,7 @@ namespace TestApp.Api.Data
             user.Property(x => x.LastName).IsRequired().HasMaxLength(100);
             user.Property(x => x.EmailAddress).IsRequired().HasMaxLength(100);
             user.Property(x => x.Password).IsRequired().HasMaxLength(1024);
-            user.Property(x => x.Role).IsRequired().HasMaxLength(50).HasDefaultValue(Roles.User);
+            user.Property(x => x.Role).IsRequired().HasMaxLength(50).HasDefaultValue(UserRoles.User);
             user.HasIndex(x => x.EmailAddress).IsUnique();
 
             var attrib = modelBuilder.Entity<Attribute>();
@@ -48,6 +48,11 @@ namespace TestApp.Api.Data
             room.HasKey(x => x.Id);
             room.Property(x => x.Name).IsRequired().HasMaxLength(100);
             room.HasIndex(x => x.Name).IsUnique();
+
+            var token = modelBuilder.Entity<Token>();
+            token.HasKey(x => x.Value).IsClustered(false);
+            token.Property(x => x.Value).HasMaxLength(150);
+            token.Property(x => x.Type).HasDefaultValue(TokenType.Unknown);
         }
     }
 }

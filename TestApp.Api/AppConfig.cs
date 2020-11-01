@@ -6,6 +6,8 @@ namespace TestApp.Api
     {
         public static IConfiguration Configuration { get; set; }
 
+        public static string Url => Configuration["Url"];
+
         #region mailing
         private static IConfigurationSection Mail => Configuration.GetSection("Mail");
         public static string Smtp_SenderEmail => Mail["SenderEmail"];
