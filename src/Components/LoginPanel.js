@@ -59,7 +59,7 @@ export default class LoginPage extends Component {
             />
           </label>
           <br />
-          <input type="submit" value="Wyślij" />
+          <input type="submit" value="Sign In" />
         </form>
       </div>
     );
