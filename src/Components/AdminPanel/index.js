@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { AttributeService, NotificationService } from "../../Services";
 import { AttributeRow } from "../ListRows";
+import { CardContent, Card, Box } from "@material-ui/core";
 
 export default class AdminPanel extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ export default class AdminPanel extends Component {
 
   fetchAttributes() {
     AttributeService.getList().then((result) => {
-      const attributes = result.data;
+      const attributes = result && result.data;
       this.setState({ attributes });
     });
   }
@@ -53,16 +54,44 @@ export default class AdminPanel extends Component {
   render() {
     return (
       <div>
-        Logged in as Admin.
-        {this.state.attributes.map((x) => (
-          <AttributeRow
-            onDelete={(id) => this.attributeDeleted(id)}
-            onChange={(attr) => this.attributeChanged(attr)}
-            key={x.id}
-            data={x}
-          />
-        ))}
-        <button onClick={() => this.addAttributeClick()}>Dodaj atrybut</button>
+        <p> Logged in as Admin.</p>
+        <div class="container-fluid d-flex">
+          <Box m={1}>
+            <Card>
+              {" "}
+              <CardContent>
+                {this.state.attributes.map((x) => (
+                  <AttributeRow
+                    onDelete={(id) => this.attributeDeleted(id)}
+                    onChange={(attr) => this.attributeChanged(attr)}
+                    key={x.id}
+                    data={x}
+                  />
+                ))}
+                <button onClick={() => this.addAttributeClick()}>
+                  Dodaj atrybut
+                </button>
+              </CardContent>
+            </Card>
+          </Box>
+          <Box m={1}>
+            <Card>
+              <CardContent>
+                {this.state.attributes.map((x) => (
+                  <AttributeRow
+                    onDelete={(id) => this.attributeDeleted(id)}
+                    onChange={(attr) => this.attributeChanged(attr)}
+                    key={x.id}
+                    data={x}
+                  />
+                ))}
+                <button onClick={() => this.addAttributeClick()}>
+                  Dodaj atrybut
+                </button>
+              </CardContent>
+            </Card>
+          </Box>
+        </div>
       </div>
     );
   }
