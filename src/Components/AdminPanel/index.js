@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { AttributeService, NotificationService } from "../../Services";
 import { AttributeRow } from "../ListRows";
 import { CardContent, Card, Box } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 export default class AdminPanel extends Component {
   constructor(props) {
@@ -91,6 +92,9 @@ export default class AdminPanel extends Component {
               </CardContent>
             </Card>
           </Box>
+          <Link to="/user/add" >
+            <button>Dodaj usera</button>
+          </Link>
         </div>
       </div>
     );
