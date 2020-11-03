@@ -9,5 +9,4 @@ export default class UserService {
     static EditUser(id, data) {
         return APIService.put(`User/{${id}}`, data);
     }
-
 }

@@ -3,8 +3,6 @@ import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import UserManager from "../../Components/UserManager"
 
-import "./index.scss";
-
 export default class AddUserPage extends Component {
     constructor(props) {
         super(props);
@@ -26,8 +24,6 @@ export default class AddUserPage extends Component {
             NotificationService.apiError(e, "Nie udało się dodać użytkownika");
         });
     }
-
-
 
     render() {
         if (this.state.redirect) {

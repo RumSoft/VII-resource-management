@@ -3,24 +3,19 @@ import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import UserManager from "../../Components/UserManager"
 
-
 export default class AddUserPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //...this.props.user,
             id: "d912bda6-b413-4eb6-f953-08d8802fee4d",
-            firstName: "dd",
-            lastName: "dd",
-            emailAddress: "awdawdaw",
+            firstName: "testoweimie",
+            lastName: "testowenazwisko",
+            emailAddress: "testowymail",
             redirect: false
         };
     }
 
     editUser(user) {
-        console.log(user);
-        //UserService.EditUser(this.state.user.id, {
-        console.log(this.state.id)
         UserService.EditUser(this.state.id, {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -39,12 +34,11 @@ export default class AddUserPage extends Component {
             return <Redirect to="/dashboard" />
         }
         let user = {
-            id: "d912bda6-b413-4eb6-f953-08d8802fee4d",
-            firstName: "dd",
-            lastName: "dd",
-            emailAddress: "awdawdaw",
+            id: this.state.id,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            emailAddress: this.state.emailAddress,
         }
-
 
         return <div>
             <UserManager onSave={(user) => this.editUser(user)} edit user={user} />
