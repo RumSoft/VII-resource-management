@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { UserService, NotificationService } from "../../Services";
+import { Redirect } from "react-router-dom";
 
 import "./index.scss";
 
@@ -9,7 +10,8 @@ export default class AddUserPage extends Component {
         this.state = {
             firstName: "",
             lastName: "",
-            emailAddress: ""
+            emailAddress: "",
+            redirect: false
         };
     }
 
@@ -19,21 +21,25 @@ export default class AddUserPage extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state);
+
         UserService.AddUser({
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             emailAddress: this.state.emailAddress
         }).then((e) => {
             NotificationService.success(`Dodano użytkownika "${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}"`);
+            this.setState({ redirect: true });
         }).catch((e) => {
             NotificationService.apiError(e, "Nie udało się dodać użytkownika");
         });
 
     }
     render() {
-        return (
+        if (this.state.redirect) {
+            return <Redirect to="/dashboard" />
+        }
 
+        return (
             <div className="adduser-form">
                 <form onSubmit={(e) => this.handleSubmit(e)}>
                     <h2 className="text-center">Dodawanie użytkownika</h2>
