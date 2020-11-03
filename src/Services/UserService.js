@@ -1,7 +1,7 @@
 import APIService from "./APIService";
 
 export default class UserService {
-  static getUser() {
+  static getUser(id) {
     return APIService.get(`User/${id}`);
   }
 
