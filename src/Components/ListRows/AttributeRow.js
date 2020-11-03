@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NotificationService } from "../../Services";
 import AttributeService from "../../Services/AttributeService";
+import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {
   handleEditClick() {

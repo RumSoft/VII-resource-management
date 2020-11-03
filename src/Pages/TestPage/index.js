@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import APIService from "../../Services/APIService";
+import "./index.scss";
 
 export default class TestPage extends Component {
   constructor(props) {

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import UserPanel from "../../Components/UserPanel";
 import AdminPanel from "../../Components/AdminPanel";
 import { AuthService, Events, EventService } from "../../Services";
+import "./index.scss";
+
 const role = "role";
 
 export default class Dashboard extends Component {

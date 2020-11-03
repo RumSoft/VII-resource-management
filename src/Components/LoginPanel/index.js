@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import AuthService from "../../Services/AuthService";
-import "./index.css";
 import { Redirect } from "react-router-dom";
 import { NotificationService } from "../../Services";
+import "./index.scss";
 
 export default class LoginPage extends Component {
   constructor(props) {

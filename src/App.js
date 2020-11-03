@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Redirector from "./Redirector";
 import { Dashboard, ErrorPage, HomePage, LoginPage, TestPage } from "./Pages";
+import "./App.scss";
 
 class App extends Component {
   render() {

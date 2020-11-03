@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { EventService } from "../../Services";
 import AuthService from "../../Services/AuthService";
 import Events from "../../Services/Events";
-import "./index.css";
+import "./index.scss";
 
 export default class Navbar extends Component {
   constructor(props) {

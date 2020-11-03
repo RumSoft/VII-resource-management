@@ -1,11 +1,6 @@
 import React, { Component } from "react";
-import {
-  AttributeService,
-  Events,
-  EventService,
-  NotificationService,
-} from "../../Services";
-import AttributeRow from "../AttributeRow";
+import { AttributeService, NotificationService } from "../../Services";
+import { AttributeRow } from "../ListRows";
 
 export default class AdminPanel extends Component {
   constructor(props) {
