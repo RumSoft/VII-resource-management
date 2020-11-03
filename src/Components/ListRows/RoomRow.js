@@ -10,7 +10,7 @@ export default class RoomRow extends Component {
     let newRoomName = prompt("Podaj nową nazwę pokoju.", name);
 
     if (newRoomName !== null) {
-      RoomService.editAttribute(id, newRoomName)
+      RoomService.editRoom(id, newRoomName)
         .then(() => {
           NotificationService.success(
             `Pomyślnie zmieniono nazwę pokoju`,
@@ -27,7 +27,7 @@ export default class RoomRow extends Component {
 
   handleDeleteClick() {
     const { id, name } = this.props.data;
-    RoomService.deleteAttribute(id)
+    RoomService.deleteRoom(id)
       .then((res) => {
         NotificationService.info(`Usunięto pokój ${name}`);
         this.props.onDelete && this.props.onDelete(id);

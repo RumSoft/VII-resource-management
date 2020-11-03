@@ -82,7 +82,7 @@ export default class AdminPanel extends Component {
     RoomService.addRoom(roomName)
       .then(() => {
         NotificationService.success(`Dodano pokój "${roomName}"`);
-        this.fetchAttributes();
+        this.fetchRooms();
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać pokoju");
