@@ -94,11 +94,11 @@ namespace TestApp.Api.Controllers
 
         [OnlyAdmin]
         [HttpPut("{id}")]
-        public IActionResult UpdateUser([FromBody] UserDto dto, [FromRoute] Guid userId)
+        public IActionResult UpdateUser([FromBody] UserDto dto, [FromRoute] Guid id)
         {
             try
             {
-                var user = _context.Users.Find(userId)
+                var user = _context.Users.Find(id)
                            ?? throw new ArgumentNullException(Message_400_UserNotFound);
 
                 //todo check if email is not used by other
@@ -118,11 +118,11 @@ namespace TestApp.Api.Controllers
 
         [OnlyAdmin]
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser([FromRoute] Guid userId)
+        public IActionResult DeleteUser([FromRoute] Guid id)
         {
             try
             {
-                var user = _context.Users.Find(userId)
+                var user = _context.Users.Find(id)
                            ?? throw new ArgumentNullException(Message_400_UserNotFound);
 
                 _context.Users.Remove(user);
