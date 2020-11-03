@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NotificationService } from "../../Services";
 import RoomService from "../../Services/RoomService";
+import "./RoomRow.scss";
 
 export default class RoomRow extends Component {
   handleEditClick() {
@@ -13,7 +14,7 @@ export default class RoomRow extends Component {
         .then(() => {
           NotificationService.success(
             `Pomyślnie zmieniono nazwę pokoju`,
-            `${name} → ${newAttributeName}`
+            `${name} → ${newRoomName}`
           );
           this.props.onChange &&
             this.props.onChange({ id: id, name: newRoomName });
