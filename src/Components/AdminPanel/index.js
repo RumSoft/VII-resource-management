@@ -1,7 +1,18 @@
 import React, { Component } from "react";
 import { AttributeService, NotificationService } from "../../Services";
 import { AttributeRow } from "../ListRows";
-import { CardContent, Card, Box } from "@material-ui/core";
+import {
+  CardContent,
+  Card,
+  Box,
+  CardHeader,
+  Tooltip,
+  Fab,
+  IconButton,
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import AttributeList from "../List/AttributeList";
 
 export default class AdminPanel extends Component {
   constructor(props) {
@@ -11,32 +22,6 @@ export default class AdminPanel extends Component {
     };
   }
 
-  componentDidMount() {
-    this.fetchAttributes();
-  }
-
-  fetchAttributes() {
-    AttributeService.getList().then((result) => {
-      const attributes = result && result.data;
-      this.setState({ attributes });
-    });
-  }
-
-  attributeChanged(attr) {
-    this.setState({
-      attributes: this.state.attributes.map((x) => {
-        if (x.id === attr.id) x.name = attr.name;
-        return x;
-      }),
-    });
-  }
-
-  attributeDeleted(id) {
-    this.setState({
-      attributes: this.state.attributes.filter((x) => x.id !== id),
-    });
-  }
-
   addAttributeClick(e) {
     let attributeName = prompt("Podaj nazwę nowego atrybutu");
     if (!attributeName) return;
@@ -44,7 +29,6 @@ export default class AdminPanel extends Component {
     AttributeService.addAttribute(attributeName)
       .then(() => {
         NotificationService.success(`Dodano atrybut "${attributeName}"`);
-        this.fetchAttributes();
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać atrybutu");
@@ -57,39 +41,7 @@ export default class AdminPanel extends Component {
         <p> Logged in as Admin.</p>
         <div class="container-fluid d-flex">
           <Box m={1}>
-            <Card>
-              {" "}
-              <CardContent>
-                {this.state.attributes.map((x) => (
-                  <AttributeRow
-                    onDelete={(id) => this.attributeDeleted(id)}
-                    onChange={(attr) => this.attributeChanged(attr)}
-                    key={x.id}
-                    data={x}
-                  />
-                ))}
-                <button onClick={() => this.addAttributeClick()}>
-                  Dodaj atrybut
-                </button>
-              </CardContent>
-            </Card>
-          </Box>
-          <Box m={1}>
-            <Card>
-              <CardContent>
-                {this.state.attributes.map((x) => (
-                  <AttributeRow
-                    onDelete={(id) => this.attributeDeleted(id)}
-                    onChange={(attr) => this.attributeChanged(attr)}
-                    key={x.id}
-                    data={x}
-                  />
-                ))}
-                <button onClick={() => this.addAttributeClick()}>
-                  Dodaj atrybut
-                </button>
-              </CardContent>
-            </Card>
+            <AttributeList />
           </Box>
         </div>
       </div>
