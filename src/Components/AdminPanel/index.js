@@ -96,6 +96,9 @@ export default class AdminPanel extends Component {
         <Link to="/user/add" >
           <button>Dodaj usera</button>
         </Link>
+        <Link to="/user/edit" >
+          <button>Edytuj usera (temp)</button>
+        </Link>
       </div>
     );
   }
