@@ -78,7 +78,7 @@ namespace TestApp.Api.Controllers
 
                 var user = _mapper.Map<User>(dto);
 
-                SetRandomPasswordAndSendMail(user);
+                SetRandomPasswordGetResetToken(user);
 
                 _context.Users.Add(user);
                 _context.SaveChanges();
@@ -137,16 +137,20 @@ namespace TestApp.Api.Controllers
         }
 
         [HttpPost("reset-password/{id}")]
-        public IActionResult ResetPassword([FromRoute] Guid id)
+        public ActionResult<AuthToken> ResetPassword([FromRoute] Guid id)
         {
             try
             {
                 var user = _context.Users.Find(id)
                            ?? throw new ArgumentNullException(Message_400_UserNotFound);
 
-                SetRandomPasswordAndSendMail(user);
+                var resetToken = SetRandomPasswordGetResetToken(user);
 
-                return Ok();
+                return Ok(new AuthToken()
+                {
+                    AccessToken = resetToken.Value,
+                    ExpiresIn = (long)TimeSpan.FromHours(24).TotalMinutes
+                });
             }
             catch (Exception e)
             {
@@ -183,7 +187,7 @@ namespace TestApp.Api.Controllers
             }
         }
 
-        private void SetRandomPasswordAndSendMail(User user)
+        private Token SetRandomPasswordGetResetToken(User user)
         {
             var password = _generator.Generate();
             user.Password = _hashService.HashPassword(password);
@@ -202,9 +206,8 @@ namespace TestApp.Api.Controllers
             _context.Tokens.Add(resetToken);
             _context.SaveChanges();
 
-            //todo create password reset token
-
-            MailingHelper.SendPasswordMail(user, resetToken, _mailer);
+            return resetToken;
+            //MailingHelper.SendPasswordMail(user, resetToken, _mailer);
         }
     }
 }
