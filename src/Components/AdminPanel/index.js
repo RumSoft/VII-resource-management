@@ -13,34 +13,37 @@ export default class AdminPanel extends Component {
     this.state = {
       attributes: [],
     };
-
-    EventService.Subscribe(Events.Admin_AttributeRemoved, (id) => {
-      this.setState({
-        attributes: this.state.attributes.filter((x) => x.id !== id),
-      });
-    });
   }
 
   componentDidMount() {
+    this.fetchAttributes();
+  }
+
+  fetchAttributes() {
     AttributeService.getList().then((result) => {
       const attributes = result.data;
       this.setState({ attributes });
     });
   }
 
-  addAttributeClick(e) {
-    e.preventDefault();
+  attributeDeleted(id) {
+    this.setState({
+      attributes: this.state.attributes.filter((x) => x.id !== id),
+    });
+  }
 
+  addAttributeClick(e) {
     let attributeName = prompt("Podaj nazwę nowego atrybutu");
-    if (attributeName !== null) {
-      AttributeService.addAttribute(attributeName)
-        .then(() => {
-          NotificationService.success(`Dodano atrybut "${attributeName}"`);
-        })
-        .catch((e) => {
-          NotificationService.apiError(e, "Nie udało się dodać atrybutu");
-        });
-    }
+    if (!attributeName) return;
+
+    AttributeService.addAttribute(attributeName)
+      .then(() => {
+        NotificationService.success(`Dodano atrybut "${attributeName}"`);
+        this.fetchAttributes();
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się dodać atrybutu");
+      });
   }
 
   render() {
@@ -48,11 +51,13 @@ export default class AdminPanel extends Component {
       <div>
         Logged in as Admin.
         {this.state.attributes.map((x) => (
-          <AttributeRow key={x.id} data={x} />
+          <AttributeRow
+            onDelete={(id) => this.attributeDeleted(id)}
+            key={x.id}
+            data={x}
+          />
         ))}
-        <button onClick={(e) => this.addAttributeClick(e)}>
-          Dodaj atrybut
-        </button>
+        <button onClick={() => this.addAttributeClick()}>Dodaj atrybut</button>
       </div>
     );
   }

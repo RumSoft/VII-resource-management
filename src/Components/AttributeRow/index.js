@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Events, EventService, NotificationService } from "../../Services";
+import { NotificationService } from "../../Services";
 import AttributeService from "../../Services/AttributeService";
 
 export default class AttributeRow extends Component {
-  handleEditClick(e) {
-    e.preventDefault();
-
+  handleEditClick() {
     const { name, id } = this.props.data;
 
     let newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
@@ -24,13 +22,16 @@ export default class AttributeRow extends Component {
     }
   }
 
-  handleDeleteClick(e) {
-    e.preventDefault();
-    let id = this.props.data.id;
-    AttributeService.deleteAttribute(id).then((res) => {
-      NotificationService.info(`Usunięto atrybut ${this.props.data.name}`);
-      EventService.Emit(Events.Admin_AttributeRemoved, id);
-    });
+  handleDeleteClick() {
+    const { id, name } = this.props.data;
+    AttributeService.deleteAttribute(id)
+      .then((res) => {
+        NotificationService.info(`Usunięto atrybut ${name}`);
+        this.props.onDelete && this.props.onDelete(id);
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
+      });
   }
 
   render() {
@@ -38,8 +39,8 @@ export default class AttributeRow extends Component {
     return (
       <div>
         {id}&gt; {name}
-        <button onClick={(e) => this.handleEditClick(e)}>Edytuj</button>
-        <button onClick={(e) => this.handleDeleteClick(e)}>Usuń</button>
+        <button onClick={() => this.handleEditClick()}>Edytuj</button>
+        <button onClick={() => this.handleDeleteClick()}>Usuń</button>
       </div>
     );
   }
