@@ -9,30 +9,14 @@ import {
   Tooltip,
   Fab,
   IconButton,
+  Grid,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import AttributeList from "../List/AttributeList";
 
 export default class AdminPanel extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      attributes: [],
-    };
-  }
-
-  addAttributeClick(e) {
-    let attributeName = prompt("Podaj nazwę nowego atrybutu");
-    if (!attributeName) return;
-
-    AttributeService.addAttribute(attributeName)
-      .then(() => {
-        NotificationService.success(`Dodano atrybut "${attributeName}"`);
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się dodać atrybutu");
-      });
+    this.state = {};
   }
 
   render() {
@@ -40,9 +24,23 @@ export default class AdminPanel extends Component {
       <div>
         <p> Logged in as Admin.</p>
         <div class="container-fluid d-flex">
-          <Box m={1}>
-            <AttributeList />
-          </Box>
+          <Grid container spacing={2}>
+            <Grid item sm={6} xs={12} md={6} lg={3}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={6} xs={12} md={6} lg={3}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={4} xs={12} md={4} lg={2}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={4} xs={6} md={4} lg={2}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={4} xs={6} md={4} lg={2}>
+              <AttributeList />
+            </Grid>
+          </Grid>
         </div>
       </div>
     );

@@ -1,49 +1,43 @@
+import { Tooltip } from "@material-ui/core";
 import React, { Component } from "react";
-import { NotificationService } from "../../Services";
-import AttributeService from "../../Services/AttributeService";
 import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {
   handleEditClick() {
-    const { name, id } = this.props.data;
-
-    let newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
-
-    if (newAttributeName !== null) {
-      AttributeService.editAttribute(id, newAttributeName)
-        .then(() => {
-          NotificationService.success(
-            `Pomyślnie zmieniono nazwę atrybutu`,
-            `${name} → ${newAttributeName}`
-          );
-          this.props.onChange &&
-            this.props.onChange({ id: id, name: newAttributeName });
-        })
-        .catch((e) => {
-          NotificationService.apiError(e, "Nie udało się edytować atrybutu");
-        });
-    }
+    const { name, id } = this.props.attribute;
+    const newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
+    newAttributeName &&
+      this.props.onChange &&
+      this.props.onChange({ id: id, name: newAttributeName });
   }
 
   handleDeleteClick() {
-    const { id, name } = this.props.data;
-    AttributeService.deleteAttribute(id)
-      .then((res) => {
-        NotificationService.info(`Usunięto atrybut ${name}`);
-        this.props.onDelete && this.props.onDelete(id);
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
-      });
+    this.props.onDelete && this.props.onDelete(this.props.attribute);
   }
 
   render() {
-    const { name, id } = this.props.data;
+    const { name } = this.props.attribute;
     return (
-      <div>
-        {id}&gt; {name}
-        <button onClick={() => this.handleEditClick()}>Edytuj</button>
-        <button onClick={() => this.handleDeleteClick()}>Usuń</button>
+      <div className="list-row">
+        <div className="list-row__content">{name}</div>
+        <div className="list-row__actions">
+          <Tooltip title="Edytuj">
+            <button
+              className="list-row__actions__edit"
+              onClick={() => this.handleEditClick()}
+            >
+              E
+            </button>
+          </Tooltip>
+          <Tooltip title="Usuń">
+            <button
+              className="list-row__actions__delete"
+              onClick={() => this.handleDeleteClick()}
+            >
+              X
+            </button>
+          </Tooltip>
+        </div>
       </div>
     );
   }
