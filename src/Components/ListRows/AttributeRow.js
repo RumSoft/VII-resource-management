@@ -16,6 +16,8 @@ export default class AttributeRow extends Component {
             `Pomyślnie zmieniono nazwę atrybutu`,
             `${name} → ${newAttributeName}`
           );
+          this.props.onChange &&
+            this.props.onChange({ id: id, name: newAttributeName });
         })
         .catch((e) => {
           NotificationService.apiError(e, "Nie udało się edytować atrybutu");

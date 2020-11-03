@@ -21,6 +21,15 @@ export default class AdminPanel extends Component {
     });
   }
 
+  attributeChanged(attr) {
+    this.setState({
+      attributes: this.state.attributes.map((x) => {
+        if (x.id === attr.id) x.name = attr.name;
+        return x;
+      }),
+    });
+  }
+
   attributeDeleted(id) {
     this.setState({
       attributes: this.state.attributes.filter((x) => x.id !== id),
@@ -48,6 +57,7 @@ export default class AdminPanel extends Component {
         {this.state.attributes.map((x) => (
           <AttributeRow
             onDelete={(id) => this.attributeDeleted(id)}
+            onChange={(attr) => this.attributeChanged(attr)}
             key={x.id}
             data={x}
           />
