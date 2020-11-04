@@ -12,11 +12,7 @@ export default class AddUserPage extends Component {
     }
 
     addUser(user) {
-        UserService.AddUser({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            emailAddress: user.emailAddress
-        }).then((e) => {
+        UserService.addUser(user).then((e) => {
             NotificationService.success(`Dodano użytkownika ${user.firstName} ${user.lastName} o adresie ${user.emailAddress}`);
             this.setState({ redirect: true });
         }).catch((e) => {
@@ -29,8 +25,10 @@ export default class AddUserPage extends Component {
             return <Redirect to="/dashboard" />
         }
 
-        return (
+        return <>
+            {this.state.redirect && <Redirect to="/dashboard" />}
             <UserManager onSave={(user) => this.addUser(user)} />
-        );
+        </>
+
     }
 }

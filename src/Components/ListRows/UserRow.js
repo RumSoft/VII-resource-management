@@ -4,8 +4,8 @@ import UserService from "../../Services/UserService";
 import "./UserRow.scss";
 
 export default class UserRow extends Component {
-  handleEditClick() {
-    EventService.Emit(Events.Redirect, "/user/edit");
+  handleEditClick(id) {
+    EventService.Emit(Events.Redirect, `/user/edit?userid=${id}`);
   }
 
   handleDeleteClick() {
@@ -29,7 +29,7 @@ export default class UserRow extends Component {
     return (
       <div>
         {firstName} {lastName} {emailAddress}
-        <button onClick={() => this.handleEditClick()}>Edytuj</button>
+        <button onClick={() => this.handleEditClick(id)}>Edytuj</button>
         <button onClick={() => this.handleDeleteClick()}>Usuń</button>
       </div>
     );

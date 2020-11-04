@@ -22,19 +22,18 @@ export default class UserManager extends Component {
     }
 
     handleReset() {
-        UserService.ResetPassword(this.state.id)
+        UserService.resetPassword(this.state.id)
             .then((e) => {
                 NotificationService.success(`Zresetowano hasło użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
                 this.setState({ redirect: true });
             }).catch((e) => {
                 NotificationService.apiError(e, "Nie udało się zresetować hasła");
             });
-
     }
 
     handleDelete() {
         if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} ?`)) {
-            UserService.DeleteUser(this.state.id)
+            UserService.deleteUser(this.state.id)
                 .then((e) => {
                     NotificationService.success(`Usunięto użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
                     this.setState({ redirect: true });
