@@ -12,7 +12,6 @@ export default class AddUserPage extends Component {
     }
 
     addUser(user) {
-        console.log(user);
         UserService.AddUser({
             firstName: user.firstName,
             lastName: user.lastName,

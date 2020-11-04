@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
 
 import "./index.scss";
@@ -20,9 +21,28 @@ export default class UserManager extends Component {
         this.props.onSave(this.state)
     }
 
+    handleDelete() {
+        if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} ?`)) {
+            UserService.DeleteUser(this.state.id)
+                .then((e) => {
+                    NotificationService.success(`Usunięto użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
+                    this.setState({ redirect: true });
+                }).catch((e) => {
+                    NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
+                });
+        }
+    }
+
     render() {
         const isEdit = this.props.edit;
-
+        let deleteButton;
+        if (isEdit === true) {
+            deleteButton = <div className="form-group">
+                <button type="button" className="btn btn-danger btn-block" onClick={() => this.handleDelete()}>
+                    Usuń użytkownika
+        </button>
+            </div>
+        }
         if (this.state.redirect) {
             return <Redirect to="/dashboard" />
         }
@@ -63,12 +83,15 @@ export default class UserManager extends Component {
                             onChange={(e) => this.handleChange(e)}
                         />
                     </div>
-                    <div className="usermanager-group">
+                    <div className="form-group">
                         <button type="submit" className="btn btn-primary btn-block">
                             {isEdit === true ? "Zapisz" : "Dodaj"} użytkownika
                         </button>
                     </div>
+                    {deleteButton}
+
                 </form>
+
 
             </div >
         )

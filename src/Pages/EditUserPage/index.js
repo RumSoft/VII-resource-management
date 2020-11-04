@@ -7,10 +7,10 @@ export default class AddUserPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: "d912bda6-b413-4eb6-f953-08d8802fee4d",
-            firstName: "testoweimie",
-            lastName: "testowenazwisko",
-            emailAddress: "testowymail",
+            id: "533b5851-c3c6-4a48-f951-08d8802fee4d",
+            firstName: "test",
+            lastName: "test",
+            emailAddress: "test",
             redirect: false
         };
     }
@@ -26,6 +26,7 @@ export default class AddUserPage extends Component {
         }).catch((e) => {
             NotificationService.apiError(e, "Edycja użytkownika nie powiodła się");
         });
+
     }
 
     render() {
