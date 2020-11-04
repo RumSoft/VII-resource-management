@@ -22,13 +22,13 @@ export default class UserList extends Component {
   userDeleted(user) {
     UserService.deleteUser(user.id)
       .then(() => {
-        NotificationService.success(`Usunięto atrybut ${user.fullname}`);
+        NotificationService.success(`Usunięto użytkownika ${user.fullname}`);
         this.setState({
           users: this.state.users.filter((x) => x.id !== user.id),
         });
       })
       .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
+        NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
       });
   }
 

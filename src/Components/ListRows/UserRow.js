@@ -1,9 +1,14 @@
-import React, { Component } from "react";
 import { Tooltip } from "@material-ui/core";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Events, EventService } from "../../Services";
 import "./UserRow.scss";
 
 export default class UserRow extends Component {
+  handleEditClick(id) {
+    EventService.Emit(Events.Redirect, `/user/edit?userid=${id}`);
+  }
+
   handleDeleteClick() {
     this.props.onDelete && this.props.onDelete(this.props.user);
   }

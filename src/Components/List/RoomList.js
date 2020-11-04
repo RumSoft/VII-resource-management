@@ -20,7 +20,7 @@ export default class RoomList extends Component {
   }
 
   addRoomClick() {
-    let roomName = prompt("Podaj nazwę nowego atrybutu");
+    let roomName = prompt("Podaj nazwę nowego pokoju");
     if (!roomName) return;
 
     RoomService.addRoom(roomName)
@@ -37,7 +37,7 @@ export default class RoomList extends Component {
     RoomService.editRoom(room.id, room.name)
       .then(() => {
         NotificationService.success(
-          `Pomyślnie zmieniono nazwę atrybutu`,
+          `Pomyślnie zmieniono nazwę pokoju`,
           ` → ${room.name}`
         );
         this.setState({
@@ -48,20 +48,20 @@ export default class RoomList extends Component {
         });
       })
       .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się edytować atrybutu");
+        NotificationService.apiError(e, "Nie udało się pokoju atrybutu");
       });
   }
 
   roomDeleted(room) {
     RoomService.deleteRoom(room.id)
       .then(() => {
-        NotificationService.success(`Usunięto atrybut ${room.name}`);
+        NotificationService.success(`Usunięto pokój ${room.name}`);
         this.setState({
           rooms: this.state.rooms.filter((x) => x.id !== room.id),
         });
       })
       .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
+        NotificationService.apiError(e, "Nie udało się usunąć pokoju");
       });
   }
 
