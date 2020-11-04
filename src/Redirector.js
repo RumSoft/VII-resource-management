@@ -21,6 +21,7 @@ export default class Redirector extends Component {
     EventService.Subscribe(Events.Auth_Unauthorized, () =>
       this._handleUnauthorized()
     );
+    EventService.Subscribe(Events.Redirect, (url) => this._handleRedirect(url));
   }
 
   render() {
@@ -52,6 +53,10 @@ export default class Redirector extends Component {
       "Zaloguj się aby zobaczyć żądaną stronę",
       { toastId: "login-required" }
     );
+  }
+
+  _handleRedirect(url) {
+    this._setUrl(url);
   }
 
   _setUrl(url) {

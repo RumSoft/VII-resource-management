@@ -1,22 +1,27 @@
 import APIService from "./APIService";
 
 export default class UserService {
+  static getUser(userId) {
+    return APIService.get(`User/${userId}`);
+  }
 
-    static AddUser(data) {
-        return APIService.post("User/", data);
-    }
+  static getList() {
+    return APIService.get("User/list");
+  }
 
-    static EditUser(id, data) {
-        return APIService.put(`User/${id}`, data);
-    }
+  static addUser(user) {
+    return APIService.post("User/", user);
+  }
 
-    static DeleteUser(id) {
-        return APIService.delete(`User/${id}`)
-    }
+  static editUser(user) {
+    return APIService.put(`User/${user.id}`, user);
+  }
 
-    static ResetPassword(id) {
-        return APIService.post(`User/reset-password/${id}`)
-    }
+  static deleteUser(userId) {
+    return APIService.delete(`User/${userId}`);
+  }
 
-
+  static resetPassword(userId) {
+    return APIService.post(`User/reset-password/${userId}`);
+  }
 }
