@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { AttributeService, NotificationService, RoomService, UserService } from "../../Services";
 import { AttributeRow, RoomRow, UserRow } from "../ListRows";
 import { CardContent, Card, Box } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 export default class AdminPanel extends Component {
   constructor(props) {
@@ -134,7 +135,7 @@ export default class AdminPanel extends Component {
     return (
       <div>
         <p> Logged in as Admin.</p>
-        <div class="container-fluid d-flex">
+        <div className="container-fluid d-flex">
           <Box m={1}>
             <Card>
               {" "}
@@ -188,6 +189,12 @@ export default class AdminPanel extends Component {
             </Card>
           </Box>
         </div>
+        <Link to="/user/add" >
+          <button>Dodaj usera</button>
+        </Link>
+        <Link to="/user/edit" >
+          <button>Edytuj usera (temp)</button>
+        </Link>
       </div>
     );
   }
