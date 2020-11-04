@@ -1,22 +1,26 @@
 import React, { Component } from "react";
-import { AttributeService, NotificationService } from "../../Services";
-import { AttributeRow } from "../ListRows";
-import {
-  CardContent,
-  Card,
-  Box,
-  CardHeader,
-  Tooltip,
-  Fab,
-  IconButton,
-  Grid,
-} from "@material-ui/core";
+import { NotificationService } from "../../Services";
+import { Grid } from "@material-ui/core";
 import AttributeList from "../List/AttributeList";
 
 export default class AdminPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  addRoomClick(e) {
+    let roomName = prompt("Podaj nazwę nowego pokoju");
+    if (!roomName) return;
+
+    RoomService.addRoom(roomName)
+      .then(() => {
+        NotificationService.success(`Dodano pokój "${roomName}"`);
+        this.fetchRooms();
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się dodać pokoju");
+      });
   }
 
   render() {
