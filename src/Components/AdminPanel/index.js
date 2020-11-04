@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { AttributeService, NotificationService, RoomService, UserService } from "../../Services";
+import {
+  AttributeService,
+  Events,
+  EventService,
+  NotificationService,
+  RoomService,
+  UserService,
+} from "../../Services";
 import { AttributeRow, RoomRow, UserRow } from "../ListRows";
 import { CardContent, Card, Box } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -11,7 +18,6 @@ export default class AdminPanel extends Component {
       attributes: [],
       rooms: [],
       users: [],
-
     };
   }
 
@@ -115,22 +121,6 @@ export default class AdminPanel extends Component {
       });
   }
 
-  addUserClick(e) {
-    let userFirstName = prompt("Podaj imię użytkownika");
-    let userLastName = prompt("Podaj nazwisko użytkownika");
-    let userAddressEmail = prompt("Podaj adres email użytkownikaa");
-    if (!userFirstName || !userLastName || !userAddressEmail) return;
-
-    UserService.addUser(userFirstName, userLastName, userAddressEmail)
-      .then(() => {
-        NotificationService.success(`Dodano użytkownika "${userFirstName}" "${userLastName}" o adresie "${userAddressEmail}"`);
-        this.fetchUsers();
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się dodać uzytkownika");
-      });
-  }
-
   render() {
     return (
       <div>
@@ -165,9 +155,7 @@ export default class AdminPanel extends Component {
                     data={x}
                   />
                 ))}
-                <button onClick={() => this.addRoomClick()}>
-                  Dodaj pokój
-                </button>
+                <button onClick={() => this.addRoomClick()}>Dodaj pokój</button>
               </CardContent>
             </Card>
           </Box>
@@ -182,19 +170,13 @@ export default class AdminPanel extends Component {
                     data={x}
                   />
                 ))}
-                <button onClick={() => this.addUserClick()}>
-                  Dodaj użytkownika
-                </button>
+                <Link to="/user/add">
+                  <button>Dodaj usera</button>
+                </Link>
               </CardContent>
             </Card>
           </Box>
         </div>
-        <Link to="/user/add" >
-          <button>Dodaj usera</button>
-        </Link>
-        <Link to="/user/edit" >
-          <button>Edytuj usera (temp)</button>
-        </Link>
       </div>
     );
   }
