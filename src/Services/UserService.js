@@ -13,4 +13,10 @@ export default class UserService {
     static DeleteUser(id) {
         return APIService.delete(`User/{${id}}`)
     }
+
+    static ResetPassword(id) {
+        return APIService.post(`User/reset-password/{${id}}`)
+    }
+
+
 }

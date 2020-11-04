@@ -21,6 +21,17 @@ export default class UserManager extends Component {
         this.props.onSave(this.state)
     }
 
+    handleReset() {
+        UserService.ResetPassword(this.state.id)
+            .then((e) => {
+                NotificationService.success(`Zresetowano hasło użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
+                this.setState({ redirect: true });
+            }).catch((e) => {
+                NotificationService.apiError(e, "Nie udało się zresetować hasła");
+            });
+
+    }
+
     handleDelete() {
         if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} ?`)) {
             UserService.DeleteUser(this.state.id)
@@ -35,13 +46,20 @@ export default class UserManager extends Component {
 
     render() {
         const isEdit = this.props.edit;
-        let deleteButton;
+        let deleteAndResetButton;
         if (isEdit === true) {
-            deleteButton = <div className="form-group">
-                <button type="button" className="btn btn-danger btn-block" onClick={() => this.handleDelete()}>
-                    Usuń użytkownika
+            deleteAndResetButton = <>
+                <div className="form-group">
+                    <button type="button" className="btn btn-warning btn-block" onClick={() => this.handleReset()}>
+                        Przypomnij hasło
         </button>
-            </div>
+                </div>
+                <div className="form-group">
+                    <button type="button" className="btn btn-danger btn-block" onClick={() => this.handleDelete()}>
+                        Usuń użytkownika
+                    </button>
+                </div>
+            </>
         }
         if (this.state.redirect) {
             return <Redirect to="/dashboard" />
@@ -91,7 +109,7 @@ export default class UserManager extends Component {
                             {isEdit === true ? "Zapisz" : "Dodaj"} użytkownika
                         </button>
                     </div>
-                    {deleteButton}
+                    {deleteAndResetButton}
 
                 </form>
 
