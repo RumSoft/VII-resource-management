@@ -12,8 +12,6 @@ export default class EntityList extends Component {
       onReloadClick,
       onAddClick,
       entities,
-      onEntityDeleted,
-      onEntityChanged,
       entityMapFunc,
       entityName,
       title,

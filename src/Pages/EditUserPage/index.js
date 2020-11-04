@@ -37,15 +37,12 @@ export default class EditUserPage extends Component {
   }
 
   render() {
+    const { user, redirect } = this.state;
     return (
       <>
-        {this.state.redirect && <Redirect to="/dashboard" />}
-        {this.state.user && (
-          <UserManager
-            onSave={(user) => this.editUser(user)}
-            edit
-            user={this.state.user}
-          />
+        {redirect && <Redirect to="/dashboard" />}
+        {user && (
+          <UserManager onSave={(u) => this.editUser(u)} edit user={user} />
         )}
       </>
     );
