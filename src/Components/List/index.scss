@@ -1,0 +1,15 @@
+.list {
+ &__header {
+     display: flex;
+     justify-content: space-between;
+ }   
+
+ hr {
+     margin-top: 0;
+     margin-bottom: 0;
+ }
+
+ .title {
+     line-height: 2.5rem;
+ }
+}
