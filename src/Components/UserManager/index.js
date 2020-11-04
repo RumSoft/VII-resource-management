@@ -52,6 +52,7 @@ export default class UserManager extends Component {
                 <form onSubmit={(e) => this.handleSave(e)}>
                     <h2 className="text-center">{isEdit === true ? "Edytowanie" : "Dodawanie"} użytkownika</h2>
                     <div className="form-group">
+                        Imię
                         <input
                             type="text"
                             className="form-control"
@@ -63,6 +64,7 @@ export default class UserManager extends Component {
                     </div>
 
                     <div className="form-group">
+                        Nazwisko
                         <input
                             type="text"
                             className="form-control"
@@ -74,6 +76,7 @@ export default class UserManager extends Component {
                     </div>
 
                     <div className="form-group">
+                        Adres email
                         <input
                             type="text"
                             className="form-control"
