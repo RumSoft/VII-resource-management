@@ -15,11 +15,9 @@ export default class UserRow extends Component {
       UserService.editUser(id, newUserFirstName, newUserLastName, newUserEmailAddress)
         .then(() => {
           NotificationService.success(
-            `Pomyślnie zmieniono imię użytkownika`,
+            `Pomyślnie zmieniono użytkownika`,
             `${firstName} → ${newUserFirstName}`,
-            ` pomyślnie zmieniono nazwisko użytkownika`,
             `${lastName} → ${newUserLastName}`,
-            ` pomyślnie zmieniono adres e-mail użytkownika`,
             `${emailAddress} → ${newUserEmailAddress}`,
           );
           this.props.onChange &&
@@ -49,7 +47,7 @@ export default class UserRow extends Component {
     const { firstName, lastName, emailAddress, id } = this.props.data;
     return (
       <div>
-        {id}&gt; {firstName} {lastName} {emailAddress}
+        {firstName} {lastName} {emailAddress}
         <button onClick={() => this.handleEditClick()}>Edytuj</button>
         <button onClick={() => this.handleDeleteClick()}>Usuń</button>
       </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { AttributeService, NotificationService, RoomService } from "../../Services";
-import { AttributeRow, RoomRow } from "../ListRows";
+import { AttributeService, NotificationService, RoomService, UserService } from "../../Services";
+import { AttributeRow, RoomRow, UserRow } from "../ListRows";
 import { CardContent, Card, Box } from "@material-ui/core";
 
 export default class AdminPanel extends Component {
@@ -9,12 +9,15 @@ export default class AdminPanel extends Component {
     this.state = {
       attributes: [],
       rooms: [],
+      users: [],
+
     };
   }
 
   componentDidMount() {
     this.fetchAttributes();
     this.fetchRooms();
+    this.fetchUsers();
   }
 
   fetchAttributes() {
@@ -28,6 +31,13 @@ export default class AdminPanel extends Component {
     RoomService.getList().then((result) => {
       const rooms = result && result.data;
       this.setState({ rooms });
+    });
+  }
+
+  fetchUsers() {
+    UserService.getList().then((result) => {
+      const users = result && result.data;
+      this.setState({ users });
     });
   }
 
@@ -49,6 +59,15 @@ export default class AdminPanel extends Component {
     });
   }
 
+  userChanged(user) {
+    this.setState({
+      users: this.state.users.map((x) => {
+        if (x.id === user.id) x.name = user.name;
+        return x;
+      }),
+    });
+  }
+
   attributeDeleted(id) {
     this.setState({
       attributes: this.state.attributes.filter((x) => x.id !== id),
@@ -58,6 +77,12 @@ export default class AdminPanel extends Component {
   roomDeleted(id) {
     this.setState({
       rooms: this.state.rooms.filter((x) => x.id !== id),
+    });
+  }
+
+  userDeleted(id) {
+    this.setState({
+      users: this.state.users.filter((x) => x.id !== id),
     });
   }
 
@@ -86,6 +111,22 @@ export default class AdminPanel extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać pokoju");
+      });
+  }
+
+  addUserClick(e) {
+    let userFirstName = prompt("Podaj imię użytkownika");
+    let userLastName = prompt("Podaj nazwisko użytkownika");
+    let userAddressEmail = prompt("Podaj adres email użytkownikaa");
+    if (!userFirstName || !userLastName || !userAddressEmail) return;
+
+    UserService.addUser(userFirstName, userLastName, userAddressEmail)
+      .then(() => {
+        NotificationService.success(`Dodano użytkownika "${userFirstName}" "${userLastName}" o adresie "${userAddressEmail}"`);
+        this.fetchUsers();
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się dodać uzytkownika");
       });
   }
 
@@ -125,6 +166,23 @@ export default class AdminPanel extends Component {
                 ))}
                 <button onClick={() => this.addRoomClick()}>
                   Dodaj pokój
+                </button>
+              </CardContent>
+            </Card>
+          </Box>
+          <Box m={1}>
+            <Card>
+              <CardContent>
+                {this.state.users.map((x) => (
+                  <UserRow
+                    onDelete={(id) => this.userDeleted(id)}
+                    onChange={(user) => this.userChanged(user)}
+                    key={x.id}
+                    data={x}
+                  />
+                ))}
+                <button onClick={() => this.addUserClick()}>
+                  Dodaj użytkownika
                 </button>
               </CardContent>
             </Card>
