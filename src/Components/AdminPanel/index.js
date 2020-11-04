@@ -1,122 +1,13 @@
 import React, { Component } from "react";
-import {
-  AttributeService,
-  NotificationService,
-  RoomService,
-  UserService,
-} from "../../Services";
-import { AttributeRow, RoomRow, UserRow } from "../ListRows";
-import { CardContent, Card, Box } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Grid } from "@material-ui/core";
+import AttributeList from "../List/AttributeList";
+import RoomList from "../List/RoomList";
+import UserList from "../List/UserList";
 
 export default class AdminPanel extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      attributes: [],
-      rooms: [],
-      users: [],
-    };
-  }
-
-  componentDidMount() {
-    this.fetchAttributes();
-    this.fetchRooms();
-    this.fetchUsers();
-  }
-
-  fetchAttributes() {
-    AttributeService.getList().then((result) => {
-      const attributes = result && result.data;
-      this.setState({ attributes });
-    });
-  }
-
-  fetchRooms() {
-    RoomService.getList().then((result) => {
-      const rooms = result && result.data;
-      this.setState({ rooms });
-    });
-  }
-
-  fetchUsers() {
-    UserService.getList().then((result) => {
-      const users = result && result.data;
-      this.setState({ users });
-    });
-  }
-
-  attributeChanged(attr) {
-    this.setState({
-      attributes: this.state.attributes.map((x) => {
-        if (x.id === attr.id) x.name = attr.name;
-        return x;
-      }),
-    });
-  }
-
-  roomChanged(room) {
-    this.setState({
-      rooms: this.state.rooms.map((x) => {
-        if (x.id === room.id) x.name = room.name;
-        return x;
-      }),
-    });
-  }
-
-  userChanged(user) {
-    this.setState({
-      users: this.state.users.map((x) => {
-        if (x.id === user.id) x.name = user.name;
-        return x;
-      }),
-    });
-  }
-
-  attributeDeleted(id) {
-    this.setState({
-      attributes: this.state.attributes.filter((x) => x.id !== id),
-    });
-  }
-
-  roomDeleted(id) {
-    this.setState({
-      rooms: this.state.rooms.filter((x) => x.id !== id),
-    });
-  }
-
-  userDeleted(id) {
-    this.setState({
-      users: this.state.users.filter((x) => x.id !== id),
-    });
-  }
-
-  addAttributeClick(e) {
-    let attributeName = prompt("Podaj nazwę nowego atrybutu");
-    if (!attributeName) return;
-
-    AttributeService.addAttribute(attributeName)
-      .then(() => {
-        NotificationService.success(`Dodano atrybut "${attributeName}"`);
-        this.fetchAttributes();
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się dodać atrybutu");
-      });
-  }
-
-  addRoomClick(e) {
-    let roomName = prompt("Podaj nazwę nowego pokoju");
-    if (!roomName) return;
-
-    RoomService.addRoom(roomName)
-      .then(() => {
-        NotificationService.success(`Dodano pokój "${roomName}"`);
-        this.fetchRooms();
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się dodać pokoju");
-      });
+    this.state = {};
   }
 
   render() {
@@ -124,56 +15,23 @@ export default class AdminPanel extends Component {
       <div>
         <p> Logged in as Admin.</p>
         <div className="container-fluid d-flex">
-          <Box m={1}>
-            <Card>
-              {" "}
-              <CardContent>
-                {this.state.attributes.map((x) => (
-                  <AttributeRow
-                    onDelete={(id) => this.attributeDeleted(id)}
-                    onChange={(attr) => this.attributeChanged(attr)}
-                    key={x.id}
-                    data={x}
-                  />
-                ))}
-                <button onClick={() => this.addAttributeClick()}>
-                  Dodaj atrybut
-                </button>
-              </CardContent>
-            </Card>
-          </Box>
-          <Box m={1}>
-            <Card>
-              <CardContent>
-                {this.state.rooms.map((x) => (
-                  <RoomRow
-                    onDelete={(id) => this.roomDeleted(id)}
-                    onChange={(room) => this.roomChanged(room)}
-                    key={x.id}
-                    data={x}
-                  />
-                ))}
-                <button onClick={() => this.addRoomClick()}>Dodaj pokój</button>
-              </CardContent>
-            </Card>
-          </Box>
-          <Box m={1}>
-            <Card>
-              <CardContent>
-                {this.state.users.map((x) => (
-                  <UserRow
-                    onDelete={(id) => this.userDeleted(id)}
-                    onChange={(user) => this.userChanged(user)}
-                    key={x.id}
-                    data={x}
-                  />
-                ))}
-                <Link to="/user/add">
-                  <button>Dodaj usera</button>
-                </Link>
-              </CardContent>
-            </Card>
-          </Box>
+          <Grid container spacing={2}>
+            <Grid item sm={6} xs={12} md={6} lg={3}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={6} xs={12} md={6} lg={3}>
+              <AttributeList />
+            </Grid>
+            <Grid item sm={4} xs={12} md={4} lg={2}>
+              <UserList />
+            </Grid>
+            <Grid item sm={4} xs={6} md={4} lg={2}>
+              <RoomList />
+            </Grid>
+            <Grid item sm={4} xs={6} md={4} lg={2}>
+              <AttributeList />
+            </Grid>
+          </Grid>
         </div>
       </div>
     );
