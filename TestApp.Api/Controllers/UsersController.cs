@@ -41,11 +41,11 @@ namespace TestApp.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UserDetailsDto> GetUserDetails(Guid id)
+        public ActionResult<UserDetailsDto> GetUserDetails([FromRoute] Guid id)
         {
             try
             {
-                var user = _context.Resources.Find(id)
+                var user = _context.Users.Find(id)
                            ?? throw new ArgumentNullException(Message_400_UserNotFound);
 
                 var result = _mapper.Map<UserDetailsDto>(user);
