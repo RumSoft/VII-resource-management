@@ -1,5 +1,5 @@
-import { Tooltip } from "@material-ui/core";
 import React, { Component } from "react";
+import { Tooltip } from "@material-ui/core";
 import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {

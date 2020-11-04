@@ -1,36 +1,33 @@
 import React, { Component } from "react";
-import { Events, EventService, NotificationService } from "../../Services";
-import UserService from "../../Services/UserService";
+import { Tooltip } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import "./UserRow.scss";
 
 export default class UserRow extends Component {
-  handleEditClick() {
-    EventService.Emit(Events.Redirect, "/user/edit");
-  }
-
   handleDeleteClick() {
-    console.log(this.props.data);
-    const { firstName, lastName, emailAddress, id } = this.props.data;
-
-    UserService.deleteUser(id)
-      .then((res) => {
-        NotificationService.info(
-          `Usunięto użytkownika ${firstName} ${lastName} o adresie ${emailAddress}`
-        );
-        this.props.onDelete && this.props.onDelete(id);
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
-      });
+    this.props.onDelete && this.props.onDelete(this.props.user);
   }
 
   render() {
-    const { firstName, lastName, emailAddress, id } = this.props.data;
+    const { firstName, lastName, id } = this.props.user;
     return (
-      <div>
-        {firstName} {lastName} {emailAddress}
-        <button onClick={() => this.handleEditClick()}>Edytuj</button>
-        <button onClick={() => this.handleDeleteClick()}>Usuń</button>
+      <div className="list-row room-row">
+        <div className="list-row__content">
+          {firstName} {lastName}
+        </div>
+        <div className="list-row__actions">
+          <Link to={`/user/edit?userId=${id}`}>
+            <button className="list-row__actions__edit">E</button>
+          </Link>
+          <Tooltip title="Usuń">
+            <button
+              className="list-row__actions__delete"
+              onClick={() => this.handleDeleteClick()}
+            >
+              X
+            </button>
+          </Tooltip>
+        </div>
       </div>
     );
   }

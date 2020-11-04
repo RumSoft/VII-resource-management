@@ -12,7 +12,7 @@ export default class AddUserPage extends Component {
     }
 
     addUser(user) {
-        UserService.AddUser({
+        UserService.addUser({
             firstName: user.firstName,
             lastName: user.lastName,
             emailAddress: user.emailAddress
