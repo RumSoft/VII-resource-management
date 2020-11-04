@@ -7,15 +7,15 @@ export default class UserService {
     }
 
     static EditUser(id, data) {
-        return APIService.put(`User/{${id}}`, data);
+        return APIService.put(`User/${id}`, data);
     }
 
     static DeleteUser(id) {
-        return APIService.delete(`User/{${id}}`)
+        return APIService.delete(`User/${id}`)
     }
 
     static ResetPassword(id) {
-        return APIService.post(`User/reset-password/{${id}}`)
+        return APIService.post(`User/reset-password/${id}`)
     }
 
 
