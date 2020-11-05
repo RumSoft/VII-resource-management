@@ -131,7 +131,7 @@ namespace TestApp.Api.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         [OnlyAdmin]
         [HttpPost("reset-password/{id}")]
         public ActionResult<AuthToken> ResetPassword([FromRoute] Guid id)
@@ -158,7 +158,7 @@ namespace TestApp.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("new-password/{token}")]
-        public IActionResult SetNewPassword([FromRoute] string token, [FromBody] string password)
+        public IActionResult SetNewPassword([FromRoute] string token, [FromBody] ResetPasswordDto passwordDto)
         {
             //find user by token
             try
@@ -169,7 +169,7 @@ namespace TestApp.Api.Controllers
                 if (!user.IsGeneratedPassword)
                     throw new Exception(ReturnMessages.Message_400_UserCannotResetPassword);
 
-                user.Password = _hashService.HashPassword(password);
+                user.Password = _hashService.HashPassword(passwordDto.Password);
                 user.IsGeneratedPassword = false;
 
                 _context.Users.Update(user);
@@ -182,6 +182,11 @@ namespace TestApp.Api.Controllers
                 _logger.LogError(e, e.Message);
                 return BadRequest(e);
             }
+        }
+
+        public class ResetPasswordDto
+        {
+            public string Password { get; set; }
         }
 
         private Token SetRandomPasswordGetResetToken(User user)
