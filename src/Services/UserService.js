@@ -26,6 +26,8 @@ export default class UserService {
   }
 
   static newPassword(token, password) {
-    return APIService.post(`User/new-password/${token}`, password);
+    return APIService.post(`User/new-password/${token}`, {
+      password,
+    });
   }
 }
