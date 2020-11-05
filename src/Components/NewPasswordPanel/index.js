@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { NotificationService, UserService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import "./index.scss";
-import { ExitToApp } from "@material-ui/icons";
 
 export default class NewPasswordPanel extends Component {
     constructor(props) {
@@ -35,12 +34,11 @@ export default class NewPasswordPanel extends Component {
                 UserService.newPassword(token, password)
                     .then((e) => {
                         NotificationService.success(`Ustawiono nowe hasło`);
-                        this.setState({ redirect: true });
                     }).catch((e) => {
                         NotificationService.apiError(e, "Nie udało się ustawić nowego hasła");
                     });
-                this.setState({ redirect: true });
                 NotificationService.warning("Błędny token");
+                this.setState({ redirect: true });
 
             } else { NotificationService.warning("Hasła nie są jednakowe"); }
         } else { NotificationService.warning("Hasło nie może być puste") }
