@@ -6,3 +6,4 @@ export { default as TestPage } from "./TestPage";
 export { default as AddUserPage } from "./AddUserPage";
 export { default as EditUserPage } from "./EditUserPage";
 export { default as NewPasswordPage } from "./NewPasswordPage";
+export { default as AddResourcePage } from "./AddResourcePage";
