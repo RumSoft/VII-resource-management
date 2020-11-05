@@ -25,7 +25,7 @@ export default class NewPasswordPanel extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleNewPassword() {
+    handleSubmit() {
         const { password, repeatedPassword, token } = this.state;
 
         if (password !== "") {
@@ -51,7 +51,7 @@ export default class NewPasswordPanel extends Component {
 
         return (
             <div className="newpassword-form">
-                <form onSubmit={(e) => this.handleNewPassword(e)}>
+                <form onSubmit={(e) => this.handleSubmit(e)}>
                     <input
                         type="hidden"
                         name="token"
