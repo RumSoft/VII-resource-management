@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NotificationService, UserService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import "./index.scss";
+import { ExitToApp } from "@material-ui/icons";
 
 export default class NewPasswordPanel extends Component {
     constructor(props) {
@@ -9,7 +10,8 @@ export default class NewPasswordPanel extends Component {
         this.state = {
             password: "",
             repeatedPassword: "",
-            token: ""
+            token: "",
+            redirect: false
         }
     }
 
@@ -24,18 +26,24 @@ export default class NewPasswordPanel extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handlePasswordReset() {
+    handleNewPassword() {
         const { password, repeatedPassword, token } = this.state;
 
-        if (password === repeatedPassword) {
-            UserService.NewPassword(token, password)
-                .then((e) => {
-                    NotificationService.success(`Ustawiono nowe hasło`);
-                    this.setState({ redirect: true });
-                }).catch((e) => {
-                    NotificationService.apiError(e, "Nie udało się ustawić nowego hasła");
-                });
-        } else { NotificationService.warning("Hasła nie są jednakowe"); }
+        if (password !== "") {
+            if (password === repeatedPassword) {
+
+                UserService.newPassword(token, password)
+                    .then((e) => {
+                        NotificationService.success(`Ustawiono nowe hasło`);
+                        this.setState({ redirect: true });
+                    }).catch((e) => {
+                        NotificationService.apiError(e, "Nie udało się ustawić nowego hasła");
+                    });
+                this.setState({ redirect: true });
+                NotificationService.warning("Błędny token");
+
+            } else { NotificationService.warning("Hasła nie są jednakowe"); }
+        } else { NotificationService.warning("Hasło nie może być puste") }
     }
 
     render() {
@@ -45,7 +53,13 @@ export default class NewPasswordPanel extends Component {
 
         return (
             <div className="newpassword-form">
-                <form onSubmit={(e) => this.handlePasswordReset(e)}>
+                <form onSubmit={(e) => this.handleNewPassword(e)}>
+                    <input
+                        type="hidden"
+                        name="token"
+                        value={this.state.token}
+                    />
+
                     <h2 className="text-center">Nowe hasło</h2>
                     <div className="form-group">
                         Podaj nowe hasło
@@ -72,7 +86,7 @@ export default class NewPasswordPanel extends Component {
                     </div>
 
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handlePasswordReset(e)}>
+                        <button type="submit" className="btn btn-primary btn-block">
                             Zaktualizuj hasło
                         </button>
                     </div>
