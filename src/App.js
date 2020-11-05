@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Redirector from "./Redirector";
 import { Dashboard, ErrorPage, HomePage, LoginPage, TestPage, AddUserPage, EditUserPage, NewPasswordPage } from "./Pages";
 import "./App.scss";
+import QueryPage from "./Pages/QueryPage";
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
           <Route path="/" component={HomePage} exact />
           <Route path="/login" component={LoginPage} />
           <Route path="/test" component={TestPage} />
+          <Route path="/query" component={QueryPage} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/user/add" component={AddUserPage} />
           <Route path="/user/edit" component={EditUserPage} />

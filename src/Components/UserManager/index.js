@@ -22,7 +22,7 @@ export default class UserManager extends Component {
     }
 
     handleReset() {
-        UserService.ResetPassword(this.state.id)
+        UserService.resetPassword(this.state.id)
             .then((e) => {
                 NotificationService.success(`Zresetowano hasło użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
                 this.setState({ redirect: true });
@@ -32,8 +32,8 @@ export default class UserManager extends Component {
     }
 
     handleDelete() {
-        if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}?`)) {
-            UserService.DeleteUser(this.state.id)
+        if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} ?`)) {
+            UserService.deleteUser(this.state.id)
                 .then((e) => {
                     NotificationService.success(`Usunięto użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
                     this.setState({ redirect: true });
