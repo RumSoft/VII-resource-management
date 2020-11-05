@@ -29,11 +29,10 @@ export default class UserManager extends Component {
             }).catch((e) => {
                 NotificationService.apiError(e, "Nie udało się zresetować hasła");
             });
-
     }
 
     handleDelete() {
-        if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} ?`)) {
+        if (window.confirm(`Czy usunąć użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}?`)) {
             UserService.DeleteUser(this.state.id)
                 .then((e) => {
                     NotificationService.success(`Usunięto użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);

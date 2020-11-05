@@ -24,4 +24,8 @@ export default class UserService {
   static resetPassword(userId) {
     return APIService.post(`User/reset-password/${userId}`);
   }
+
+  static newPassword(token, password) {
+    return APIService.post(`User/new-password/${token}`, password);
+  }
 }
