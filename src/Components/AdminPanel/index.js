@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "@material-ui/core";
-import AttributeList from "../List/AttributeList";
-import RoomList from "../List/RoomList";
-import UserList from "../List/UserList";
+import { AttributeList, RoomList, UserList } from "../List";
 
 export default class AdminPanel extends Component {
   constructor(props) {

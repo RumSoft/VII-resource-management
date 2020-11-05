@@ -1,7 +1,3 @@
-import React, { Component } from "react";
-
-export default class index extends Component {
-  render() {
-    return <div></div>;
-  }
-}
+export { default as AttributeList } from "./AttributeList";
+export { default as RoomList } from "./RoomList";
+export { default as UserList } from "./UserList";
