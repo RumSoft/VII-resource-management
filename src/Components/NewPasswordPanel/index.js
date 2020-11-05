@@ -7,11 +7,17 @@ export default class NewPasswordPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ...this.props.user
-        };
-        this.state.password = "";
-        this.state.repeatedPassword = "";
-        this.state.token = "i-will-be-sent-by-a-mail";
+            password: "",
+            repeatedPassword: "",
+            token: ""
+        }
+    }
+
+    componentDidMount() {
+        let URLToken = new URLSearchParams(window.location.search.toLowerCase()).get(
+            "token"
+        );
+        this.setState({ token: URLToken });
     }
 
     handleChange(event) {
@@ -19,27 +25,27 @@ export default class NewPasswordPanel extends Component {
     }
 
     handlePasswordReset() {
-        const {password,repeatedPassword, firstName, lastName, token} = this.state;
+        const { password, repeatedPassword, token } = this.state;
 
-        if(password === repeatedPassword){
+        if (password === repeatedPassword) {
             UserService.NewPassword(token, password)
                 .then((e) => {
-                    NotificationService.success(`Ustawiono nowe hasło dla użytkownika ${firstName} ${lastName}`);
+                    NotificationService.success(`Ustawiono nowe hasło`);
                     this.setState({ redirect: true });
                 }).catch((e) => {
-                    NotificationService.apiError(e, "Nie udało się zresetować hasła");
+                    NotificationService.apiError(e, "Nie udało się ustawić nowego hasła");
                 });
         } else { NotificationService.warning("Hasła nie są jednakowe"); }
     }
 
     render() {
-        if (this.state.redirect) {
+        if (this.state.redirect || this.state.token === null) {
             return <Redirect to="/dashboard" />
         }
 
         return (
             <div className="newpassword-form">
-                <form  onSubmit={(e) => this.handlePasswordReset(e)}>
+                <form onSubmit={(e) => this.handlePasswordReset(e)}>
                     <h2 className="text-center">Nowe hasło</h2>
                     <div className="form-group">
                         Podaj nowe hasło
@@ -67,7 +73,7 @@ export default class NewPasswordPanel extends Component {
 
                     <div className="form-group">
                         <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handlePasswordReset(e)}>
-                           Zaktualizuj hasło
+                            Zaktualizuj hasło
                         </button>
                     </div>
                 </form>
