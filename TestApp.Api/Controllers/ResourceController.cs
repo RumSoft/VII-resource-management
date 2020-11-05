@@ -22,11 +22,6 @@ namespace TestApp.Api.Controllers
     [Route("[controller]")]
     public class ResourceController : RumsoftController
     {
-        private const string Message_400_InvalidOwner = "Could not verify resource ownership";
-        private const string Message_400_ResourceNotFound = "Resource does not exist.";
-        private const string Message_400_TooBigSplitAmount = "Resource does not exist.";
-        private const string Message_Log_TransactionRollback = "Transaction failed, rollbacking";
-
         private readonly DataContext _context;
         private readonly ILogger<ResourceController> _logger;
         private readonly IMapper _mapper;
@@ -46,10 +41,10 @@ namespace TestApp.Api.Controllers
             try
             {
                 var resource = _context.Resources.Find(id) 
-                               ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
+                               ?? throw new ArgumentNullException(ReturnMessages.Message_400_ResourceNotFound);
 
                 if(resource.Owner.Id != _userInfo.Id)
-                    throw new Exception(Message_400_InvalidOwner);
+                    throw new Exception(ReturnMessages.Message_400_InvalidOwner);
 
                 var result = _mapper.Map<ResourceDetailsDto>(resource);
                 return Ok(result);
@@ -95,7 +90,7 @@ namespace TestApp.Api.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, Message_Log_TransactionRollback);
+                _logger.LogError(e, ReturnMessages.Message_Log_TransactionRollback);
                 await transaction.RollbackAsync();
                 return BadRequest(e);
             }
@@ -120,7 +115,7 @@ namespace TestApp.Api.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, Message_Log_TransactionRollback);
+                _logger.LogError(e, ReturnMessages.Message_Log_TransactionRollback);
                 await transaction.RollbackAsync();
                 return BadRequest(e);
             }
@@ -132,7 +127,7 @@ namespace TestApp.Api.Controllers
         {
             var resource = _context.Resources.Find(id);
             if (resource == null)
-                return BadRequest(Message_400_ResourceNotFound);
+                return BadRequest(ReturnMessages.Message_400_ResourceNotFound);
 
             _context.Resources.Remove(resource);
             _context.SaveChanges();
@@ -148,7 +143,7 @@ namespace TestApp.Api.Controllers
                 Quantity = dto.Quantity
             };
 
-            var user = _userInfo.GetCurrentUser() ?? throw new Exception(Message_400_InvalidOwner);
+            var user = _userInfo.GetCurrentUser() ?? throw new Exception(ReturnMessages.Message_400_InvalidOwner);
             resource.Owner = user;
 
             if (dto.Room != null)
@@ -167,10 +162,10 @@ namespace TestApp.Api.Controllers
 
         private async Task<Resource> ModifyResource(Guid id, CreateResourceDto dto)
         {
-            var resource = _context.Resources.Find(id) ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
+            var resource = _context.Resources.Find(id) ?? throw new ArgumentNullException(ReturnMessages.Message_400_ResourceNotFound);
 
             if (resource.Owner.Id != _userInfo.Id)
-                throw new Exception(Message_400_InvalidOwner);
+                throw new Exception(ReturnMessages.Message_400_InvalidOwner);
 
             resource.Name = dto.Name;
             resource.Quantity = dto.Quantity;
@@ -197,10 +192,10 @@ namespace TestApp.Api.Controllers
             var dtoCopy = _mapper.Map<CreateResourceDto>(dto.Resource);
             dtoCopy.Quantity = dto.SplitAmount;
 
-            var baseResource = _context.Resources.Find(id) ?? throw new ArgumentNullException(Message_400_ResourceNotFound);
+            var baseResource = _context.Resources.Find(id) ?? throw new ArgumentNullException(ReturnMessages.Message_400_ResourceNotFound);
 
             if (baseResource.Quantity < dto.SplitAmount)
-                throw new ArgumentOutOfRangeException(Message_400_TooBigSplitAmount);
+                throw new ArgumentOutOfRangeException(ReturnMessages.Message_400_TooBigSplitAmount);
 
             baseResource.Quantity -= dto.SplitAmount;
             _context.Resources.Update(baseResource);

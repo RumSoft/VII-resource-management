@@ -6,13 +6,11 @@ using TestApp.Api.Data;
 using TestApp.Api.Services;
 
 namespace TestApp.Api.Controllers
-{
+{ 
     [ApiController]
     [Route("[controller]")]
     public class AuthController : RumsoftController
     {
-        private const string UserDoesNotExistOrPasswordInvalid = "";
-
         private readonly DataContext _context;
         private readonly IHashService _hashService;
         private readonly ITokenManager _tokenManager;
@@ -32,10 +30,10 @@ namespace TestApp.Api.Controllers
         {
             var user = _context.Users.FirstOrDefault(x => x.EmailAddress == dto.EmailAddress);
             if (user == null)
-                return BadRequest(UserDoesNotExistOrPasswordInvalid);
+                return BadRequest(ReturnMessages.Message_400_UserNotExistOrInvalidPassword);
 
             if (!_hashService.VerifyPassword(dto.Password, user.Password))
-                return BadRequest(UserDoesNotExistOrPasswordInvalid);
+                return BadRequest(ReturnMessages.Message_400_UserNotExistOrInvalidPassword);
 
             return Ok(
                 new AuthResult

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Models.Dto;
@@ -17,9 +15,6 @@ namespace TestApp.Api.Controllers
     [Route("[controller]")]
     public class AttributeController : RumsoftController
     {
-        private const string Message_400_AttributeExists = "Attribute with same name already exists";
-        private const string Message_400_AttributeNotFound = "This attribute no longer exists";
-
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
@@ -41,37 +36,54 @@ namespace TestApp.Api.Controllers
         [HttpPost("")]
         public ActionResult<AttributeDto> Create([FromBody] CreateAttributeDto dto)
         {
-            if (_context.Attributes.Any(x => x.Name == dto.Name))
-                return BadRequest(Message_400_AttributeExists);
+            try
+            {
+                dto.Validate();
+                if (_context.Attributes.Any(x => x.Name == dto.Name))
+                    return BadRequest(ReturnMessages.Message_400_AttributeExists);
 
-            var attr = _mapper.Map<Attribute>(dto);
+                var attr = _mapper.Map<Attribute>(dto);
 
-            _context.Attributes.Add(attr);
-            _context.SaveChanges();
+                _context.Attributes.Add(attr);
+                _context.SaveChanges();
 
-            var result = _mapper.Map<AttributeDto>(attr);
-            return Ok(result);
+                var result = _mapper.Map<AttributeDto>(attr);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [OnlyAdmin]
         [HttpPut("{id}")]
         public ActionResult<AttributeDto> Update([FromRoute] int id, [FromBody] CreateAttributeDto dto)
         {
-            var attr = _context.Attributes.Find(id);
-            if (attr == null)
-                return BadRequest(Message_400_AttributeNotFound);
+            try
+            {
+                dto.Validate();
 
-            if (dto.Name.Equals(attr.Name, StringComparison.CurrentCultureIgnoreCase))
-                return Ok(attr);
+                var attr = _context.Attributes.Find(id);
+                if (attr == null)
+                    return BadRequest(ReturnMessages.Message_400_AttributeNotFound);
 
-            if (_context.Attributes.Any(x => x.Name == dto.Name))
-                return BadRequest(Message_400_AttributeExists);
+                if (dto.Name.Equals(attr.Name, StringComparison.CurrentCultureIgnoreCase))
+                    return Ok(attr);
 
-            attr.Name = dto.Name;
-            _context.SaveChanges();
+                if (_context.Attributes.Any(x => x.Name == dto.Name))
+                    return BadRequest(ReturnMessages.Message_400_AttributeExists);
 
-            var result = _mapper.Map<AttributeDto>(attr);
-            return Ok(result);
+                attr.Name = dto.Name;
+                _context.SaveChanges();
+
+                var result = _mapper.Map<AttributeDto>(attr);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [OnlyAdmin]
@@ -82,7 +94,7 @@ namespace TestApp.Api.Controllers
 
             var attr = _context.Attributes.Find(id);
             if (attr == null)
-                return BadRequest(Message_400_AttributeNotFound);
+                return BadRequest(ReturnMessages.Message_400_AttributeNotFound);
 
             _context.Attributes.Remove(attr);
             _context.SaveChanges();

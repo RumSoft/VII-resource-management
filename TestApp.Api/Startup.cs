@@ -1,8 +1,11 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -16,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using TestApp.Api.Auth;
 using TestApp.Api.Controllers;
 using TestApp.Api.Data;
+using TestApp.Api.Helpers;
 using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 using TestApp.Api.Services.Impl;
@@ -52,7 +56,10 @@ namespace TestApp.Api
 
             services.AddBearerAuthentication();
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAttributeDto>());
+            ValidatorOptions.Global.LanguageManager.Enabled = true;
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("pl");
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Resource Manager", Version = "v1" });
@@ -83,6 +90,7 @@ namespace TestApp.Api
                     options.Requirements.Add(new ShouldBeAnAdminRequirement());
                 });
             });
+
 
 
             services.AddTransient<IHashService, PBKDF2HashSerivce>();

@@ -18,10 +18,6 @@ namespace TestApp.Api.Controllers
     [ApiController]
     public class UserController : RumsoftController
     {
-        private const string Message_400_UserNotFound = "User does not exist.";
-        private const string Message_400_UserExists = "User with same name already exists.";
-        private const string Message_400_UserCannotResetPassword = "Password reset request invalid.";
-
         private readonly DataContext _context;
         private readonly IRandomPasswordGenerator _generator;
         private readonly IHashService _hashService;
@@ -46,7 +42,7 @@ namespace TestApp.Api.Controllers
             try
             {
                 var user = _context.Users.Find(id)
-                           ?? throw new ArgumentNullException(Message_400_UserNotFound);
+                           ?? throw new ArgumentNullException(ReturnMessages.Message_400_UserNotFound);
 
                 var result = _mapper.Map<UserDetailsDto>(user);
                 return Ok(result);
@@ -74,7 +70,7 @@ namespace TestApp.Api.Controllers
             {
                 var exists = _context.Users.FirstOrDefault(x => x.EmailAddress == dto.EmailAddress);
                 if (exists != null)
-                    throw new Exception(Message_400_UserExists);
+                    throw new Exception(ReturnMessages.Message_400_UserExists);
 
                 var user = _mapper.Map<User>(dto);
 
@@ -99,7 +95,7 @@ namespace TestApp.Api.Controllers
             try
             {
                 var user = _context.Users.Find(id)
-                           ?? throw new ArgumentNullException(Message_400_UserNotFound);
+                           ?? throw new ArgumentNullException(ReturnMessages.Message_400_UserNotFound);
 
                 //todo check if email is not used by other
                 user = _mapper.Map(dto, user);
@@ -123,7 +119,7 @@ namespace TestApp.Api.Controllers
             try
             {
                 var user = _context.Users.Find(id)
-                           ?? throw new ArgumentNullException(Message_400_UserNotFound);
+                           ?? throw new ArgumentNullException(ReturnMessages.Message_400_UserNotFound);
 
                 _context.Users.Remove(user);
                 _context.SaveChanges();
@@ -135,14 +131,15 @@ namespace TestApp.Api.Controllers
                 return BadRequest(e);
             }
         }
-
+        
+        [OnlyAdmin]
         [HttpPost("reset-password/{id}")]
         public ActionResult<AuthToken> ResetPassword([FromRoute] Guid id)
         {
             try
             {
                 var user = _context.Users.Find(id)
-                           ?? throw new ArgumentNullException(Message_400_UserNotFound);
+                           ?? throw new ArgumentNullException(ReturnMessages.Message_400_UserNotFound);
 
                 var resetToken = SetRandomPasswordGetResetToken(user);
 
@@ -168,9 +165,9 @@ namespace TestApp.Api.Controllers
             {
                 var tokenEntity = _context.Tokens.Find(token);
                 var user = _context.Users.Find(tokenEntity.ParentId)
-                           ?? throw new Exception(Message_400_UserCannotResetPassword);
+                           ?? throw new Exception(ReturnMessages.Message_400_UserCannotResetPassword);
                 if (!user.IsGeneratedPassword)
-                    throw new Exception(Message_400_UserCannotResetPassword);
+                    throw new Exception(ReturnMessages.Message_400_UserCannotResetPassword);
 
                 user.Password = _hashService.HashPassword(password);
                 user.IsGeneratedPassword = false;
