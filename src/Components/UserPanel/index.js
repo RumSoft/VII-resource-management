@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ResourceRow } from "../ListRows";
 
 export default class UserPanel extends Component {
   constructor(props) {
