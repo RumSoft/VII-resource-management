@@ -14,7 +14,7 @@ export default class ResourceService {
     }
 
     static getList() {
-        return APIService.put("Resource/list");
+        return APIService.get("Resource/list");
     }
 
     static addResource(resourceName, resourceQuantity, resourceAttributes, resourceRoom) {

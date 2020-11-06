@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Select, MenuItem, TextField } from '@material-ui/core'
-import RoomService from "../../Services/RoomService"
+import { Select, MenuItem, TextField, FormControlLabel, Checkbox } from '@material-ui/core'
+import { RoomService, AttributeService } from "../../Services"
 import { withStyles } from '@material-ui/core/styles';
 import "./index.scss";
 
@@ -22,29 +22,47 @@ export default class ResourceManager extends Component {
             name: "",
             room: "",
             rooms: [],
-            quantity: 1
+            quantity: 1,
+            attributes: [],
+            selectedAttributes: new Map()
         };
     }
 
     componentDidMount() {
         RoomService.getList()
             .then((res) => {
-                this.setState({ rooms: res.data })
-                // console.log(this.state.rooms);
+                this.setState({ rooms: res.data });
             });
+
+        AttributeService.getList()
+            .then((res) => {
+                this.setState({ attributes: res.data });
+            })
     }
 
     handleChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    handleCheckbox(e) {
+        const attribute = e.target.value;
+        const isChecked = e.target.checked;
+        this.setState(prevState => ({ selectedAttributes: prevState.selectedAttributes.set(attribute, isChecked) }));
+    }
+
     handleSave(e) {
         e.preventDefault();
-        this.props.onSave({ name: this.state.name, room: this.state.room, quantity: this.state.quantity });
+        let passAttributes = [];
+        this.state.selectedAttributes.forEach((v, k) => {
+            if (v === true)
+                passAttributes.push(parseInt(k));
+        })
+        this.props.onSave({ name: this.state.name, room: this.state.room === "" ? null : this.state.room, quantity: parseInt(this.state.quantity), attributes: passAttributes });
     }
 
     render() {
         const isEdit = this.props.edit;
+
         return <div className="resourcemanager-form">
 
             <div className="form-group">
@@ -93,6 +111,14 @@ export default class ResourceManager extends Component {
                         />
                     </div>
                 </div>
+
+                {this.state.attributes.map((x) => {
+                    return <FormControlLabel key={x.id}
+                        control={< Checkbox value={x.id} onChange={(e) => this.handleCheckbox(e)} />}
+                        label={x.name}
+                    />
+
+                })}
 
                 <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handleSave(e)}>
                     Zapisz zasób

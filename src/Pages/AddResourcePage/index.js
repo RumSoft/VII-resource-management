@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import ResourceManager from "../../Components/ResourceManager";
+import ResourceServise from "../../Services/ResourceService";
 
 import "./index.scss";
 
@@ -8,14 +9,21 @@ export default class AddResurcePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            redirect: false,
+            redirect: false
         };
     }
-
     addResource(res) {
-        console.log(`Mock res added!\nName: ${res.name} Room: ${res.room} Quantity: ${res.quantity}\nPass it to ResourceController.addResource`);
-        this.setState({ redirect: true });
+        ResourceServise.addResource(res.name, res.quantity, res.attributes, res.room)
+            .then((res) => {
+                console.log(`Res added!\nName: ${res.name} Room: ${res.room} Quantity: ${res.quantity} Attributes: ${res.attributes}\nPass it to ResourceController.addResource`);
+                this.setState({ redirect: true });
+            })
+            .catch((e) => {
+                console.log(e.response);
+            })
+
     }
+
     render() {
         return <>
             {this.state.redirect && <Redirect to="/dashboard" />}
@@ -23,43 +31,3 @@ export default class AddResurcePage extends Component {
         </>
     }
 }
-
-// import React, { Component } from "react";
-// import { UserService, NotificationService } from "../../Services";
-// import { Redirect } from "react-router-dom";
-// import UserManager from "../../Components/UserManager";
-
-// export default class AddUserPage extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       redirect: false,
-//     };
-//   }
-
-//   addUser(user) {
-//     UserService.addUser(user)
-//       .then((e) => {
-//         NotificationService.success(
-//           `Dodano użytkownika ${user.firstName} ${user.lastName} o adresie ${user.emailAddress}`
-//         );
-//         this.setState({ redirect: true });
-//       })
-//       .catch((e) => {
-//         NotificationService.apiError(e, "Nie udało się dodać użytkownika");
-//       });
-//   }
-
-//   render() {
-//     if (this.state.redirect) {
-//       return <Redirect to="/dashboard" />;
-//     }
-
-//     return (
-//       <>
-//         {this.state.redirect && <Redirect to="/dashboard" />}
-//         <UserManager onSave={(user) => this.addUser(user)} />
-//       </>
-//     );
-//   }
-// }
