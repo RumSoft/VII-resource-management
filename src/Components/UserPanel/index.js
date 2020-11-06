@@ -15,7 +15,7 @@ export default class UserPanel extends Component {
       <div>
         <p> Logged in as User.</p>
         <button onClick={() => this.addResource()}>
-          Dodaj przedmiot
+          Dodaj zasób
           </button>
       </div>
     )
