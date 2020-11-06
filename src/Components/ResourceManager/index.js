@@ -1,7 +1,18 @@
 import React, { Component } from "react";
-import { Select, MenuItem } from '@material-ui/core'
+import { Select, MenuItem, TextField } from '@material-ui/core'
 import RoomService from "../../Services/RoomService"
+import { withStyles } from '@material-ui/core/styles';
 import "./index.scss";
+
+const CssTextField = withStyles({
+    root: {
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: '#0275d8',
+            },
+        },
+    },
+})(TextField);
 
 export default class ResourceManager extends Component {
     constructor(props) {
@@ -10,7 +21,8 @@ export default class ResourceManager extends Component {
             //   ...this.props.resource
             name: "",
             room: "",
-            rooms: []
+            rooms: [],
+            quantity: 1
         };
     }
 
@@ -28,7 +40,7 @@ export default class ResourceManager extends Component {
 
     handleSave(e) {
         e.preventDefault();
-        this.props.onSave({ name: this.state.name, room: this.state.room });
+        this.props.onSave({ name: this.state.name, room: this.state.room, quantity: this.state.quantity });
     }
 
     render() {
@@ -52,7 +64,7 @@ export default class ResourceManager extends Component {
 
                 <div className="form-group">
                     Pokój
-                    <Select
+                    <Select //TODO: kolor
                         name="room"
                         displayEmpty={true}
                         value={this.state.room}
@@ -64,6 +76,22 @@ export default class ResourceManager extends Component {
                             return <MenuItem key={x.id} value={x.id} > {x.name}</MenuItem>
                         })}
                     </Select>
+                </div>
+
+
+                <div className="form-group">
+                    Ilość
+                    <div>
+                        <CssTextField
+                            name="quantity"
+                            type="number"
+                            value={this.state.quantity}
+                            inputProps={{ min: "1", step: "1", style: { textAlign: 'center' } }}
+                            onChange={(e) => this.handleChange(e)}
+                            variant="outlined"
+
+                        />
+                    </div>
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handleSave(e)}>

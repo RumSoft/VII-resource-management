@@ -13,7 +13,7 @@ export default class AddResurcePage extends Component {
     }
 
     addResource(res) {
-        console.log(`Mock res added!\nName: ${res.name} Room: ${res.room}\nPass it to ResourceController.addResource`);
+        console.log(`Mock res added!\nName: ${res.name} Room: ${res.room} Quantity: ${res.quantity}\nPass it to ResourceController.addResource`);
         this.setState({ redirect: true });
     }
     render() {
