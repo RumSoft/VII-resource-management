@@ -35,7 +35,7 @@ namespace TestApp.Api.Commands.TradeRequest
                 if (!_userInfo.IsAdmin)
                     tr = tr.Where(x => x.Taker == user || x.Resource.Owner == user);
 
-                var result = _mapper.Map<GetTradeRequestsQueryResult>(tr.ToList());
+                var result = _mapper.Map<GetTradeRequestsQueryResult[]>(tr.ToList());
                 return Ok(result);
             }
             catch (Exception e)

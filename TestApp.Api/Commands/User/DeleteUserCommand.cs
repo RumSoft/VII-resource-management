@@ -5,7 +5,7 @@ using TestApp.Api.Data;
 
 namespace TestApp.Api.Commands.User
 {
-    public class DeleteUserCommand : Command<int>
+    public class DeleteUserCommand : Command<Guid>
     {
         private readonly DataContext _context;
 
@@ -16,7 +16,7 @@ namespace TestApp.Api.Commands.User
 
         [OnlyAdmin]
         [HttpDelete("user/{id}")]
-        public override IActionResult Execute([FromRoute] int id)
+        public override IActionResult Execute([FromRoute] Guid id)
         {
             try
             {

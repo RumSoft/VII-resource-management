@@ -6,7 +6,7 @@ using TestApp.Api.Data;
 
 namespace TestApp.Api.Commands.Resource
 {
-    public class DeleteResourceCommand : Command<int>
+    public class DeleteResourceCommand : Command<Guid>
     {
         private readonly DataContext _context;
 
@@ -17,7 +17,7 @@ namespace TestApp.Api.Commands.Resource
 
         [Authorize]
         [HttpDelete("resource/{id}")]
-        public override IActionResult Execute([FromRoute] int id)
+        public override IActionResult Execute([FromRoute] Guid id)
         {
             try
             {
