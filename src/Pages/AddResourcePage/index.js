@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import ResourceManager from "../../Components/ResourceManager";
-import ResourceServise from "../../Services/ResourceService";
+import ResourceService from "../../Services/ResourceService";
 
 import "./index.scss";
 
@@ -13,7 +13,7 @@ export default class AddResurcePage extends Component {
         };
     }
     addResource(res) {
-        ResourceServise.addResource(res.name, res.quantity, res.attributes, res.room)
+        ResourceService.addResource(res.name, res.quantity, res.attributes, res.room)
             .then((res) => {
                 console.log(`Res added!\nName: ${res.name} Room: ${res.room} Quantity: ${res.quantity} Attributes: ${res.attributes}\nPass it to ResourceController.addResource`);
                 this.setState({ redirect: true });

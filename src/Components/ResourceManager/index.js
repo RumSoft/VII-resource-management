@@ -66,7 +66,7 @@ export default class ResourceManager extends Component {
         return <div className="resourcemanager-form">
 
             <div className="form-group">
-                <h2 className="text-center">{isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu</h2>
+                <h2 className="text-center">{isEdit === true ? "TODO: Edytowanie" : "Dodawanie"} zasobu</h2>
 
                 <div className="form-group">
                     Nazwa zasobu
