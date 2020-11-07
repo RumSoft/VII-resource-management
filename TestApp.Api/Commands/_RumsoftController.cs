@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -18,9 +19,21 @@ namespace TestApp.Api.Commands
         [ApiExplorerSettings(IgnoreApi = true)]
         public ObjectResult BadRequest(Exception e)
         {
+            var message = new StringBuilder();
+            var exc = e;
+            for (var i = 0; i < 10; i++)
+            {
+                message.AppendLine(" --> ").Append(e.Message);
+
+                exc = e.InnerException;
+                if (exc == null)
+                    break;
+            }
+
             return BadRequest(new
             {
-                e.Message, e.StackTrace
+                e.Message,
+                e.StackTrace
             });
         }
 

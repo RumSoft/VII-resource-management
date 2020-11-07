@@ -7,7 +7,7 @@ using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Attribute
 {
-    public class GetAttributesQuery : Query<IdName>
+    public class GetAttributesQuery : Query<IdNameColor>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -20,10 +20,10 @@ namespace TestApp.Api.Commands.Attribute
 
         [Authorize]
         [HttpGet("attribute")]
-        public override ActionResult<IdName> Execute()
+        public override ActionResult<IdNameColor> Execute()
         {
             var attributes = _context.Attributes;
-            var result = _mapper.Map<IdName[]>(attributes.ToList());
+            var result = _mapper.Map<IdNameColor[]>(attributes.ToList());
             return Ok(result);
         }
     }

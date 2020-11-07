@@ -5,6 +5,7 @@ namespace TestApp.Api.Models
     public class Room : Entity<int>
     {
         public string Name { get; set; }
+        public int? Color { get; set; }
         public virtual IList<Resource> Resources { get; set; }
     }
 }

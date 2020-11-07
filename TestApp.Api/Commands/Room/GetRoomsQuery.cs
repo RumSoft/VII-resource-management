@@ -7,7 +7,7 @@ using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Room
 {
-    public class GetRoomsQuery : Query<IdName>
+    public class GetRoomsQuery : Query<IdNameColor>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -20,10 +20,10 @@ namespace TestApp.Api.Commands.Room
 
         [Authorize]
         [HttpGet("room")]
-        public override ActionResult<IdName> Execute()
+        public override ActionResult<IdNameColor> Execute()
         {
             var rooms = _context.Rooms;
-            var result = _mapper.Map<IdName[]>(rooms.ToList());
+            var result = _mapper.Map<IdNameColor[]>(rooms.ToList());
             return Ok(result);
         }
     }

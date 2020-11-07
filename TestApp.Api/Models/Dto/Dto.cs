@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Drawing;
 
 namespace TestApp.Api.Models.Dto
 {
@@ -15,14 +15,15 @@ namespace TestApp.Api.Models.Dto
     {
         public int Quantity { get; set; }
         public UserDto Owner { get; set; }
-        public IdName Room { get; set; }
-        public IdName[] Attributes { get; set; }
+        public IdNameColor Room { get; set; }
+        public IdNameColor[] Attributes { get; set; }
     }
 
-    public class IdName
+    public class IdNameColor
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public Color? Color { get; set; }
     }
 
     public class GuidName

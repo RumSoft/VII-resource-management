@@ -49,7 +49,7 @@ namespace TestApp.Api.Commands.Attribute
             }
         }
 
-        public class UpdateAttributeCommandInput : IdName
+        public class UpdateAttributeCommandInput : IdNameColor
         { }
 
         public class UpdateAttributeCommandInputValidator : AbstractValidator<UpdateAttributeCommandInput>

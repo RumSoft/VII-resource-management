@@ -49,7 +49,7 @@ namespace TestApp.Api.Commands.Room
             }
         }
 
-        public class UpdateRoomCommandInput : IdName
+        public class UpdateRoomCommandInput : IdNameColor
         {
 
         }

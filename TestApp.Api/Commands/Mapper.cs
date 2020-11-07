@@ -11,9 +11,9 @@ namespace TestApp.Api.Commands
         public MappingProfile()
         {
             CreateMap<Models.Resource, ResourceDto>().ReverseMap();
-            CreateMap<Models.Attribute, IdName>().ReverseMap();
+            CreateMap<Models.Attribute, IdNameColor>().ReverseMap();
             CreateMap<Models.User, UserDto>().ReverseMap();
-            CreateMap<Models.Room, IdName>().ReverseMap();
+            CreateMap<Models.Room, IdNameColor>().ReverseMap();
 
             CreateMap<Models.User, GetUserDetailsQuery.GetUserDetailsCommandResult>().ReverseMap();
             CreateMap<Models.User, CreateUserCommand.CreateUserCommandInput>().ReverseMap();

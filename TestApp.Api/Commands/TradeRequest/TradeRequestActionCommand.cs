@@ -90,6 +90,11 @@ namespace TestApp.Api.Commands.TradeRequest
         public class TradeRequestActionCommandInput
         {
             public Guid Id { get; set; }
+            /// <summary>
+            /// CancelByOwner = 0,
+            /// Accept = 1,
+            /// Decline = 2
+            /// </summary>
             public TradeRequestAction? Action { get; set; }
         }
 
