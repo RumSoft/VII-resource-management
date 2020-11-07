@@ -32,7 +32,7 @@ namespace TestApp.Api.Commands
 
             return BadRequest(new
             {
-                e.Message,
+                message,
                 e.StackTrace
             });
         }
