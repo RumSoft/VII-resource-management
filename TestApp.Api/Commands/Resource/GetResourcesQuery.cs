@@ -39,6 +39,7 @@ namespace TestApp.Api.Commands.Resource
             public Guid Id { get; set; }
             public string Name { get; set; }
             public int Quantity { get; set; }
+            public GetResourcesCommandResultOwner Owner { get; set; }
             public GetResourcesCommandResultRoom Room { get; set; }
             public GetResourcesCommandResultAttribute[] Attributes { get; set; }
 
@@ -46,6 +47,14 @@ namespace TestApp.Api.Commands.Resource
             {
                 public int Id { get; set; }
                 public string Name { get; set; }
+            }
+
+            public class GetResourcesCommandResultOwner
+            {
+                public Guid Id { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+                public string EmailAddress { get; set; }
             }
 
             public class GetResourcesCommandResultAttribute

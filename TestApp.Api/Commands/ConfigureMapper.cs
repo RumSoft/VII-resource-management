@@ -21,10 +21,12 @@ namespace TestApp.Api.Commands
             CreateMap<Models.Resource, GetResourcesCommand.GetResourcesCommandResult>().ReverseMap();
             CreateMap<Models.Room, GetResourcesCommand.GetResourcesCommandResult.GetResourcesCommandResultRoom>().ReverseMap();
             CreateMap<Models.Attribute, GetResourcesCommand.GetResourcesCommandResult.GetResourcesCommandResultAttribute>().ReverseMap();
+            CreateMap<Models.User, GetResourcesCommand.GetResourcesCommandResult.GetResourcesCommandResultOwner>().ReverseMap();
 
             CreateMap<Models.Resource, GetResourceDetailsCommand.GetResourceDetailsCommandResult>().ReverseMap();
-            CreateMap<Models.Room, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultRoom>().ReverseMap();
-            CreateMap<Models.Attribute, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultAttribute>().ReverseMap();
+            CreateMap<Models.Room, GetResourceDetailsCommand.GetResourceDetailsCommandResult.GetResourceDetailsCommandResultRoom>().ReverseMap();
+            CreateMap<Models.Attribute, GetResourceDetailsCommand.GetResourceDetailsCommandResult.GetResourceDetailsCommandResultAttribute>().ReverseMap();
+            CreateMap<Models.User, GetResourceDetailsCommand.GetResourceDetailsCommandResult.GetResourceDetailsCommandResultOwner>().ReverseMap();
             CreateMap<UpdateResourceCommand.UpdateResourceCommandInput, CreateResourceCommand.CreateResourceCommandInput>().ReverseMap();
         }
     }
