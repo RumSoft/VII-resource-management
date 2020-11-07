@@ -29,6 +29,7 @@ export default class AddResurcePage extends Component {
     }
     render() {
         const { resource, redirect } = this.state;
+
         return <>
             {redirect && <Redirect to="/dashboard" />}
             { resource && (

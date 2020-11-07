@@ -17,6 +17,9 @@ export default class UserPanel extends Component {
       });
   }
 
+  handleEdit() {
+    window.location = "/resource/edit?resourceId=e298e8aa-9524-4028-2c7f-08d8830eecbd";
+  }
 
   addResource() {
     window.location = "/resource/add";
@@ -41,6 +44,9 @@ export default class UserPanel extends Component {
         <button onClick={() => this.addResource()}>
           Dodaj zasób
           </button>
+        <button onClick={() => this.handleEdit()}>
+          Edytuj zasób (temp)
+            </button>
       </div >
     )
   };
