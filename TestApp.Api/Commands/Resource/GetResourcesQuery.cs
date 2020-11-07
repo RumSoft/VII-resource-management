@@ -30,7 +30,7 @@ namespace TestApp.Api.Commands.Resource
             if (!_userInfo.IsAdmin)
                 resources = resources.Where(x => x.Owner.Id == _userInfo.Id);
 
-            var result = _mapper.Map<GetResourcesCommandResult[]>(resources);
+            var result = _mapper.Map<GetResourcesCommandResult[]>(resources.ToList());
             return Ok(result);
         }
 
