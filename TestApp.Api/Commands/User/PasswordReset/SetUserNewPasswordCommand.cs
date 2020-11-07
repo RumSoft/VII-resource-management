@@ -25,17 +25,19 @@ namespace TestApp.Api.Commands.User.PasswordReset
         {
             try
             {
-                var tokenEntity = _context.Tokens.Find(input.Token);
-                if (tokenEntity == null || tokenEntity.IsUsed)
+                var token = _context.Tokens.Find(input.Token);
+                if (token == null || token.IsUsed || DateTime.Now > token.ExpiresAt)
                     return BadRequest(ReturnMessages.Message_400_TokenInvalid);
 
-                var user = _context.Users.Find(tokenEntity.ParentId);
+                var user = _context.Users.Find(token.ParentId);
                 if (user == null)
                     return BadRequest(ReturnMessages.Message_400_UserNotFound);
 
+                token.IsUsed = true;
                 user.Password = _hashService.HashPassword(input.Password);
                 user.IsGeneratedPassword = false;
 
+                _context.Tokens.Update(token);
                 _context.Users.Update(user);
                 _context.SaveChanges();
 
