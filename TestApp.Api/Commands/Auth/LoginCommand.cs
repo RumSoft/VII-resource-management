@@ -9,7 +9,7 @@ using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Auth
 {
-    public class LoginCommand : Command<LoginCommand.LoginCommandInput>
+    public class LoginCommand : Command<LoginCommand.LoginCommandInput, LoginCommand.LoginCommandResult>
     {
         private readonly DataContext _context;
         private readonly IHashService _hashService;
@@ -24,7 +24,7 @@ namespace TestApp.Api.Commands.Auth
 
         [AllowAnonymous]
         [HttpPost("auth/login")]
-        public override IActionResult Execute([FromBody] LoginCommandInput input)
+        public override ActionResult<LoginCommandResult> Execute([FromBody] LoginCommandInput input)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -40,10 +40,12 @@ namespace TestApp.Api.Commands.Auth
 
                 var token = _tokenManager.Generate(user);
                 var role = user.Role;
-                Response.Headers.Add("Authorization", $"Bearer {token.AccessToken}");
-                Response.Headers.Add("Role", $"{role}");
-
-                return Ok();
+               
+                return Ok(new LoginCommandResult
+                {
+                    Token = token.AccessToken,
+                    Role = role
+                });
             }
             catch (Exception e)
             {
@@ -55,6 +57,12 @@ namespace TestApp.Api.Commands.Auth
         {
             public string EmailAddress { get; set; }
             public string Password { get; set; }
+        }
+
+        public class LoginCommandResult
+        {
+            public string Token { get; set; }
+            public string Role { get; set; }
         }
 
         public class LoginCommandInputValidator : AbstractValidator<LoginCommandInput>

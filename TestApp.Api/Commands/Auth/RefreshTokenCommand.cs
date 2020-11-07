@@ -7,7 +7,7 @@ using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Auth
 {
-    public class RefreshTokenCommand : Command
+    public class RefreshTokenCommand : Query<RefreshTokenCommand.RefreshTokenCommandResult>
     {
         private readonly DataContext _context;
         private readonly IHashService _hashService;
@@ -24,22 +24,29 @@ namespace TestApp.Api.Commands.Auth
 
         [Authorize]
         [HttpPost("auth/refresh-token")]
-        public override IActionResult Execute()
+        public override ActionResult<RefreshTokenCommandResult> Execute()
         {
             try
             {
                 var user = _userInfo.GetCurrentUser();
                 var newToken = _tokenManager.Generate(user);
-
-                Response.Headers.Add("Authorization", $"Bearer {newToken.AccessToken}");
-                Response.Headers.Add("Role", $"{user.Role}");
-
-                return Ok();
+              
+                return Ok(new RefreshTokenCommandResult
+                {
+                    Token = newToken.AccessToken,
+                    Role = user.Role
+                });
             }
             catch (Exception e)
             {
                 return BadRequest(e);
             }
+        }
+
+        public class RefreshTokenCommandResult
+        {
+            public string Token { get; set; }
+            public string Role { get; set; }
         }
     }
 }
