@@ -16,14 +16,12 @@ export default class EditUserPage extends Component {
     let id = new URLSearchParams(window.location.search.toLowerCase()).get(
       "userid"
     );
-    console.log(id);
     UserService.getUser(id).then((res) => {
       this.setState({ user: res.data });
     });
   }
 
   editUser(user) {
-    console.log(this.state.user);
     UserService.editUser(user)
       .then((e) => {
         NotificationService.success(

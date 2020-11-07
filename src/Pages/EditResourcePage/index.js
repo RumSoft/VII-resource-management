@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import ResourceManager from "../../Components/ResourceManager";
-import ResourceService from "../../Services/ResourceService";
+import { ResourceService, NotificationService } from "../../Services";
 
 import "./index.scss";
 
@@ -25,8 +25,17 @@ export default class AddResurcePage extends Component {
     }
 
     editResource(res) {
-        console.log(res)
+        console.log(res);
+        ResourceService.editResource(res)
+            .then(() => {
+                //NotificationService.success(`Zmieniono dane zasobu ${res.name}`);
+                this.setState({ redirect: true });
+            })
+            .catch((e) => {
+                //NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
+            });
     }
+
     render() {
         const { resource, redirect } = this.state;
 

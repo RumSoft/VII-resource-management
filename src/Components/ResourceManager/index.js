@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Select, MenuItem, TextField, FormControlLabel, Checkbox } from '@material-ui/core'
-import { RoomService, AttributeService } from "../../Services"
+import { RoomService, AttributeService, NotificationService, ResourceService } from "../../Services"
+import { Redirect } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import "./index.scss";
 
@@ -19,7 +20,7 @@ export default class ResourceManager extends Component {
         super(props);
         const { resource } = this.props;
         this.state = {
-            //   ...this.props.resource
+            id: resource?.id || null,
             name: resource?.name || [],
             room: resource?.room.id || "",
             rooms: [],
@@ -51,7 +52,7 @@ export default class ResourceManager extends Component {
 
         if (attrList.includes(id)) {
             this.setState({
-                selectedAttributes: [...attrList.filter((x) => x != id)],
+                selectedAttributes: [...attrList.filter((x) => x !== id)],
             });
         } else {
             this.setState({
@@ -62,16 +63,52 @@ export default class ResourceManager extends Component {
 
     handleSave(e) {
         e.preventDefault();
-        this.props.onSave({ name: this.state.name, room: this.state.room === "" ? null : this.state.room, quantity: parseInt(this.state.quantity), attributes: this.state.selectedAttributes });
+        this.props.onSave({ id: this.state.id, name: this.state.name, room: this.state.room === "" ? null : this.state.room, quantity: parseInt(this.state.quantity), attributes: this.state.selectedAttributes });
+    }
+
+    handleDelete() {
+        const { id, name } = this.state;
+        console.log(this.state);
+        if (window.confirm(`Czy usunąć zasób ${name}?`)) {
+            ResourceService.deleteResource(id)
+                .then(() => {
+                    NotificationService.success(`Usunięto zasób ${name}`);
+                    this.setState({ redirect: true });
+                }).catch((e) => {
+                    NotificationService.apiError(e, "Nie udało się usunąć zasobu");
+                });
+        }
+        //     AttributeService.deleteUser(this.state.id)
+        //         .then((e) => {
+        //             NotificationService.success(`Usunięto użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress}`);
+        //             this.setState({ redirect: true });
+        //         }).catch((e) => {
+        //             NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
+        //         });
+        //}
     }
 
     render() {
         const isEdit = this.props.edit;
+        let deleteButton;
+        if (isEdit === true) {
+            deleteButton = <>
+                <div className="form-group">
+                    <button type="button" className="btn btn-danger btn-block" onClick={() => this.handleDelete()}>
+                        Usuń zasób
+                    </button>
+                </div>
+            </>
+        }
+
+        if (this.state.redirect) {
+            return <Redirect to="/dashboard" />
+        }
 
         return <div className="resourcemanager-form">
 
             <div className="form-group">
-                <h2 className="text-center">{isEdit === true ? "TODO: Edytowanie" : "Dodawanie"} zasobu</h2>
+                <h2 className="text-center">{isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu</h2>
 
                 <div className="form-group">
                     Nazwa zasobu
@@ -128,10 +165,12 @@ export default class ResourceManager extends Component {
                     />
 
                 })}
-
-                <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handleSave(e)}>
-                    Zapisz zasób
+                <div className="form-group">
+                    <button type="submit" className="btn btn-primary btn-block" onClick={(e) => this.handleSave(e)}>
+                        Zapisz zasób
                         </button>
+                </div>
+                {deleteButton}
             </div>
 
         </div >

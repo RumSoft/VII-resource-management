@@ -5,9 +5,9 @@ export default class ResourceService {
     return APIService.get(`resource/${id}`);
   }
 
-  // static editResource(id, resourceSplit, resourceSplitAmount, resourceName, resourceQuantity, resourceAttributes, resourceRoom) {
-  //     return APIService.put(`Resource/`, { split: resourceSplit, splitAmount: resourceSplitAmount, name: resourceName, quantity: resourceQuantity, attributes: resourceAttributes, room: resourceRoom });
-  // }
+  static editResource(res) {
+    return APIService.put(`resource`, res);
+  }
 
   static deleteResource(id) {
     return APIService.delete(`resource/${id}`);
