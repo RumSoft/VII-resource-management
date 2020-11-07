@@ -32,6 +32,7 @@ namespace TestApp.Api.Commands.User
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var exists = _context.Users.FirstOrDefault(x => x.EmailAddress == input.EmailAddress);
@@ -39,15 +40,20 @@ namespace TestApp.Api.Commands.User
                     return BadRequest(ReturnMessages.Message_400_UserExists);
 
                 var user = _mapper.Map<Models.User>(input);
+                user.Password = "temp_todo:maybe_fix_in_future__password_must_not_be_null_when_saving";
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
 
                 PasswordResetHelper.RandomizePasswordAndSendPasswordReset(user, _context, _mailer, _hashService);
 
-                _context.Add((object) user);
-                _context.SaveChanges();
+                transaction.Commit();
+
                 return Ok();
             }
             catch (Exception e)
             {
+                transaction.Rollback();
                 return BadRequest(e);
             }
         }

@@ -22,9 +22,10 @@ namespace TestApp.Api.Commands
             CreateMap<Models.Room, GetResourcesCommand.GetResourcesCommandResult.GetResourcesCommandResultRoom>().ReverseMap();
             CreateMap<Models.Attribute, GetResourcesCommand.GetResourcesCommandResult.GetResourcesCommandResultAttribute>().ReverseMap();
 
-            CreateMap<Models.Resource, GetResourceDetailsCommand.GetResourceDetailsCommandResult>();
-            CreateMap<Models.Room, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultRoom>();
-            CreateMap<Models.Attribute, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultAttribute>();
+            CreateMap<Models.Resource, GetResourceDetailsCommand.GetResourceDetailsCommandResult>().ReverseMap();
+            CreateMap<Models.Room, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultRoom>().ReverseMap();
+            CreateMap<Models.Attribute, GetResourceDetailsCommand.GetResourceDetailsCommandResult.ResultAttribute>().ReverseMap();
+            CreateMap<UpdateResourceCommand.UpdateResourceCommandInput, CreateResourceCommand.CreateResourceCommandInput>().ReverseMap();
         }
     }
 }

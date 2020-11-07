@@ -9,7 +9,8 @@ using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Resource
 {
-    public class CreateResourceCommand : Command<CreateResourceCommand.CreateResourceCommandInput>
+    public class CreateResourceCommand
+        : Command<CreateResourceCommand.CreateResourceCommandInput, CreateResourceCommand.CreateResourceCommandResult>
     {
         private readonly DataContext _context;
         private readonly IUserInfo _userInfo;
@@ -22,7 +23,7 @@ namespace TestApp.Api.Commands.Resource
 
         [OnlyUser]
         [HttpPost("resource")]
-        public override IActionResult Execute([FromBody] CreateResourceCommandInput input)
+        public override ActionResult<CreateResourceCommandResult> Execute([FromBody] CreateResourceCommandInput input)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -56,7 +57,11 @@ namespace TestApp.Api.Commands.Resource
                 ResourceMerger.TryMergeByResource(resource, _context);
 
                 transaction.Commit();
-                return Ok();
+
+                return Ok(new CreateResourceCommandResult
+                {
+                    Id = resource.Id
+                });
             }
             catch (Exception e)
             {
@@ -71,6 +76,11 @@ namespace TestApp.Api.Commands.Resource
             public int Quantity { get; set; }
             public int[] Attributes { get; set; }
             public int? Room { get; set; }
+        }
+
+        public class CreateResourceCommandResult
+        {
+            public Guid Id { get; set; }
         }
 
         public class CreateResourceCommandInputValidator : AbstractValidator<CreateResourceCommandInput>

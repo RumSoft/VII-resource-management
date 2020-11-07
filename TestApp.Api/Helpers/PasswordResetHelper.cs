@@ -20,6 +20,8 @@ namespace TestApp.Api.Helpers
             var password = _generator.Generate();
             user.Password = hashService.HashPassword(password);
             user.IsGeneratedPassword = true;
+            context.Users.Update(user);
+            context.SaveChanges();
 
             return SendPasswordChangeLinkToUser(user, context, mailer);
         }

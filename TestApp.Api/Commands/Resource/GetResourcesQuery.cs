@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Data;
+using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Resource
 {
@@ -11,18 +12,24 @@ namespace TestApp.Api.Commands.Resource
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserInfo _userInfo;
 
-        public GetResourcesCommand(IMapper mapper, DataContext context)
+        public GetResourcesCommand(IMapper mapper, DataContext context, IUserInfo userInfo)
         {
             _mapper = mapper;
             _context = context;
+            _userInfo = userInfo;
         }
 
         [Authorize]
         [HttpGet("resource")]
         public override ActionResult<GetResourcesCommandResult[]> Execute()
         {
-            var resources = _context.Resources.ToArray();
+            var resources = _context.Resources.AsQueryable();
+            
+            if (!_userInfo.IsAdmin)
+                resources = resources.Where(x => x.Owner.Id == _userInfo.Id);
+
             var result = _mapper.Map<GetResourcesCommandResult[]>(resources);
             return Ok(result);
         }

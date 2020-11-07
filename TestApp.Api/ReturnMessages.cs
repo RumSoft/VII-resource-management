@@ -1,4 +1,6 @@
-﻿namespace TestApp.Api
+﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+
+namespace TestApp.Api
 {
     public class ReturnMessages
     {
@@ -21,5 +23,6 @@
         public const string Message_400_UserCannotResetPassword = "Prośba zresetowania hasła jest niepoprawna";
 
         public const string Message_418_ValidationFailed = "Wprowadzono niepoprawne dane";
+        public const string CatastrophicFailure = "CatastrophicFailure";
     }
 }
