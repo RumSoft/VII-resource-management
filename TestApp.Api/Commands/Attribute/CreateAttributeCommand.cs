@@ -49,7 +49,7 @@ namespace TestApp.Api.Commands.Attribute
         {
             public CreateAttributeCommandInputValidator()
             {
-                RuleFor(x => x.Name).Transform(x => x.Cleanup()).RoomNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Name).Transform(x => x.Cleanup()).AttributeNameValidator().WithName("Nazwa");
             }
         }
     }

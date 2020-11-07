@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
+using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Resource
@@ -41,7 +42,7 @@ namespace TestApp.Api.Commands.Resource
 
                 var user = _userInfo.GetCurrentUser();
                 if (user == null || resource.Owner != user)
-                    return BadRequest(ReturnMessages.Message_400_InvalidOwner);
+                    return BadRequest(ReturnMessages.CatastrophicFailure);
 
                 if (input.Room != null)
                     resource.Room = _context.Rooms.Find(input.Room);
@@ -70,10 +71,8 @@ namespace TestApp.Api.Commands.Resource
             }
         }
 
-        public class UpdateResourceCommandInput
+        public class UpdateResourceCommandInput : GuidName
         {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
             public int Quantity { get; set; }
             public int[] Attributes { get; set; }
             public int? Room { get; set; }

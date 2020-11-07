@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.User
 {
@@ -49,12 +50,8 @@ namespace TestApp.Api.Commands.User
             }
         }
 
-        public class UpdateUserCommandInput
+        public class UpdateUserCommandInput : UserDto
         {
-            public Guid Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string EmailAddress { get; set; }
         }
 
         public class UpdateUserCommandInputValidator : AbstractValidator<UpdateUserCommandInput>

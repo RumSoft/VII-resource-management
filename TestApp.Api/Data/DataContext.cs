@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Data
@@ -16,8 +17,8 @@ namespace TestApp.Api.Data
         public DbSet<Attribute> Attributes { get; set; }
 
         public DbSet<Token> Tokens { get; set; }
-        //todo:
-        //public DbSet<TradeRequest> TradeRequests { get; set; }
+        
+        public DbSet<TradeRequest> TradeRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +55,15 @@ namespace TestApp.Api.Data
             token.HasKey(x => x.Value).IsClustered(false);
             token.Property(x => x.Value).HasMaxLength(150);
             token.Property(x => x.Type).HasDefaultValue(TokenType.Unknown);
+
+            var tr = modelBuilder.Entity<TradeRequest>();
+            tr.HasKey(x => x.Id).IsClustered(false);
+            tr.HasOne(x => x.Taker).WithMany(x => x.IncomingTradeRequests).IsRequired();
+            tr.HasOne(x => x.Resource)
+                .WithOne(x => x.TradeRequest)
+                .HasForeignKey<TradeRequest>(x => x.Id)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

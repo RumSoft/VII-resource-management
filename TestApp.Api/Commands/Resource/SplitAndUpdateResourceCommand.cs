@@ -35,7 +35,7 @@ namespace TestApp.Api.Commands.Resource
 
                 var user = _userInfo.GetCurrentUser();
                 if (user == null || baseResource.Owner != user)
-                    return BadRequest(ReturnMessages.Message_400_InvalidOwner);
+                    return BadRequest(ReturnMessages.CatastrophicFailure);
 
                 if (input.Quantity >= baseResource.Quantity)
                 {
@@ -46,7 +46,7 @@ namespace TestApp.Api.Commands.Resource
                 var createResourceCommand = new CreateResourceCommand(_context, _userInfo);
                 var newResourceResult = createResourceCommand.Execute(_mapper.Map<CreateResourceCommand.CreateResourceCommandInput>(input));
 
-                if (newResourceResult.Value == null)
+                if (!(newResourceResult.Result is OkObjectResult r))
                 {
                     throw new Exception(ReturnMessages.CatastrophicFailure);
                 }

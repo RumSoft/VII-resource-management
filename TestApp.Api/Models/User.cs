@@ -17,6 +17,8 @@ namespace TestApp.Api.Models
         //public DateTime lastLogin;
 
         public virtual IList<Resource> Resources { get; set; }
+        
+        public virtual IList<TradeRequest> IncomingTradeRequests { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
     }

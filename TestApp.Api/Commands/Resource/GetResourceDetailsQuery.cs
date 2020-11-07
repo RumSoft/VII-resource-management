@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Data;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Resource
 {
@@ -36,36 +37,12 @@ namespace TestApp.Api.Commands.Resource
             }
         }
 
-        public class GetResourceDetailsCommandResult
+        public class GetResourceDetailsCommandResult : ResourceDto
         {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public int Quantity { get; set; }
-            public GetResourceDetailsCommandResultRoom Room { get; set; }
-            public GetResourceDetailsCommandResultOwner Owner { get; set; }
-            public GetResourceDetailsCommandResultAttribute[] Attributes { get; set; }
             public DateTime CreatedAt => DateTime.Today;
             public DateTime ModifiedAt => DateTime.Now;
-
-            public class GetResourceDetailsCommandResultRoom
-            {
-                public int Id { get; set; }
-                public string Name { get; set; }
-            }
-
-            public class GetResourceDetailsCommandResultOwner
-            {
-                public Guid Id { get; set; }
-                public string FirstName { get; set; }
-                public string LastName { get; set; }
-                public string EmailAddress { get; set; }
-            }
-
-            public class GetResourceDetailsCommandResultAttribute
-            {
-                public int Id { get; set; }
-                public string Name { get; set; }
-            }
+            public bool IsLocked { get; set; }
+            public Guid? TradeRequest { get; set; }
         }
     }
 }

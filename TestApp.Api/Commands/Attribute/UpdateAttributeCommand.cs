@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Attribute
 {
@@ -48,11 +49,8 @@ namespace TestApp.Api.Commands.Attribute
             }
         }
 
-        public class UpdateAttributeCommandInput
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
+        public class UpdateAttributeCommandInput : IdName
+        { }
 
         public class UpdateAttributeCommandInputValidator : AbstractValidator<UpdateAttributeCommandInput>
         {

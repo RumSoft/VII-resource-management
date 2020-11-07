@@ -41,7 +41,7 @@ namespace TestApp.Api.Commands.Resource
 
                 var user = _userInfo.GetCurrentUser();
                 if (user == null)
-                    return BadRequest(ReturnMessages.Message_400_InvalidOwner);
+                    return BadRequest(ReturnMessages.CatastrophicFailure);
                 resource.Owner = user;
 
                 if (input.Room != null)

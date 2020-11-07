@@ -3,15 +3,16 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Data;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Room
 {
-    public class GetRoomsCommand : Query<GetRoomsCommand.GetRoomsCommandResult>
+    public class GetRoomsQuery : Query<IdName>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public GetRoomsCommand(IMapper mapper, DataContext context)
+        public GetRoomsQuery(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _context = context;
@@ -19,17 +20,11 @@ namespace TestApp.Api.Commands.Room
 
         [Authorize]
         [HttpGet("room")]
-        public override ActionResult<GetRoomsCommandResult> Execute()
+        public override ActionResult<IdName> Execute()
         {
             var rooms = _context.Rooms;
-            var result = _mapper.Map<GetRoomsCommandResult[]>(rooms.ToList());
+            var result = _mapper.Map<IdName[]>(rooms.ToList());
             return Ok(result);
-        }
-
-        public class GetRoomsCommandResult
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
         }
     }
 }

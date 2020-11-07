@@ -4,12 +4,12 @@ namespace TestApp.Api
 {
     public class ReturnMessages
     {
+        public const string Message_400_TradeRequestNotFound = "Nie znaleziono prośby przekazania zasobu.";
         public const string Message_400_TokenInvalid = "Podano nieprawidłowy token";
         public const string Message_400_AttributeAlreadyExists = "Istnieje już atrybut o takiej samej nazwie";
         public const string Message_400_AttributeNotFound = "Nie znaleziono atrybutu";
         public const string Message_400_UserNotExistOrInvalidPassword = "Nie znaleziono użytkownika z takim adresem e-mail i hasłem";
 
-        public const string Message_400_InvalidOwner = "Could not verify resource ownership";
         public const string Message_400_ResourceNotFound = "Nie znaleziono zasobu";
         public const string Message_400_TooBigSplitAmount = "Błędna ilość rozdzielenia zasobu";
         public const string Message_Log_TransactionRollback = "Transaction failed, rollbacking";
@@ -23,6 +23,6 @@ namespace TestApp.Api
         public const string Message_400_UserCannotResetPassword = "Prośba zresetowania hasła jest niepoprawna";
 
         public const string Message_418_ValidationFailed = "Wprowadzono niepoprawne dane";
-        public const string CatastrophicFailure = "CatastrophicFailure";
+        public const string CatastrophicFailure = "Katastroficzny błąd";
     }
 }

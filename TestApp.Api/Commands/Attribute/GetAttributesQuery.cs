@@ -3,15 +3,16 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Data;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Attribute
 {
-    public class GetAttributesCommand : Query<GetAttributesCommand.GetAttributesCommandResult>
+    public class GetAttributesQuery : Query<IdName>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public GetAttributesCommand(IMapper mapper, DataContext context)
+        public GetAttributesQuery(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _context = context;
@@ -19,17 +20,11 @@ namespace TestApp.Api.Commands.Attribute
 
         [Authorize]
         [HttpGet("attribute")]
-        public override ActionResult<GetAttributesCommandResult> Execute()
+        public override ActionResult<IdName> Execute()
         {
             var attributes = _context.Attributes;
-            var result = _mapper.Map<GetAttributesCommandResult[]>(attributes.ToList());
+            var result = _mapper.Map<IdName[]>(attributes.ToList());
             return Ok(result);
-        }
-
-        public class GetAttributesCommandResult
-        {
-            public string Name { get; set; }
-            public int Id { get; set; }
         }
     }
 }

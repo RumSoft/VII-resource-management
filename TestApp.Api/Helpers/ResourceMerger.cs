@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
 
@@ -24,24 +25,14 @@ namespace TestApp.Api.Helpers
             //get exactly same resources (except attributes, see below)
             var matchingResources = context.Resources.Where(x => x.Owner == resource.Owner
                                                                  && x.Name == resource.Name
-                                                                 && x.Room == resource.Room).ToList();
+                                                                 && x.Room == resource.Room
+                                                                 && x.TradeRequest == null)
+                .ToList()
+                .Where(x => x.Attributes.SequenceEqual(resource.Attributes))
+                .ToList();
 
-            if (matchingResources.Count < 2)
-                return; // no exactly same resources found
-
-            //filter to have same attributes (must be after ToList())
-            matchingResources = matchingResources.Where(x => x.Attributes.SequenceEqual(resource.Attributes)).ToList();
-
-            if (matchingResources.Count < 2)
-                return;  // no exactly same resources found
-
-            //sum to resource
-            resource.Quantity = matchingResources.Sum(x => x.Quantity);
-
-            var toDelete = matchingResources.Where(x => x != resource);
-            context.Resources.RemoveRange(toDelete);
-            context.Resources.Update(resource);
-            context.SaveChanges();
+            if(matchingResources.Count >= 2)
+                Merge(matchingResources, context);
         }
 
         /// <summary>
@@ -55,6 +46,10 @@ namespace TestApp.Api.Helpers
         ///     try merge resources when resource owner changed
         /// </summary>
         public static void TryMergeByOwner(User owner, DataContext context)
+        {
+        }
+
+        private static void Merge(IList<Resource> resources, DataContext context)
         {
         }
     }

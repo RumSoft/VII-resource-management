@@ -6,12 +6,12 @@ using TestApp.Api.Data;
 
 namespace TestApp.Api.Commands.User
 {
-    public class GetUserDetailsCommand : Command<Guid, GetUserDetailsCommand.GetUserDetailsCommandResult>
+    public class GetUserDetailsQuery : Command<Guid, GetUserDetailsQuery.GetUserDetailsCommandResult>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public GetUserDetailsCommand(IMapper mapper, DataContext context)
+        public GetUserDetailsQuery(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _context = context;

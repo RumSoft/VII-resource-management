@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
+using TestApp.Api.Models.Dto;
 
 namespace TestApp.Api.Commands.Room
 {
@@ -48,10 +49,9 @@ namespace TestApp.Api.Commands.Room
             }
         }
 
-        public class UpdateRoomCommandInput
+        public class UpdateRoomCommandInput : IdName
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
+
         }
 
         public class UpdateRoomCommandInputValidator : AbstractValidator<UpdateRoomCommandInput>
