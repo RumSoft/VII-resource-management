@@ -34,7 +34,7 @@ export default class AttributeList extends Component {
   }
 
   attributeChanged(attr) {
-    AttributeService.editAttribute(attr.id, attr.name)
+    AttributeService.editAttribute(attr)
       .then(() => {
         NotificationService.success(
           `Pomyślnie zmieniono nazwę atrybutu`,

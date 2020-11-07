@@ -6,28 +6,29 @@ export default class UserService {
   }
 
   static getList() {
-    return APIService.get("User/list");
+    return APIService.get("user");
   }
 
   static addUser(user) {
-    return APIService.post("User/", user);
+    return APIService.post("user", user);
   }
 
   static editUser(user) {
-    return APIService.put(`User/${user.id}`, user);
+    return APIService.put(`user`, user);
   }
 
   static deleteUser(userId) {
-    return APIService.delete(`User/${userId}`);
+    return APIService.delete(`user/${userId}`);
   }
 
   static resetPassword(userId) {
-    return APIService.post(`User/reset-password/${userId}`);
+    return APIService.get(`user/reset-password/${userId}`);
   }
 
   static newPassword(token, password) {
-    return APIService.post(`User/new-password/${token}`, {
-      password,
+    return APIService.post(`user/new-password`, {
+      token: token,
+      password: password,
     });
   }
 }

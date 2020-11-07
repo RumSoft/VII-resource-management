@@ -9,7 +9,6 @@ export default class NotificationService {
    * @param {string} title error title
    */
   static apiError(e, title, params) {
-    console.log(e.response.data);
     this.error(`🔥 ${title}`, e?.response?.data?.message);
   }
 

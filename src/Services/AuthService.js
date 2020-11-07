@@ -1,26 +1,28 @@
 import { APIService, EventService } from ".";
 import Events from "./Events";
 
-const authToken = "auth_token";
-const role = "role";
+const authTokenKey = "auth_token";
+const roleKey = "role";
 
 export default class AuthService {
   static login(userData) {
     return APIService.post("auth/login", userData).then((response) => {
       let data = response.data;
-      window.localStorage.setItem(authToken, `${data.token.accessToken}`);
-      window.localStorage.setItem(role, `${data.role}`);
+      const { token, role } = data;
+
+      window.localStorage.setItem(authTokenKey, token);
+      window.localStorage.setItem(roleKey, role);
       EventService.Emit(Events.Auth_Login);
     });
   }
 
   static isLogged() {
-    return window.localStorage.getItem(authToken) !== null;
+    return window.localStorage.getItem(authTokenKey) !== null;
   }
 
   static logout() {
-    window.localStorage.removeItem(authToken);
-    window.localStorage.removeItem(role);
+    window.localStorage.removeItem(authTokenKey);
+    window.localStorage.removeItem(roleKey);
     EventService.Emit(Events.Auth_Logout);
   }
 }
