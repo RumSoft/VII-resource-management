@@ -33,9 +33,6 @@ namespace TestApp.Api.Commands.User.PasswordReset
                 if (user == null)
                     return BadRequest(ReturnMessages.Message_400_UserNotFound);
 
-                if (!user.IsGeneratedPassword)
-                    throw new Exception(ReturnMessages.Message_400_UserCannotResetPassword);
-
                 user.Password = _hashService.HashPassword(input.Password);
                 user.IsGeneratedPassword = false;
 
