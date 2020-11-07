@@ -1,5 +1,4 @@
 ﻿using System;
-using TestApp.Api.Data;
 using TestApp.Api.Models;
 
 namespace TestApp.Api.Services
@@ -10,9 +9,9 @@ namespace TestApp.Api.Services
         bool IsAdmin { get; }
         string EmailAddress { get; }
         Guid Id { get; }
-
-        User GetCurrentUser();
         public string Role { get; }
         public string AuthToken { get; }
+
+        User GetCurrentUser();
     }
 }

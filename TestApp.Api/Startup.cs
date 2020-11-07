@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -16,14 +16,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 using TestApp.Api.Auth;
-using TestApp.Api.Controllers;
+using TestApp.Api.Commands;
 using TestApp.Api.Data;
-using TestApp.Api.Helpers;
-using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 using TestApp.Api.Services.Impl;
-using Attribute = TestApp.Api.Models.Attribute;
 
 namespace TestApp.Api
 {
@@ -43,7 +41,6 @@ namespace TestApp.Api
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-
             var policy = new CorsPolicyBuilder().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
             services.AddCors(options =>
             {
@@ -51,18 +48,19 @@ namespace TestApp.Api
                 options.AddDefaultPolicy(policy);
             });
 
-
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddBearerAuthentication();
 
-            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateAttributeDto>());
+            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
             ValidatorOptions.Global.LanguageManager.Enabled = true;
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("pl");
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Resource Manager", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Resource Manager", Version = "v1"});
                 c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -70,8 +68,10 @@ namespace TestApp.Api
                     Scheme = "bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Description = "JWT Authorization header using the Bearer scheme."
                 });
+
+                c.AddFluentValidationRules();
 
                 c.OperationFilter<AuthOperationFilter>();
                 c.OperationFilter<OperationRoleFilter>();
@@ -79,6 +79,8 @@ namespace TestApp.Api
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+
+                c.TagActionsBy(api => api.RelativePath.Split("/").FirstOrDefault().ToLower() ?? api.RelativePath.ToLower());
             });
 
             services.AddAuthorization(c =>
@@ -90,8 +92,6 @@ namespace TestApp.Api
                     options.Requirements.Add(new ShouldBeAnAdminRequirement());
                 });
             });
-
-
 
             services.AddTransient<IHashService, PBKDF2HashSerivce>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -109,7 +109,7 @@ namespace TestApp.Api
             app.UseCors(x => x.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-            
+
             app.UseRouting();
 
             app.UseAuthentication();

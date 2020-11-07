@@ -1,4 +1,6 @@
-﻿namespace TestApp.Api.Models.Mailing
+﻿using System;
+
+namespace TestApp.Api.Models.Mailing
 {
     public class MailMessage
     {
@@ -6,6 +8,10 @@
         {
             var address = AppConfig.Smtp_SenderEmail;
             var name = AppConfig.Smtp_SenderName;
+
+            if (string.IsNullOrWhiteSpace(address) || string.IsNullOrWhiteSpace(name))
+                throw new Exception("App error: missing mail configuration");
+
             From = new MailAddress(address, name);
         }
 

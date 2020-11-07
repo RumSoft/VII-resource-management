@@ -14,6 +14,7 @@ namespace TestApp.Api.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Attribute> Attributes { get; set; }
+
         public DbSet<Token> Tokens { get; set; }
         //todo:
         //public DbSet<TradeRequest> TradeRequests { get; set; }

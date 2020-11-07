@@ -8,15 +8,15 @@ namespace TestApp.Api.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tokens",
-                columns: table => new
+                "Tokens",
+                table => new
                 {
-                    Value = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Value = table.Column<string>("nvarchar(150)", maxLength: 150),
+                    CreatedAt = table.Column<DateTime>("datetime2"),
+                    ExpiresAt = table.Column<DateTime>("datetime2"),
+                    IsUsed = table.Column<bool>("bit"),
+                    Type = table.Column<int>("int", nullable: false, defaultValue: 0),
+                    ParentId = table.Column<Guid>("uniqueidentifier")
                 },
                 constraints: table =>
                 {
@@ -28,7 +28,7 @@ namespace TestApp.Api.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tokens");
+                "Tokens");
         }
     }
 }

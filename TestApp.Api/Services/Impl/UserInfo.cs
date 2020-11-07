@@ -10,8 +10,8 @@ namespace TestApp.Api.Services.Impl
 {
     public class UserInfo : IUserInfo
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserInfo(IHttpContextAccessor httpContextAccessor, DataContext context)
         {
@@ -20,6 +20,9 @@ namespace TestApp.Api.Services.Impl
         }
 
         private IEnumerable<Claim> Claims => _httpContextAccessor?.HttpContext?.User?.Claims;
+        private string _id => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+
+        private string _authHeadr => _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
         public string Role => Claims.First(x => x.Type == ClaimTypes.Role)?.Value;
 
         public bool IsLogged => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
@@ -33,10 +36,7 @@ namespace TestApp.Api.Services.Impl
         }
 
         public string EmailAddress => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        private string _id => Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
         public Guid Id => _id == null ? Guid.Empty : new Guid(_id);
-
-        private string _authHeadr => _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
         public string AuthToken => _authHeadr[7..]; //Bearer_TOKEN
     }
 }

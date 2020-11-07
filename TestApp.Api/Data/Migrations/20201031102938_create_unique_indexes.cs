@@ -7,37 +7,37 @@ namespace TestApp.Api.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateIndex(
-                name: "IX_Users_EmailAddress",
-                table: "Users",
-                column: "EmailAddress",
+                "IX_Users_EmailAddress",
+                "Users",
+                "EmailAddress",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_Name",
-                table: "Rooms",
-                column: "Name",
+                "IX_Rooms_Name",
+                "Rooms",
+                "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attributes_Name",
-                table: "Attributes",
-                column: "Name",
+                "IX_Attributes_Name",
+                "Attributes",
+                "Name",
                 unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "IX_Users_EmailAddress",
-                table: "Users");
+                "IX_Users_EmailAddress",
+                "Users");
 
             migrationBuilder.DropIndex(
-                name: "IX_Rooms_Name",
-                table: "Rooms");
+                "IX_Rooms_Name",
+                "Rooms");
 
             migrationBuilder.DropIndex(
-                name: "IX_Attributes_Name",
-                table: "Attributes");
+                "IX_Attributes_Name",
+                "Attributes");
         }
     }
 }

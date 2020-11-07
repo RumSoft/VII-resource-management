@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using TestApp.Api.Models;
 
 namespace TestApp.Api.Auth
 {
@@ -12,14 +13,14 @@ namespace TestApp.Api.Auth
 
     public class OnlyAdminAttribute : OnlyRolesAttribute
     {
-        public OnlyAdminAttribute() : base(Models.UserRoles.Admin)
+        public OnlyAdminAttribute() : base(UserRoles.Admin)
         {
         }
     }
 
     public class OnlyUserAttribute : OnlyRolesAttribute
     {
-        public OnlyUserAttribute() : base(Models.UserRoles.User)
+        public OnlyUserAttribute() : base(UserRoles.User)
         {
         }
     }
