@@ -17,14 +17,16 @@ const CssTextField = withStyles({
 export default class ResourceManager extends Component {
     constructor(props) {
         super(props);
+        const { resource } = this.props;
         this.state = {
             //   ...this.props.resource
-            name: "",
-            room: "",
+            name: resource?.name || [],
+            room: resource?.room.id || "",
             rooms: [],
-            quantity: 1,
+            quantity: resource?.quantity || 1,
             attributes: [],
-            selectedAttributes: new Map()
+            selectedAttributes: resource?.attributes.map((x) => x.id) || []
+
         };
     }
 
@@ -44,20 +46,23 @@ export default class ResourceManager extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleCheckbox(e) {
-        const attribute = e.target.value;
-        const isChecked = e.target.checked;
-        this.setState(prevState => ({ selectedAttributes: prevState.selectedAttributes.set(attribute, isChecked) }));
+    handleAttributeChanged(id) {
+        const attrList = this.state.selectedAttributes;
+
+        if (attrList.includes(id)) {
+            this.setState({
+                selectedAttributes: [...attrList.filter((x) => x != id)],
+            });
+        } else {
+            this.setState({
+                selectedAttributes: [...attrList, id],
+            });
+        }
     }
 
     handleSave(e) {
         e.preventDefault();
-        let passAttributes = [];
-        this.state.selectedAttributes.forEach((v, k) => {
-            if (v === true)
-                passAttributes.push(parseInt(k));
-        })
-        this.props.onSave({ name: this.state.name, room: this.state.room === "" ? null : this.state.room, quantity: parseInt(this.state.quantity), attributes: passAttributes });
+        this.props.onSave({ name: this.state.name, room: this.state.room === "" ? null : this.state.room, quantity: parseInt(this.state.quantity), attributes: this.state.selectedAttributes });
     }
 
     render() {
@@ -114,7 +119,11 @@ export default class ResourceManager extends Component {
 
                 {this.state.attributes.map((x) => {
                     return <FormControlLabel key={x.id}
-                        control={< Checkbox value={x.id} onChange={(e) => this.handleCheckbox(e)} />}
+                        control={<Checkbox
+                            value={x.id}
+                            checked={this.state.selectedAttributes.includes(x.id)}
+                            onChange={() => this.handleAttributeChanged(x.id)}
+                        />}
                         label={x.name}
                     />
 

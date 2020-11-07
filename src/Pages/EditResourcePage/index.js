@@ -25,7 +25,7 @@ export default class AddResurcePage extends Component {
     }
 
     editResource(res) {
-        //TodoL
+        console.log(res)
     }
     render() {
         const { resource, redirect } = this.state;
