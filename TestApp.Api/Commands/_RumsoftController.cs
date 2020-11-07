@@ -25,7 +25,7 @@ namespace TestApp.Api.Commands
             {
                 message.AppendLine(" --> ").Append(e.Message);
 
-                exc = e.InnerException;
+                exc = exc.InnerException;
                 if (exc == null)
                     break;
             }
