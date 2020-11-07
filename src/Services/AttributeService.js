@@ -2,18 +2,18 @@ import APIService from "./APIService";
 
 export default class AttributeService {
   static getList() {
-    return APIService.get("Attribute/list");
+    return APIService.get("attribute");
   }
 
   static addAttribute(attributeName) {
-    return APIService.post("Attribute/", { name: attributeName });
+    return APIService.post("attribute", { name: attributeName });
   }
 
   static deleteAttribute(id) {
-    return APIService.delete(`Attribute/${id}`);
+    return APIService.delete(`attribute/${id}`);
   }
 
-  static editAttribute(id, attributeName) {
-    return APIService.put(`Attribute/${id}`, { name: attributeName });
+  static editAttribute(attribute) {
+    return APIService.put(`attribute`, attribute);
   }
 }

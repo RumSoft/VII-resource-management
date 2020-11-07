@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Redirector from "./Redirector";
-import { Dashboard, ErrorPage, HomePage, LoginPage, TestPage, AddUserPage, EditUserPage, NewPasswordPage } from "./Pages";
+import { Dashboard, ErrorPage, HomePage, LoginPage, TestPage, AddUserPage, EditUserPage, NewPasswordPage, AddResourcePage, EditResourcePage } from "./Pages";
 import "./App.scss";
 import QueryPage from "./Pages/QueryPage";
 
@@ -24,6 +24,8 @@ class App extends Component {
           <Route path="/user/add" component={AddUserPage} />
           <Route path="/user/edit" component={EditUserPage} />
           <Route path="/newPassword" component={NewPasswordPage} />
+          <Route path="/resource/add" component={AddResourcePage} />
+          <Route path="/resource/edit" component={EditResourcePage} />
           <Route component={ErrorPage} />
         </Switch>
         <Redirector />

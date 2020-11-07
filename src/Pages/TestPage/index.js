@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import APIService from "../../Services/APIService";
+import { AttributeService } from "../../Services";
 import "./index.scss";
 
 export default class TestPage extends Component {
@@ -11,7 +11,7 @@ export default class TestPage extends Component {
   }
 
   componentDidMount() {
-    APIService.get("Attribute/list").then((result) => {
+    AttributeService.getList().then((result) => {
       const attributes = (result && result.data) || [];
       this.setState({ attributes });
     });

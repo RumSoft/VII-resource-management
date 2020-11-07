@@ -34,7 +34,7 @@ export default class RoomList extends Component {
   }
 
   roomChanged(room) {
-    RoomService.editRoom(room.id, room.name)
+    RoomService.editRoom(room)
       .then(() => {
         NotificationService.success(
           `Pomyślnie zmieniono nazwę pokoju`,
