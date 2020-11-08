@@ -39,7 +39,10 @@ namespace TestApp.Api.Data
             user.Property(x => x.EmailAddress).IsRequired().HasMaxLength(100);
             user.Property(x => x.Password).IsRequired().HasMaxLength(1024);
             user.Property(x => x.Role).IsRequired().HasMaxLength(50).HasDefaultValue(UserRoles.User);
+            user.Property(x => x.RegisteredAt).HasDefaultValueSql("getdate()").ValueGeneratedOnAdd();
+            user.Property(x => x.LastLoginAt).HasDefaultValueSql("getdate()");
             user.HasIndex(x => x.EmailAddress).IsUnique();
+
 
             var attrib = modelBuilder.Entity<Attribute>();
             attrib.HasKey(x => x.Id);

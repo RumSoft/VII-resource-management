@@ -12,9 +12,8 @@ namespace TestApp.Api.Models
         public bool IsGeneratedPassword { get; set; }
         public string Role { get; set; }
 
-        //todo:
-        //public DateTime lastActivity;
-        //public DateTime lastLogin;
+        public DateTime RegisteredAt { get; set; }
+        public DateTime? LastLoginAt { get; set; }
 
         public virtual IList<Resource> Resources { get; set; }
         

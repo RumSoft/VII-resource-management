@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using TestApp.Api.Auth;
@@ -39,6 +40,7 @@ namespace TestApp.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies()
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             var policy = new CorsPolicyBuilder().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
@@ -52,7 +54,13 @@ namespace TestApp.Api
 
             services.AddBearerAuthentication();
 
-            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
+                .AddNewtonsoftJson(x =>
+                {
+                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    //x.SerializerSettings.MaxDepth = 3;
+                }); ;
 
             ValidatorOptions.Global.LanguageManager.Enabled = true;
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("pl");
@@ -99,6 +107,7 @@ namespace TestApp.Api
             services.AddSingleton<IRandomPasswordGenerator, RandomPasswordGenerator>();
             services.AddScoped<IUserInfo, UserInfo>();
             services.AddScoped<IMailerService, MailerService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

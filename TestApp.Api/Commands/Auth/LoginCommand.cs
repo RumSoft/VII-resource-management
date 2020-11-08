@@ -40,6 +40,9 @@ namespace TestApp.Api.Commands.Auth
 
                 var token = _tokenManager.Generate(user);
                 var role = user.Role;
+
+                user.LastLoginAt = DateTime.Now;
+                _context.SaveChanges();
                
                 return Ok(new LoginCommandResult
                 {

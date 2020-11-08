@@ -19,15 +19,17 @@ namespace TestApp.Api.Commands
         [ApiExplorerSettings(IgnoreApi = true)]
         public ObjectResult BadRequest(Exception e)
         {
-            var message = new StringBuilder();
-            var exc = e;
+            var message = new StringBuilder().AppendLine(e.Message);
+
+            var exc = e.InnerException;
             for (var i = 0; i < 10; i++)
             {
-                message.AppendLine(" --> ").Append(e.Message);
-
-                exc = exc.InnerException;
                 if (exc == null)
                     break;
+
+                message.AppendLine(" --> ").Append(exc.Message);
+
+                exc = exc.InnerException;
             }
 
             return BadRequest(new
