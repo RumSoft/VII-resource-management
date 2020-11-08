@@ -12,7 +12,7 @@ export default class EntityList extends Component {
     return (
       <div className="list__header">
         <div className={classNames({ transparent: !onReloadClick })}>
-          <Button circular icon="refresh" />
+          <Button circular icon="refresh" onClick={() => onReloadClick()} />
         </div>
         <div>
           {entityName ? (
@@ -24,7 +24,12 @@ export default class EntityList extends Component {
           )}
         </div>
         <div className={classNames({ transparent: !onAddClick })}>
-          <Button circular icon="add" color="green" />
+          <Button
+            circular
+            icon="add"
+            color="green"
+            onClick={() => onAddClick()}
+          />
         </div>
       </div>
     );
