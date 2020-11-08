@@ -50,11 +50,11 @@ namespace TestApp.Api.Commands.Resource
                 resource.Quantity = input.Quantity;
 
 
-                if (input.Room != null)
+                if (input.Room != null && input.Room >= 0)
                     resource.Room = _context.Rooms.Find(input.Room);
                 else
                     resource.Room = null;
-                //todo ^ this doesnt work
+
 
                 resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)

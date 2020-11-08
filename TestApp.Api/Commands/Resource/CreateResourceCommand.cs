@@ -44,9 +44,11 @@ namespace TestApp.Api.Commands.Resource
                     return BadRequest(ReturnMessages.CatastrophicFailure);
                 resource.Owner = user;
 
-                if (input.Room != null)
+                if (input.Room != null && input.Room >= 0)
                     resource.Room = _context.Rooms.Find(input.Room);
-
+                else
+                    resource.Room = null;
+                
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
 
