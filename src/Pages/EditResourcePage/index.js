@@ -25,14 +25,13 @@ export default class AddResurcePage extends Component {
     }
 
     editResource(res) {
-        console.log(res);
         ResourceService.editResource(res)
             .then(() => {
-                //NotificationService.success(`Zmieniono dane zasobu ${res.name}`);
+                NotificationService.success(`Zmieniono dane zasobu ${res.name}`);
                 this.setState({ redirect: true });
             })
             .catch((e) => {
-                //NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
+                NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
             });
     }
 
