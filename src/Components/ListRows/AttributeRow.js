@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tooltip } from "@material-ui/core";
+import { Button } from "semantic-ui-react";
 import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {
@@ -21,22 +21,18 @@ export default class AttributeRow extends Component {
       <div className="list-row">
         <div className="list-row__content">{name}</div>
         <div className="list-row__actions">
-          <Tooltip title="Edytuj">
-            <button
-              className="list-row__actions__edit"
-              onClick={() => this.handleEditClick()}
-            >
-              E
-            </button>
-          </Tooltip>
-          <Tooltip title="Usuń">
-            <button
-              className="list-row__actions__delete"
-              onClick={() => this.handleDeleteClick()}
-            >
-              X
-            </button>
-          </Tooltip>
+          <Button
+            circular
+            onClick={() => this.handleEditClick()}
+            icon="edit"
+            color="blue"
+          />
+          <Button
+            circular
+            onClick={() => this.handleDeleteClick()}
+            icon="delete"
+            color="red"
+          />
         </div>
       </div>
     );

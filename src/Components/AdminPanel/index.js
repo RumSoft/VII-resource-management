@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid } from "semantic-ui-react";
 import { AttributeList, RoomList, UserList } from "../List";
 
 export default class AdminPanel extends Component {
@@ -13,22 +13,22 @@ export default class AdminPanel extends Component {
       <div>
         <p> Logged in as Admin.</p>
         <div className="container-fluid d-flex">
-          <Grid container spacing={2}>
-            <Grid item sm={6} xs={12} md={6} lg={3}>
+          <Grid>
+            <Grid.Column mobile={16} tablet={8} computer={3}>
               <AttributeList />
-            </Grid>
-            <Grid item sm={6} xs={12} md={6} lg={3}>
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={8} computer={4}>
               <AttributeList />
-            </Grid>
-            <Grid item sm={4} xs={12} md={4} lg={2}>
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={5} computer={3}>
               <UserList />
-            </Grid>
-            <Grid item sm={4} xs={6} md={4} lg={2}>
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={6} computer={3}>
               <RoomList />
-            </Grid>
-            <Grid item sm={4} xs={6} md={4} lg={2}>
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={5} computer={3}>
               <AttributeList />
-            </Grid>
+            </Grid.Column>
           </Grid>
         </div>
       </div>

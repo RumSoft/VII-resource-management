@@ -1,12 +1,11 @@
 .list-row {
     $bgColor: #fff;
     $bgHoverColor: darken(#fff, 1);
-    $height: 2rem;
-    $buttonWidth: $height;
+    $height: 3rem;
     $spacing: 1px;
     $transitionTime: 0.2s;
 
-
+    padding: 0.2rem;
     height: $height;
     display: flex;
     justify-content: space-between;
@@ -27,6 +26,8 @@
     &__content {
         white-space: nowrap;
         overflow: hidden;
+        margin-top: auto;
+        margin-bottom: auto;
     }
 
     &__actions {
@@ -36,9 +37,7 @@
             cursor: pointer;
             text-decoration: none;
             border: none;
-            height: $height;
-            width: $buttonWidth;
-            margin-right: 1px;
+            
             transition: background-color $transitionTime ease;
 
             &:hover {
