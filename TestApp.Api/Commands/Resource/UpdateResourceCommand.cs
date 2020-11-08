@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
+using Microsoft.EntityFrameworkCore.Storage;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -32,7 +35,6 @@ namespace TestApp.Api.Commands.Resource
                 return BadRequest(ModelState);
 
             using var transaction = _context.Database.BeginTransaction();
-
             try
             {
                 //add resource
@@ -44,20 +46,28 @@ namespace TestApp.Api.Commands.Resource
                 if (user == null || resource.Owner != user)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
 
+                resource.Name = input.Name;
+                resource.Quantity = input.Quantity;
+
+
                 if (input.Room != null)
                     resource.Room = _context.Rooms.Find(input.Room);
+                else
+                    resource.Room = null;
+                //todo ^ this doesnt work
 
+                resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
-
+                
                 _context.Resources.Update(resource);
                 _context.SaveChanges();
 
                 //merge with existing
                 ResourceMerger.TryMergeByResource(resource, _context);
 
+                _context.SaveChanges();
                 transaction.Commit();
-
                 return Ok(new CreateResourceCommand.CreateResourceCommandResult
                 {
                     Id = resource.Id
