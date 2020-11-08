@@ -1,14 +1,10 @@
-import { Tooltip } from "@material-ui/core";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "semantic-ui-react";
 import { Events, EventService } from "../../Services";
 import "./UserRow.scss";
 
 export default class UserRow extends Component {
-  handleEditClick(id) {
-    EventService.Emit(Events.Redirect, `/user/edit?userid=${id}`);
-  }
-
   handleDeleteClick() {
     this.props.onDelete && this.props.onDelete(this.props.user);
   }
@@ -21,17 +17,19 @@ export default class UserRow extends Component {
           {firstName} {lastName}
         </div>
         <div className="list-row__actions">
-          <Link to={`/user/edit?userId=${id}`}>
-            <button className="list-row__actions__edit">E</button>
-          </Link>
-          <Tooltip title="Usuń">
-            <button
-              className="list-row__actions__delete"
-              onClick={() => this.handleDeleteClick()}
-            >
-              X
-            </button>
-          </Tooltip>
+          <Button
+            circular
+            as={Link}
+            to={`/user/edit?userId=${id}`}
+            icon="edit"
+            color="blue"
+          />
+          <Button
+            circular
+            onClick={() => this.handleDeleteClick()}
+            icon="delete"
+            color="red"
+          />
         </div>
       </div>
     );

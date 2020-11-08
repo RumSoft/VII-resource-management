@@ -51,7 +51,7 @@ export default class NotificationService {
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
+      pauseOnHover: false,
     });
   }
 }

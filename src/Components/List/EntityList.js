@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { CardContent, Card, Tooltip, IconButton } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import ContentLoader from "react-content-loader";
 import classNames from "classnames";
 import "./index.scss";
+import { Button, Card } from "semantic-ui-react";
 
 export default class EntityList extends Component {
   renderHeader() {
@@ -14,11 +12,7 @@ export default class EntityList extends Component {
     return (
       <div className="list__header">
         <div className={classNames({ transparent: !onReloadClick })}>
-          <Tooltip title="Odśwież listę">
-            <IconButton color="primary" onClick={() => onReloadClick()}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
+          <Button circular icon="refresh" />
         </div>
         <div>
           {entityName ? (
@@ -30,11 +24,7 @@ export default class EntityList extends Component {
           )}
         </div>
         <div className={classNames({ transparent: !onAddClick })}>
-          <Tooltip title="Dodaj">
-            <IconButton color="primary" onClick={() => onAddClick()}>
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
+          <Button circular icon="add" color="green" />
         </div>
       </div>
     );
@@ -62,12 +52,9 @@ export default class EntityList extends Component {
     const { entityName } = this.props;
 
     return (
-      <Card className={`list ${entityName && "entityName-list"}`}>
-        <CardContent>
-          {this.renderHeader()}
-          <hr />
-        </CardContent>
-        <CardContent>{this.renderContent()}</CardContent>
+      <Card fluid className={`list ${entityName && "entityName-list"}`}>
+        <Card.Content>{this.renderHeader()}</Card.Content>
+        <Card.Content>{this.renderContent()}</Card.Content>
       </Card>
     );
   }

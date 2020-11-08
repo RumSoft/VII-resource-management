@@ -4,6 +4,7 @@ import { EventService } from "../../Services";
 import AuthService from "../../Services/AuthService";
 import Events from "../../Services/Events";
 import "./index.scss";
+import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -22,44 +23,54 @@ export default class Navbar extends Component {
   }
 
   render() {
-    const isLogged = this.state.isLogged;
     return (
-      <nav className="navbar navbar-expand-sm bg-light">
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link to="/" className="nav-link">
-              Home
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/dashboard" className="nav-link">
-              Zarządzanie
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/test" className="nav-link">
-              Test
-            </Link>
-          </li>
-          {isLogged ? (
-            <li className="nav-item">
-              <Link
-                to="/#"
-                className="nav-link"
+      <Sidebar.Pushable
+        as={Segment}
+        style={{ minHeight: "100vh", border: "none", borderRadius: "0" }}
+      >
+        <Sidebar
+          as={Menu}
+          animation="overlay"
+          icon="labeled"
+          inverted
+          vertical
+          visible={true}
+          width="thin"
+          className="flex-container"
+        >
+          {/* todo icons */}
+          <Menu.Item as={Link} to="/">
+            <Icon name="gamepad" />
+            Home
+          </Menu.Item>
+
+          <Menu.Item as={Link} to="/dashboard">
+            <Icon name="gamepad" />
+            Panel
+          </Menu.Item>
+          <div className="bottom-aligned">
+            {this.state.isLogged ? (
+              <Menu.Item
+                as="a"
+                to="/logout"
                 onClick={() => AuthService.logout()}
+                className="bottom-aligned"
               >
-                Logout
-              </Link>
-            </li>
-          ) : (
-            <li className="nav-item">
-              <Link to="/login" className="nav-link">
-                Login
-              </Link>
-            </li>
-          )}
-        </ul>
-      </nav>
+                <Icon name="gamepad" />
+                Wyloguj
+              </Menu.Item>
+            ) : (
+              <Menu.Item as={Link} to="/login">
+                <Icon name="gamepad" />
+                Zaloguj
+              </Menu.Item>
+            )}
+          </div>
+        </Sidebar>
+        <Sidebar.Pusher>
+          <Segment basic>{this.props.content}</Segment>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
     );
   }
 }
