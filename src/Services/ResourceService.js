@@ -30,4 +30,8 @@ export default class ResourceService {
       room: resourceRoom,
     });
   }
+
+  static splitResource(res) {
+    return APIService.post("resource/split-and-update", res);
+  }
 }

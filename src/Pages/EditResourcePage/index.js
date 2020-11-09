@@ -35,13 +35,26 @@ export default class AddResurcePage extends Component {
             });
     }
 
+
+    splitResource(res) {
+        ResourceService.splitResource(res)
+            .then(() => {
+                NotificationService.success(`Zmieniono część danych zasobu ${res.name}`);
+                this.setState({ redirect: true });
+            })
+            .catch((e) => {
+                NotificationService.apiError(e, `Nie udało się zmienić części danych zasobu ${res.name}`);
+            });
+
+    }
+
     render() {
         const { resource, redirect } = this.state;
 
         return <>
             {redirect && <Redirect to="/dashboard" />}
             { resource && (
-                <ResourceManager onSave={(r) => this.editResource(r)} edit resource={resource} />
+                <ResourceManager onSave={(r, split) => split ? this.splitResource(r) : this.editResource(r)} edit resource={resource} />
             )}
         </>
     }
