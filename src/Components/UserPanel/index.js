@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 //import { ResourceRow } from "../ListRows";
 import { Grid } from "semantic-ui-react";
-import RequestList from "../List/RequestList"
+import { RequestList, ResourceList } from "../List"
 import RequestService from "../../Services/RequestService";
 
 export default class UserPanel extends Component {
@@ -17,7 +17,10 @@ export default class UserPanel extends Component {
         <p> Logged in as User.</p>
         <div className="container-fluid d-flex">
           <Grid>
-            <Grid.Column mobile={16} tablet={8} computer={3}>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
+              <ResourceList />
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
               <RequestList />
             </Grid.Column>
           </Grid>
