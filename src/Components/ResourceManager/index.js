@@ -108,7 +108,7 @@ export default class ResourceManager extends Component {
 
     return (
       <div>
-        <Card centered style={{ minWidth: "800px" }}>
+        <Card style={{ minWidth: "800px", margin: "150px auto" }}>
           < Card.Content >
             <Card.Header>
               {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
