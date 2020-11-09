@@ -6,7 +6,24 @@ import { RequestList, ResourceList } from "../List";
 export default class UserPanel extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      resources: []
+    };
+  }
+
+  componentDidMount() {
+    ResourceServise.getList()
+      .then((res) => {
+        this.setState({ resources: res.data });
+      });
+  }
+
+  handleEdit() {
+    window.location = "/resource/edit?resourceId=4a784cb1-5340-4b60-fd1d-08d884f6727c";
+  }
+
+  addResource() {
+    window.location = "/resource/add";
   }
 
   render() {

@@ -6,7 +6,7 @@ import "./index.scss";
 
 export default class AttributeList extends Component {
   state = {
-    attributes: [],
+    attributes: null,
   };
   componentDidMount() {
     this.fetchAttributes();

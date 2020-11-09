@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "semantic-ui-css/semantic.min.css";
 import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
