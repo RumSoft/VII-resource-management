@@ -25,15 +25,27 @@ export default class AddResurcePage extends Component {
     }
 
     editResource(res) {
-        console.log(res);
         ResourceService.editResource(res)
             .then(() => {
-                //NotificationService.success(`Zmieniono dane zasobu ${res.name}`);
+                NotificationService.success(`Zmieniono dane zasobu ${res.name}`);
                 this.setState({ redirect: true });
             })
             .catch((e) => {
-                //NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
+                NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
             });
+    }
+
+
+    splitResource(res) {
+        ResourceService.splitResource(res)
+            .then(() => {
+                NotificationService.success(`Zmieniono część danych zasobu ${res.name}`);
+                this.setState({ redirect: true });
+            })
+            .catch((e) => {
+                NotificationService.apiError(e, `Nie udało się zmienić części danych zasobu ${res.name}`);
+            });
+
     }
 
     render() {
@@ -42,7 +54,7 @@ export default class AddResurcePage extends Component {
         return <>
             {redirect && <Redirect to="/dashboard" />}
             { resource && (
-                <ResourceManager onSave={(r) => this.editResource(r)} edit resource={resource} />
+                <ResourceManager onSave={(r, split) => split ? this.splitResource(r) : this.editResource(r)} edit resource={resource} />
             )}
         </>
     }

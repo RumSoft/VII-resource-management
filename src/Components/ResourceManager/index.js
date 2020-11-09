@@ -6,6 +6,8 @@ import {
   ResourceService,
 } from "../../Services";
 import { Redirect } from "react-router-dom";
+import { Checkbox, Dropdown, Input, Form, Button, Grid, Card, List, Confirm } from 'semantic-ui-react'
+import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 
 export default class ResourceManager extends Component {
@@ -15,11 +17,16 @@ export default class ResourceManager extends Component {
     this.state = {
       id: resource?.id || null,
       name: resource?.name || [],
-      room: resource?.room.id || "",
+      oldname: resource?.name || [],
+      room: resource?.room?.id || -1, // -1 = no room
       rooms: [],
       quantity: resource?.quantity || 1,
+      oldquantity: resource?.quantity || 1,
+      splitquantity: resource?.quantity || 1,
+      split: false,
       attributes: [],
       selectedAttributes: resource?.attributes.map((x) => x.id) || [],
+      isDeleteDialogOpen: false
     };
   }
 
@@ -30,11 +37,15 @@ export default class ResourceManager extends Component {
 
     AttributeService.getList().then((res) => {
       this.setState({ attributes: res.data });
-    });
+    })
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleDropdownChanged = (e, { value }) => {
+    this.setState({ room: value });
   }
 
   handleAttributeChanged(id) {
@@ -56,43 +67,59 @@ export default class ResourceManager extends Component {
     this.props.onSave({
       id: this.state.id,
       name: this.state.name,
-      room: this.state.room === "" ? null : this.state.room,
-      quantity: parseInt(this.state.quantity),
+      room: this.state.room === -1 ? null : this.state.room,
+      quantity: this.state.split ? parseInt(this.state.splitquantity) : parseInt(this.state.quantity),
       attributes: this.state.selectedAttributes,
-    });
+    }, this.state.split);
   }
 
   handleDelete() {
     const { id, name } = this.state;
-    console.log(this.state);
-    if (window.confirm(`Czy usunąć zasób ${name}?`)) {
-      ResourceService.deleteResource(id)
-        .then(() => {
-          NotificationService.success(`Usunięto zasób ${name}`);
-          this.setState({ redirect: true });
-        })
-        .catch((e) => {
-          NotificationService.apiError(e, "Nie udało się usunąć zasobu");
-        });
-    }
+
+    ResourceService.deleteResource(id)
+      .then(() => {
+        NotificationService.success(`Usunięto zasób ${name}`);
+        // handleDeleteClick()
+        this.setState({ redirect: true });
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się usunąć zasobu");
+      });
+  }
+
+  handleSplitCheckboxChange(e) {
+    this.setState({ split: !this.state.split });
   }
 
   render() {
     const isEdit = this.props.edit;
-    let deleteButton;
+    const isSplit = this.state.split;
+    const roomsArr = [{ text: "bez pokoju", value: -1, content: (<div style={{ padding: "1rem" }}>bez pokoju</div>) }, ...this.state.rooms.map((x) => ({
+      ...x, text: x.name, value: x.id, content: (<div style={{ backgroundColor: x.color }}><div className="roomDropdownHover" >{x.name}</div></div>)
+    }))];
+    let deleteButton, splitCheckbox;
+
     if (isEdit === true) {
       deleteButton = (
-        <>
-          <div className="form-group">
-            <button
-              type="button"
-              className="btn btn-danger btn-block"
-              onClick={() => this.handleDelete()}
-            >
-              Usuń zasób
-            </button>
-          </div>
-        </>
+        <Button
+          color="red"
+          floated="left"
+          type="button"
+          className="btn btn-danger btn-block"
+          onClick={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+        >
+          Usuń zasób
+        </Button >
+      );
+      splitCheckbox = (
+        <Checkbox
+          disabled={this.state.oldquantity === 1}
+          name="split"
+          className="leftlabel"
+          toggle
+          label="Całość/Część"
+          onChange={(e) => this.handleSplitCheckboxChange(e)}
+        />
       );
     }
 
@@ -101,91 +128,123 @@ export default class ResourceManager extends Component {
     }
 
     return (
-      <div className="resourcemanager-form">
-        <div className="form-group">
-          <h2 className="text-center">
-            {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
-          </h2>
+      <div>
+        <Card className="resourcemanager" >
+          < Card.Content >
+            <Card.Header as="h1">
+              {isEdit === true ? "Edytowanie" : "Dodawanie"} {isSplit === true && "części"} zasobu {this.state.oldname}
+            </Card.Header>
 
-          <div className="form-group">
-            Nazwa zasobu
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              placeholder="nazwa"
-              value={this.state.name}
-              onChange={(e) => this.handleChange(e)}
-            />
-          </div>
+          </Card.Content >
 
-          <div className="form-group">
-            Pokój
-            {/* <Select //TODO: kolor
-              name="room"
-              displayEmpty={true}
-              value={this.state.room}
-              className="form-control"
-              onChange={(e) => this.handleChange(e)}
-            >
-              <MenuItem value={""}>---</MenuItem>
-              {this.state.rooms.map((x) => {
-                return (
-                  <MenuItem key={x.id} value={x.id}>
-                    {" "}
-                    {x.name}
-                  </MenuItem>
-                );
-              })}
-            </Select> */}
-          </div>
+          < Card.Content >
+            <Grid columns="2">
+              <Grid.Column>
+                {splitCheckbox}
+                <Form>
+                  <Form.Field>
+                    <label>Nazwa</label>
+                    <Input
+                      fluid
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      placeholder="nazwa"
+                      value={this.state.name}
+                      onChange={(e) => this.handleChange(e)}
+                    />
+                  </Form.Field>
 
-          <div className="form-group">
-            Ilość
-            <div>
-              {/* <TextField
-                name="quantity"
-                type="number"
-                value={this.state.quantity}
-                inputProps={{
-                  min: "1",
-                  step: "1",
-                  style: { textAlign: "center" },
-                }}
-                onChange={(e) => this.handleChange(e)}
-                variant="outlined"
-              /> */}
-            </div>
-          </div>
+                  <Form.Field>
+                    <label>Pokój</label>
+                    <Input
+                      fluid
+                      input={<Dropdown
+                        fluid
+                        selection
+                        labeled
+                        placeholder={"Wybierz pokój"}
+                        value={this.state.room}
+                        options={roomsArr}
+                        onChange={this.handleDropdownChanged}
+                      />}
+                    />
+                  </Form.Field>
 
-          {this.state.attributes.map((x) => {
-            return (
-              <p>xd</p>
-              // <FormControlLabel
-              //   key={x.id}
-              //   control={
-              //     <Checkbox
-              //       value={x.id}
-              //       checked={this.state.selectedAttributes.includes(x.id)}
-              //       onChange={() => this.handleAttributeChanged(x.id)}
-              //     />
-              //   }
-              //   label={x.name}
-              // />
-            );
-          })}
-          <div className="form-group">
-            <button
+                  {!isSplit && <Form.Field>
+                    <label>Ilość</label>
+                    <Input
+                      fluid
+                      name="quantity"
+                      type="number"
+                      value={this.state.quantity}
+                      onChange={(e) => this.handleChange(e)}
+                      min="1"
+                      step="1"
+                    />
+                  </Form.Field>}
+                  {isSplit && <Form.Field>
+                    <label>Ilość: {this.state.splitquantity}</label>
+                    <Slider
+                      color="blue"
+                      discrete
+                      value={this.state.splitquantity}
+                      settings={{
+                        start: parseInt(this.state.splitquantity),
+                        min: 1,
+                        max: parseInt(this.state.oldquantity),
+                        step: 1,
+                        onChange: value => { this.setState({ splitquantity: value }); }
+                      }}
+                    />
+                  </Form.Field>}
+                </Form>
+              </Grid.Column>
+
+              <Grid.Column>
+                <List>
+
+                  {this.state.attributes.map((x) => {
+                    return (
+                      <List.Item key={x.id} style={{ backgroundColor: x.color }}>
+                        <Checkbox
+                          key={x.id}
+                          label={x.name.substring(0, 50)}
+                          checked={this.state.selectedAttributes.includes(x.id)}
+                          onChange={() => this.handleAttributeChanged(x.id)}
+                        />
+                      </List.Item>
+                    );
+                  })}
+                </List>
+              </Grid.Column>
+            </Grid>
+          </Card.Content >
+          <Card.Content>
+            <Button
+              color="green"
+              floated="right"
               type="submit"
               className="btn btn-primary btn-block"
               onClick={(e) => this.handleSave(e)}
             >
               Zapisz zasób
-            </button>
-          </div>
-          {deleteButton}
-        </div>
-      </div>
+                </Button>
+
+            {deleteButton}
+          </Card.Content>
+        </Card >
+
+        < Confirm
+          open={this.state.isDeleteDialogOpen}
+          onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+          onConfirm={() => this.handleDelete()}
+          content={(`Czy usunąć zasób ${this.state.name}?`)}
+          cancelButton="Nie"
+          confirmButton="Tak"
+        />
+
+      </div >
     );
   }
 }
