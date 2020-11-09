@@ -96,7 +96,7 @@ export default class ResourceManager extends Component {
   render() {
     const isEdit = this.props.edit;
     const isSplit = this.state.split;
-    const roomsArr = [{ text: "bez pokoju", value: -1 }, ...this.state.rooms.map((x) => ({ ...x, text: x.name, value: x.id }))];
+    const roomsArr = [{ text: "bez pokoju", value: -1, content: (<div style={{ padding: "1rem" }}>bez pokoju</div>) }, ...this.state.rooms.map((x) => ({ ...x, text: x.name, value: x.id, content: (<div style={{ backgroundColor: x.color, padding: "1rem" }}>{x.name}</div>) }))];
     let deleteButton, splitCheckbox;
 
     if (isEdit === true) {
@@ -186,6 +186,7 @@ export default class ResourceManager extends Component {
                   {isSplit && <Form.Field>
                     <label>Ilość: {this.state.splitquantity}</label>
                     <Slider
+                      color="blue"
                       discrete
                       value={this.state.splitquantity}
                       settings={{
