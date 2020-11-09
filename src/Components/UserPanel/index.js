@@ -18,7 +18,7 @@ export default class UserPanel extends Component {
   }
 
   handleEdit() {
-    window.location = "/resource/edit?resourceId=34096198-9fd0-4b24-2d42-08d88440dd3b";
+    window.location = "/resource/edit?resourceId=4a784cb1-5340-4b60-fd1d-08d884f6727c";
   }
 
   addResource() {

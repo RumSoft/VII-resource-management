@@ -6,7 +6,7 @@ import {
   ResourceService,
 } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Checkbox, Dropdown, Input, Form, Button, Grid, Card, List } from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input, Form, Button, Grid, Card, List, Confirm } from 'semantic-ui-react'
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 
@@ -26,17 +26,16 @@ export default class ResourceManager extends Component {
       split: false,
       attributes: [],
       selectedAttributes: resource?.attributes.map((x) => x.id) || [],
+      isDeleteDialogOpen: false
     };
   }
 
   componentDidMount() {
     RoomService.getList().then((res) => {
-      res.data = res.data.map((x) => ({ ...x, color: "#ffecb3" }))
       this.setState({ rooms: res.data });
     });
 
     AttributeService.getList().then((res) => {
-      res.data = res.data.map((x) => ({ ...x, color: "#ffecb3" }))
       this.setState({ attributes: res.data });
     })
   }
@@ -77,16 +76,15 @@ export default class ResourceManager extends Component {
   handleDelete() {
     const { id, name } = this.state;
 
-    if (window.confirm(`Czy usunąć zasób ${name}?`)) {
-      ResourceService.deleteResource(id)
-        .then(() => {
-          NotificationService.success(`Usunięto zasób ${name}`);
-          this.setState({ redirect: true });
-        })
-        .catch((e) => {
-          NotificationService.apiError(e, "Nie udało się usunąć zasobu");
-        });
-    }
+    ResourceService.deleteResource(id)
+      .then(() => {
+        NotificationService.success(`Usunięto zasób ${name}`);
+        // handleDeleteClick()
+        this.setState({ redirect: true });
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się usunąć zasobu");
+      });
   }
 
   handleSplitCheckboxChange(e) {
@@ -96,7 +94,9 @@ export default class ResourceManager extends Component {
   render() {
     const isEdit = this.props.edit;
     const isSplit = this.state.split;
-    const roomsArr = [{ text: "bez pokoju", value: -1, content: (<div style={{ padding: "1rem" }}>bez pokoju</div>) }, ...this.state.rooms.map((x) => ({ ...x, text: x.name, value: x.id, content: (<div style={{ backgroundColor: x.color, padding: "1rem" }}>{x.name}</div>) }))];
+    const roomsArr = [{ text: "bez pokoju", value: -1, content: (<div style={{ padding: "1rem" }}>bez pokoju</div>) }, ...this.state.rooms.map((x) => ({
+      ...x, text: x.name, value: x.id, content: (<div style={{ backgroundColor: x.color }}><div className="roomDropdownHover" >{x.name}</div></div>)
+    }))];
     let deleteButton, splitCheckbox;
 
     if (isEdit === true) {
@@ -106,10 +106,10 @@ export default class ResourceManager extends Component {
           floated="left"
           type="button"
           className="btn btn-danger btn-block"
-          onClick={() => this.handleDelete()}
+          onClick={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
         >
           Usuń zasób
-        </Button>
+        </Button >
       );
       splitCheckbox = (
         <Checkbox
@@ -234,6 +234,16 @@ export default class ResourceManager extends Component {
             {deleteButton}
           </Card.Content>
         </Card >
+
+        < Confirm
+          open={this.state.isDeleteDialogOpen}
+          onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+          onConfirm={() => this.handleDelete()}
+          content={(`Czy usunąć zasób ${this.state.name}?`)}
+          cancelButton="Nie"
+          confirmButton="Tak"
+        />
+
       </div >
     );
   }
