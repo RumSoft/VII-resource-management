@@ -14,21 +14,23 @@ export default class ResourceRow extends Component {
 
 
         return (
-            <div className="list-row">
-                {name} {quantity} {room && room.name}
-                <Button
-                    circular
-                    as={Link}
-                    to={`/user/edit?requestId=${id}`}
-                    icon="edit"
-                    color="yellow"
-                />
-                <Button
-                    circular
-                    onClick={() => this.handleDeleteClick()}
-                    icon="delete"
-                    color="red"
-                />
+            <div className="list-row resource-row">
+                <div className="list-row__content">{name} {quantity} {room && room.name}</div>
+                <div className="list-row__actions">
+                    <Button
+                        circular
+                        as={Link}
+                        to={`/user/edit?requestId=${id}`}
+                        icon="edit"
+                        color="yellow"
+                    />
+                    <Button
+                        circular
+                        onClick={() => this.handleDeleteClick()}
+                        icon="delete"
+                        color="red"
+                    />
+                </div>
             </div>
         );
     }
