@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 //import { ResourceRow } from "../ListRows";
 import { Grid } from "semantic-ui-react";
-import { RequestList, ResourceList } from "../List"
-import RequestService from "../../Services/RequestService";
+import { RequestList, ResourceList } from "../List";
 
 export default class UserPanel extends Component {
   constructor(props) {

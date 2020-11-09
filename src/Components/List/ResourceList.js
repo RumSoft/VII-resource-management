@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NotificationService, ResourceService } from "../../Services";
+import { ResourceService } from "../../Services";
 import { ResourceRow } from "../ListRows";
 import EntityList from "./EntityList";
 import "./index.scss";
