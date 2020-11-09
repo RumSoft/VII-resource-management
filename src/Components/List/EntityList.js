@@ -38,18 +38,25 @@ export default class EntityList extends Component {
   renderContent() {
     const { entities, entityMapFunc } = this.props;
 
-    if (entities && entities.length)
-      if (entityMapFunc) return entities.map((x) => entityMapFunc(x));
-      else throw "no entityMapFunc prop passed into EntityList component!";
+    if (!entityMapFunc)
+      throw "no entityMapFunc prop passed into EntityList component!";
 
-    return (
-      <ContentLoader viewBox="0 0 100 70">
-        {Array(7)
-          .fill()
-          .map((_, i) => (
-            <rect x="0" y={i * 10} rx="0" ry="0" width="100" height="7" />
-          ))}
-      </ContentLoader>
+    if (!entities) {
+      return (
+        <ContentLoader viewBox="0 0 100 70">
+          {Array(7)
+            .fill()
+            .map((_, i) => (
+              <rect x="0" y={i * 10} rx="0" ry="0" width="100" height="7" />
+            ))}
+        </ContentLoader>
+      );
+    }
+
+    return entities.length ? (
+      entities.map((x) => entityMapFunc(x))
+    ) : (
+      <p>brak elementów</p>
     );
   }
 

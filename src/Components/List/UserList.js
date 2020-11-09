@@ -6,7 +6,7 @@ import "./index.scss";
 
 export default class UserList extends Component {
   state = {
-    users: [],
+    users: null,
   };
   componentDidMount() {
     this.fetchUsers();

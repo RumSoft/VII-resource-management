@@ -6,7 +6,7 @@ import "./index.scss";
 
 export default class RoomList extends Component {
   state = {
-    rooms: [],
+    rooms: null,
   };
   componentDidMount() {
     this.fetchRooms();
