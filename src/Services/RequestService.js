@@ -7,7 +7,7 @@ export default class RequestService {
         takerId,
         quantity
     ) {
-        return APIService.post("request", {
+        return APIService.post("trade-request", {
             ResourceId: resourceId,
             TakerId: takerId,
             Quantity: quantity
@@ -15,15 +15,15 @@ export default class RequestService {
     }
 
     static getList() {
-        return APIService.get("request");
+        return APIService.get("trade-request");
     }
 
     static editRequest(id, action) {
-        return APIService.put(`request`, id, action);
+        return APIService.put(`trade-request`, id, action);
     }
 
     static getRequest(id) {
-        return APIService.get(`request/${id}`);
+        return APIService.get(`trade-request/${id}`);
     }
 
 }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "semantic-ui-react";
-import { Events, EventService } from "../../Services";
 import "./RequestRow.scss";
 
 export default class RequestRow extends Component {
@@ -11,6 +10,7 @@ export default class RequestRow extends Component {
 
     render() {
         const { owner, taker, resource, room, attributes, id } = this.props.request;
+        const d = "abc";
         return (
             <div className="list-row request-row">
                 <div className="list-row__content">

@@ -64,7 +64,7 @@ export default class RequestList extends Component {
                 entities={requests}
                 entityName="requests"
                 entityMapFunc={(x) => (
-                    <RoomRow
+                    <RequestRow
                         onChange={(request) => this.requestChanged(request)}
                         key={x.id}
                         request={x}
