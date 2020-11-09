@@ -6,6 +6,7 @@ import {
   ResourceService,
 } from "../../Services";
 import { Redirect } from "react-router-dom";
+import { Checkbox, Dropdown, Input, Form, Button, Grid, Card } from 'semantic-ui-react'
 import "./index.scss";
 
 export default class ResourceManager extends Component {
@@ -15,7 +16,7 @@ export default class ResourceManager extends Component {
     this.state = {
       id: resource?.id || null,
       name: resource?.name || [],
-      room: resource?.room.id || "",
+      room: resource?.room?.id || -1, // -1 = no room
       rooms: [],
       quantity: resource?.quantity || 1,
       attributes: [],
@@ -35,8 +36,13 @@ export default class ResourceManager extends Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+    console.log(event.target.name)
   }
 
+  handleDropdownChanged = (e, { value }) => {
+    console.log(value)
+    this.setState({ room: value });
+  }
   handleAttributeChanged(id) {
     const attrList = this.state.selectedAttributes;
 
@@ -56,7 +62,7 @@ export default class ResourceManager extends Component {
     this.props.onSave({
       id: this.state.id,
       name: this.state.name,
-      room: this.state.room === "" ? null : this.state.room,
+      room: this.state.room === -1 ? null : this.state.room,
       quantity: parseInt(this.state.quantity),
       attributes: this.state.selectedAttributes,
     });
@@ -64,7 +70,7 @@ export default class ResourceManager extends Component {
 
   handleDelete() {
     const { id, name } = this.state;
-    console.log(this.state);
+
     if (window.confirm(`Czy usunąć zasób ${name}?`)) {
       ResourceService.deleteResource(id)
         .then(() => {
@@ -80,19 +86,19 @@ export default class ResourceManager extends Component {
   render() {
     const isEdit = this.props.edit;
     let deleteButton;
+    const roomsArr = [{ text: "bez pokoju", value: -1 }, ...this.state.rooms.map((x) => ({ ...x, text: x.name, value: x.id }))]
+
     if (isEdit === true) {
       deleteButton = (
-        <>
-          <div className="form-group">
-            <button
-              type="button"
-              className="btn btn-danger btn-block"
-              onClick={() => this.handleDelete()}
-            >
-              Usuń zasób
-            </button>
-          </div>
-        </>
+
+        <Button
+          type="button"
+          className="btn btn-danger btn-block"
+          onClick={() => this.handleDelete()}
+        >
+          Usuń zasób
+        </Button>
+
       );
     }
 
@@ -101,91 +107,85 @@ export default class ResourceManager extends Component {
     }
 
     return (
-      <div className="resourcemanager-form">
-        <div className="form-group">
-          <h2 className="text-center">
-            {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
-          </h2>
+      <div>
+        <Card style={{ minWidth: "800px", margin: "150px auto" }}>
+          < Card.Content >
+            <Card.Header>
+              {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
+            </Card.Header>
 
-          <div className="form-group">
-            Nazwa zasobu
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              placeholder="nazwa"
-              value={this.state.name}
-              onChange={(e) => this.handleChange(e)}
-            />
-          </div>
+            <Grid columns="2">
+              <Grid.Column>
+                <Form>
+                  <Form.Field>
+                    <Input
+                      fluid
+                      label="Nazwa"
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      placeholder="nazwa"
+                      value={this.state.name}
+                      onChange={(e) => this.handleChange(e)}
+                    />
+                  </Form.Field>
 
-          <div className="form-group">
-            Pokój
-            {/* <Select //TODO: kolor
-              name="room"
-              displayEmpty={true}
-              value={this.state.room}
-              className="form-control"
-              onChange={(e) => this.handleChange(e)}
-            >
-              <MenuItem value={""}>---</MenuItem>
-              {this.state.rooms.map((x) => {
-                return (
-                  <MenuItem key={x.id} value={x.id}>
-                    {" "}
-                    {x.name}
-                  </MenuItem>
-                );
-              })}
-            </Select> */}
-          </div>
+                  <Form.Field>
+                    <Input
+                      fluid
+                      label="Pokój"
+                      input={<Dropdown
+                        fluid
+                        selection
+                        labeled
+                        placeholder={"Wybierz pokój"}
+                        value={this.state.room}
+                        options={roomsArr}
+                        onChange={this.handleDropdownChanged}
+                      />}
+                    />
+                  </Form.Field>
 
-          <div className="form-group">
-            Ilość
-            <div>
-              {/* <TextField
-                name="quantity"
-                type="number"
-                value={this.state.quantity}
-                inputProps={{
-                  min: "1",
-                  step: "1",
-                  style: { textAlign: "center" },
-                }}
-                onChange={(e) => this.handleChange(e)}
-                variant="outlined"
-              /> */}
-            </div>
-          </div>
+                  <Form.Field>
+                    <Input
+                      fluid
+                      name="quantity"
+                      type="number"
+                      value={this.state.quantity}
+                      onChange={(e) => this.handleChange(e)}
+                      label="Ilość"
+                      min="1"
+                      step="1"
+                    />
+                  </Form.Field>
+                </Form>
+              </Grid.Column>
 
-          {this.state.attributes.map((x) => {
-            return (
-              <p>xd</p>
-              // <FormControlLabel
-              //   key={x.id}
-              //   control={
-              //     <Checkbox
-              //       value={x.id}
-              //       checked={this.state.selectedAttributes.includes(x.id)}
-              //       onChange={() => this.handleAttributeChanged(x.id)}
-              //     />
-              //   }
-              //   label={x.name}
-              // />
-            );
-          })}
-          <div className="form-group">
-            <button
-              type="submit"
-              className="btn btn-primary btn-block"
-              onClick={(e) => this.handleSave(e)}
-            >
-              Zapisz zasób
-            </button>
-          </div>
-          {deleteButton}
-        </div>
-      </div>
+              <Grid.Column>
+                {this.state.attributes.map((x) => {
+                  return (
+                    <Checkbox
+                      key={x.id}
+                      label={x.name}
+                      checked={this.state.selectedAttributes.includes(x.id)}
+                      onChange={() => this.handleAttributeChanged(x.id)}
+                    />
+                  );
+                })}
+                <Button
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                  onClick={(e) => this.handleSave(e)}
+                >
+                  Zapisz zasób
+                </Button>
+
+                {deleteButton}
+              </Grid.Column>
+            </Grid>
+          </Card.Content >
+        </Card >
+      </div >
     );
   }
 }
