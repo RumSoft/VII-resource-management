@@ -6,7 +6,7 @@ import {
   ResourceService,
 } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Checkbox, Dropdown, Input } from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input, Form, Button, Grid, Card } from 'semantic-ui-react'
 import "./index.scss";
 
 export default class ResourceManager extends Component {
@@ -90,17 +90,15 @@ export default class ResourceManager extends Component {
 
     if (isEdit === true) {
       deleteButton = (
-        <>
-          <div className="form-group">
-            <button
-              type="button"
-              className="btn btn-danger btn-block"
-              onClick={() => this.handleDelete()}
-            >
-              Usuń zasób
-            </button>
-          </div>
-        </>
+
+        <Button
+          type="button"
+          className="btn btn-danger btn-block"
+          onClick={() => this.handleDelete()}
+        >
+          Usuń zasób
+        </Button>
+
       );
     }
 
@@ -109,83 +107,85 @@ export default class ResourceManager extends Component {
     }
 
     return (
-      <div className="resourcemanager-form">
-        <div className="form-group">
-          <h2 className="text-center">
-            {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
-          </h2>
+      <div>
+        <Card centered style={{ minWidth: "800px" }}>
+          < Card.Content >
+            <Card.Header>
+              {isEdit === true ? "Edytowanie" : "Dodawanie"} zasobu
+            </Card.Header>
 
-          <div className="form-group">
-            Nazwa zasobu
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              placeholder="nazwa"
-              value={this.state.name}
-              onChange={(e) => this.handleChange(e)}
-            />
-          </div>
+            <Grid columns="2">
+              <Grid.Column>
+                <Form>
+                  <Form.Field>
+                    <Input
+                      fluid
+                      label="Nazwa"
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      placeholder="nazwa"
+                      value={this.state.name}
+                      onChange={(e) => this.handleChange(e)}
+                    />
+                  </Form.Field>
 
-          <div className="form-group">
-            x
-            <Dropdown
-              selection
-              labeled
-              placeholder={"Wybierz pokój"}
-              value={this.state.room}
-              options={roomsArr}
-              onChange={this.handleDropdownChanged}
+                  <Form.Field>
+                    <Input
+                      fluid
+                      label="Pokój"
+                      input={<Dropdown
+                        fluid
+                        selection
+                        labeled
+                        placeholder={"Wybierz pokój"}
+                        value={this.state.room}
+                        options={roomsArr}
+                        onChange={this.handleDropdownChanged}
+                      />}
+                    />
+                  </Form.Field>
 
-            />
-          </div>
+                  <Form.Field>
+                    <Input
+                      fluid
+                      name="quantity"
+                      type="number"
+                      value={this.state.quantity}
+                      onChange={(e) => this.handleChange(e)}
+                      label="Ilość"
+                      min="1"
+                      step="1"
+                    />
+                  </Form.Field>
+                </Form>
+              </Grid.Column>
 
-          <div className="form-group">
-            Ilość
-            <Input
-              name="quantity"
-              type="number"
-              value={this.state.quantity}
-              onChange={(e) => this.handleChange(e)}
-              label="Ilość"
-            />
-            {/* <TextField
-                name="quantity"
-                type="number"
-                value={this.state.quantity}
-                inputProps={{
-                  min: "1",
-                  step: "1",
-                  style: { textAlign: "center" },
-                }}
-                onChange={(e) => this.handleChange(e)}
-                variant="outlined"
-              /> */}
+              <Grid.Column>
+                {this.state.attributes.map((x) => {
+                  return (
+                    <Checkbox
+                      key={x.id}
+                      label={x.name}
+                      checked={this.state.selectedAttributes.includes(x.id)}
+                      onChange={() => this.handleAttributeChanged(x.id)}
+                    />
+                  );
+                })}
+                <Button
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                  onClick={(e) => this.handleSave(e)}
+                >
+                  Zapisz zasób
+                </Button>
 
-          </div>
-
-          {this.state.attributes.map((x) => {
-            return (
-              <Checkbox
-                key={x.id}
-                label={x.name}
-                checked={this.state.selectedAttributes.includes(x.id)}
-                onChange={() => this.handleAttributeChanged(x.id)}
-              />
-            );
-          })}
-          <div className="form-group">
-            <button
-              type="submit"
-              className="btn btn-primary btn-block"
-              onClick={(e) => this.handleSave(e)}
-            >
-              Zapisz zasób
-            </button>
-          </div>
-          {deleteButton}
-        </div>
-      </div>
+                {deleteButton}
+              </Grid.Column>
+            </Grid>
+          </Card.Content >
+        </Card >
+      </div >
     );
   }
 }
