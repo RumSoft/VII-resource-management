@@ -31,12 +31,14 @@ export default class ResourceManager extends Component {
 
   componentDidMount() {
     RoomService.getList().then((res) => {
+      res.data = res.data.map((x) => ({ ...x, color: "#ffecb3" }))
       this.setState({ rooms: res.data });
     });
 
     AttributeService.getList().then((res) => {
+      res.data = res.data.map((x) => ({ ...x, color: "#ffecb3" }))
       this.setState({ attributes: res.data });
-    });
+    })
   }
 
   handleChange(event) {
@@ -168,6 +170,7 @@ export default class ResourceManager extends Component {
                       />}
                     />
                   </Form.Field>
+
                   {!isSplit && <Form.Field>
                     <label>Ilość</label>
                     <Input
@@ -199,9 +202,10 @@ export default class ResourceManager extends Component {
 
               <Grid.Column>
                 <List>
+
                   {this.state.attributes.map((x) => {
                     return (
-                      <List.Item key={x.id}>
+                      <List.Item key={x.id} style={{ backgroundColor: x.color }}>
                         <Checkbox
                           key={x.id}
                           label={x.name.substring(0, 50)}
