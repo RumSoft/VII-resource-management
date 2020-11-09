@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
 
 namespace TestApp.Api.Commands
 {
@@ -49,6 +50,11 @@ namespace TestApp.Api.Commands
                 .NotEmpty()
                 .MinimumLength(5)
                 .MaximumLength(150);
+        }
+
+        public static IRuleBuilderOptions<T, string> HexColorValidator<T>(this IRuleBuilder<T, string> rule)
+        {
+            return rule.NotEmpty().Matches(new Regex("^((#[0-9a-fA-F]{3})|(#[0-9a-fA-F]{6})(#[0-9a-fA-F]{8}))$"));
         }
     }
 }

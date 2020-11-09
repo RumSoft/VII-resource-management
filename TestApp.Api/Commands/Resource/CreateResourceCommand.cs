@@ -35,7 +35,7 @@ namespace TestApp.Api.Commands.Resource
                 //add resource
                 var resource = new Models.Resource
                 {
-                    Name = input.Name,
+                    Name = input.Name.Cleanup(),
                     Quantity = input.Quantity
                 };
 
@@ -90,7 +90,7 @@ namespace TestApp.Api.Commands.Resource
             public CreateResourceCommandInputValidator()
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).ResourceNameValidator().WithName("Nazwa zasobu");
-                //RuleFor(x => x.Quantity > 0)
+                RuleFor(x => x.Quantity > 0);
             }
         }
     }

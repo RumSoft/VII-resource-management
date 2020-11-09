@@ -148,6 +148,7 @@ namespace TestApp.Api.Commands.Search
             var list = attributes.Select(x => new
             {
                 x.Name,
+                x.Color,
                 ResourceCount = x.Resources.Count
             });
 

@@ -37,7 +37,7 @@ namespace TestApp.Api.Commands.Resource
                 if (user == null || baseResource.Owner != user)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
 
-                if (input.Quantity >= baseResource.Quantity)
+                if (input.Quantity > baseResource.Quantity)
                 {
                     ModelState.AddModelError("Quantity", ReturnMessages.Message_400_TooBigSplitAmount);
                     return BadRequest(ModelState);

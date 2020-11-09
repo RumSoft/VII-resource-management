@@ -6,5 +6,6 @@ namespace TestApp.Api.Models
     {
         public string Name { get; set; }
         public virtual IList<Resource> Resources { get; set; }
+        public string Color { get; set; }
     }
 }

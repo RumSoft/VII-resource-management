@@ -27,7 +27,8 @@ namespace TestApp.Api.Commands.Room
             {
                 var room = new Models.Room
                 {
-                    Name = input.Name.Cleanup()
+                    Name = input.Name.Cleanup(),
+                    Color = input.Color
                 };
 
                 _context.Add(room);
@@ -43,6 +44,7 @@ namespace TestApp.Api.Commands.Room
         public class AddRoomCommandInput
         {
             public string Name { get; set; }
+            public string Color { get; set; }
         }
 
         public class AddRoomCommandInputValidator : AbstractValidator<AddRoomCommandInput>
@@ -50,6 +52,7 @@ namespace TestApp.Api.Commands.Room
             public AddRoomCommandInputValidator()
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).RoomNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Color).HexColorValidator().WithName("Kolor");
             }
         }
     }

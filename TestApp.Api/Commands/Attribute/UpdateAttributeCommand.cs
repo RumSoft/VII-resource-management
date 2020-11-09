@@ -38,6 +38,7 @@ namespace TestApp.Api.Commands.Attribute
                     return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
 
                 attribute.Name = input.Name.Cleanup();
+                attribute.Color = input.Color;
                 _context.Attributes.Update(attribute);
                 _context.SaveChanges();
 
@@ -57,6 +58,7 @@ namespace TestApp.Api.Commands.Attribute
             public UpdateAttributeCommandInputValidator()
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).AttributeNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Color).HexColorValidator().WithName("Kolor");
             }
         }
     }

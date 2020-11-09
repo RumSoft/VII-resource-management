@@ -23,7 +23,7 @@ namespace TestApp.Api.Models.Dto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Color? Color { get; set; }
+        public string Color { get; set; }
     }
 
     public class GuidName

@@ -107,7 +107,6 @@ namespace TestApp.Api
             services.AddSingleton<IRandomPasswordGenerator, RandomPasswordGenerator>();
             services.AddScoped<IUserInfo, UserInfo>();
             services.AddScoped<IMailerService, MailerService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

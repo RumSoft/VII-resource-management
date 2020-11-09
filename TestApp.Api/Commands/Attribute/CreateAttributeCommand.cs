@@ -27,7 +27,8 @@ namespace TestApp.Api.Commands.Attribute
             {
                 var attr = new Models.Attribute
                 {
-                    Name = input.Name.Cleanup()
+                    Name = input.Name.Cleanup(),
+                    Color = input.Color
                 };
 
                 _context.Attributes.Add(attr);
@@ -43,6 +44,7 @@ namespace TestApp.Api.Commands.Attribute
         public class CreateAttributeCommandInput
         {
             public string Name { get; set; }
+            public string Color { get; set; }
         }
 
         public class CreateAttributeCommandInputValidator : AbstractValidator<CreateAttributeCommandInput>
@@ -50,6 +52,7 @@ namespace TestApp.Api.Commands.Attribute
             public CreateAttributeCommandInputValidator()
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).AttributeNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Color).HexColorValidator().WithName("Kolor");
             }
         }
     }

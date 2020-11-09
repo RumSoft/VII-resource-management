@@ -43,7 +43,7 @@ namespace TestApp.Api.Commands.Resource
                 if (user == null || resource.Owner != user)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
 
-                resource.Name = input.Name;
+                resource.Name = input.Name.Cleanup();
                 resource.Quantity = input.Quantity;
 
                 //set room
@@ -56,9 +56,7 @@ namespace TestApp.Api.Commands.Resource
                 else
                     _context.Entry(resource).Property("RoomId").CurrentValue = null;
 
-                //resource.Room = input.Room == null ? null : _context.Rooms.Find(input.Room);
-                //_context.Entry(resource).Property(x => x.Room).IsModified = true;
-
+        
                 resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
@@ -96,6 +94,7 @@ namespace TestApp.Api.Commands.Resource
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).ResourceNameValidator().WithName("Nazwa");
                 RuleFor(x => x.Id).NotEmpty();
+                RuleFor(x => x.Quantity).GreaterThan(0);
             }
         }
     }

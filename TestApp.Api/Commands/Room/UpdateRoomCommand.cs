@@ -38,6 +38,7 @@ namespace TestApp.Api.Commands.Room
                     return BadRequest(ReturnMessages.Message_400_RoomAlreadyExists);
 
                 room.Name = input.Name.Cleanup();
+                room.Color = input.Color;
                 _context.Rooms.Update(room);
                 _context.SaveChanges();
 
@@ -59,6 +60,7 @@ namespace TestApp.Api.Commands.Room
             public UpdateRoomCommandInputValidator()
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).RoomNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Color).HexColorValidator().WithName("Kolor");
             }
         }
     }
