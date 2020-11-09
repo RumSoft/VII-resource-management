@@ -49,12 +49,18 @@ namespace TestApp.Api.Commands.Resource
                 resource.Name = input.Name;
                 resource.Quantity = input.Quantity;
 
+                //set room
+                //https://github.com/dotnet/efcore/issues/6504
+                //Models.Room roomToSet = null;
+                //if (input.Room != null && input.Room >= 0)
+                //    roomToSet = _context.Rooms.Find(input.Room);
+                //if (roomToSet != null)
+                //    resource.Room = roomToSet;
+                //else
+                //    _context.Entry(resource).Property("RoomId").CurrentValue = null;
 
-                if (input.Room != null && input.Room >= 0)
-                    resource.Room = _context.Rooms.Find(input.Room);
-                else
-                    resource.Room = null;
-
+                resource.Room = input.Room == null ? null : _context.Rooms.Find(input.Room);
+                _context.Entry(resource).Property(x => x.Room).IsModified = true;
 
                 resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)
