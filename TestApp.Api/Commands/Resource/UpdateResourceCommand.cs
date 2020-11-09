@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -51,21 +48,21 @@ namespace TestApp.Api.Commands.Resource
 
                 //set room
                 //https://github.com/dotnet/efcore/issues/6504
-                //Models.Room roomToSet = null;
-                //if (input.Room != null && input.Room >= 0)
-                //    roomToSet = _context.Rooms.Find(input.Room);
-                //if (roomToSet != null)
-                //    resource.Room = roomToSet;
-                //else
-                //    _context.Entry(resource).Property("RoomId").CurrentValue = null;
+                Models.Room roomToSet = null;
+                if (input.Room != null && input.Room >= 0)
+                    roomToSet = _context.Rooms.Find(input.Room);
+                if (roomToSet != null)
+                    resource.Room = roomToSet;
+                else
+                    _context.Entry(resource).Property("RoomId").CurrentValue = null;
 
-                resource.Room = input.Room == null ? null : _context.Rooms.Find(input.Room);
-                _context.Entry(resource).Property(x => x.Room).IsModified = true;
+                //resource.Room = input.Room == null ? null : _context.Rooms.Find(input.Room);
+                //_context.Entry(resource).Property(x => x.Room).IsModified = true;
 
                 resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
-                
+
                 _context.Resources.Update(resource);
                 _context.SaveChanges();
 
@@ -78,7 +75,6 @@ namespace TestApp.Api.Commands.Resource
                 {
                     Id = resource.Id
                 });
-
             }
             catch (Exception e)
             {
