@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
+using TestApp.Api.Helpers;
 
 namespace TestApp.Api.Commands.Attribute
 {
@@ -25,8 +26,15 @@ namespace TestApp.Api.Commands.Attribute
                 if (attr == null)
                     return BadRequest(ReturnMessages.Message_400_RoomNotFound);
 
-                if (attr.Resources.Any())
-                    return BadRequest(ReturnMessages.Message_400_RoomContainsResources);
+                if (AppConfig.CanRemoveAttributesWithResources)
+                {
+                    if (attr.Resources.Any())
+                        return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
+                }
+                else
+                {
+                    ResourceMerger.TryMergeByAttribute(attr, _context);
+                }
 
                 _context.Attributes.Remove(attr);
                 _context.SaveChanges();

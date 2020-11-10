@@ -31,12 +31,13 @@ namespace TestApp.Api.Helpers
         /// </summary>
         public static void TryMergeByResource(Resource resource, DataContext context)
         {
-            //get exactly same resources (except attributes, see below)
+            var attributeIds = resource.Attributes?.Select(x => x.Id) ?? new[] {-1};
+
             var matchingResources = Resources(context).Where(x => x.Owner == resource.Owner
                                                                   && x.Name == resource.Name
                                                                   && x.Room == resource.Room)
                 .ToList()
-                .Where(x => x.Attributes.SequenceEqual(resource.Attributes))
+                .Where(x => x.Attributes == null || x.Attributes.Select(y => y.Id).SequenceEqual(attributeIds))
                 .ToList();
 
             if (matchingResources.Count >= 2)
@@ -54,19 +55,31 @@ namespace TestApp.Api.Helpers
                 Merge(res, context);
         }
 
-        ///// <summary>
-        /////     try merge resources when resource owner changed
-        ///// </summary>
-        //public static void TryMergeByOwner(User owner, DataContext context)
-        //{
-        //    var res = Resources(context).Where(x => x.Owner == owner)
-        //        .ToList();
-        //    if (res.Count > 2)
-        //        Merge(res, context);
-        //}
-
         private static void Merge(IList<Resource> resources, DataContext context)
         {
+            foreach (var pre_group in resources.GroupBy(x => new {x.Name, x.Room, x.Owner}).ToList())
+            {
+                //https://stackoverflow.com/questions/31724512/linq-group-by-using-the-elements-inside-an-array-property]
+                string stringifyResourceAttributesIds(Resource r)
+                {
+                    return r?.Attributes == null 
+                        ? "none" 
+                        : string.Join("|", r.Attributes.Select(y => y.Id).OrderBy(y => y));
+                }
+
+                foreach (var group in pre_group.GroupBy(stringifyResourceAttributesIds))
+                    if (@group.Count() > 1)
+                    {
+                        var first = @group.First();
+                        var others = @group.Skip(1).ToList();
+
+                        first.Quantity += others.Sum(x => x.Quantity);
+
+                        context.Resources.RemoveRange(others);
+                        context.Resources.Update(first);
+                        context.SaveChanges();
+                    }
+            }
         }
     }
 }

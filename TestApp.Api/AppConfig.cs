@@ -9,6 +9,14 @@ namespace TestApp.Api
         public static string Url => Configuration["Url"];
         public static string PasswordResetUrl => Configuration["PasswordResetUrl"];
 
+        #region app features
+        private static IConfigurationSection Features => Configuration.GetSection("Features");
+
+        public static bool CanRemoveAttributesWithResources => Features.GetValue<bool>("CanRemoveAttributesWithResources");
+        public static bool CanRemoveRoomsWithResources => Features.GetValue<bool>("CanRemoveRoomsWithResources");
+
+        #endregion
+
         #region mailing
 
         private static IConfigurationSection Mail => Configuration.GetSection("Mail");

@@ -186,6 +186,7 @@ namespace TestApp.Api.Commands.Search
 
             var list = rooms.Select(x => new
             {
+                x.Id,
                 x.Name,
                 x.Color,
                 ResourceCount = x.Resources.Count

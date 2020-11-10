@@ -45,6 +45,7 @@ namespace TestApp.Api.Commands.User
             public string EmailAddress { get; set; }
             public DateTime RegisteredAt => DateTime.Today;
             public DateTime LastActivity => DateTime.Now;
+            public string Role { get; set; }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
+using TestApp.Api.Helpers;
 
 namespace TestApp.Api.Commands.Room
 {
@@ -25,8 +26,15 @@ namespace TestApp.Api.Commands.Room
                 if (room == null)
                     return BadRequest(ReturnMessages.Message_400_RoomNotFound);
 
-                if (room.Resources.Any())
-                    return BadRequest(ReturnMessages.Message_400_RoomContainsResources);
+                if (AppConfig.CanRemoveRoomsWithResources)
+                {
+                    if (room.Resources.Any())
+                        return BadRequest(ReturnMessages.Message_400_RoomContainsResources);
+                }
+                else
+                {
+                    ResourceMerger.TryMergeByRoom(room, _context);
+                }
 
                 _context.Rooms.Remove(room);
                 _context.SaveChanges();
