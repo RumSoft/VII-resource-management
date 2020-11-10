@@ -9,7 +9,7 @@ namespace TestApp.Api.Commands
         {
             return rule
                 .NotEmpty()
-                .MinimumLength(5)
+                .MinimumLength(3)
                 .MaximumLength(100);
         }
 
@@ -17,7 +17,7 @@ namespace TestApp.Api.Commands
         {
             return rule
                 .NotEmpty()
-                .MinimumLength(5)
+                .MinimumLength(3)
                 .MaximumLength(100);
         }
 
@@ -40,7 +40,7 @@ namespace TestApp.Api.Commands
         {
             return rule
                 .NotEmpty()
-                .MinimumLength(5)
+                .MinimumLength(2)
                 .MaximumLength(100);
         }
 
@@ -48,7 +48,7 @@ namespace TestApp.Api.Commands
         {
             return rule
                 .NotEmpty()
-                .MinimumLength(5)
+                .MinimumLength(3)
                 .MaximumLength(150);
         }
 
