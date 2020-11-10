@@ -32,6 +32,10 @@ export default class ResourceList extends Component {
             });
     }
 
+    resourceChanged(resource) {
+        window.location = `/resource/edit?resourceId=${resource.id}`
+    }
+
     render() {
         const { resources } = this.state;
 
@@ -46,7 +50,7 @@ export default class ResourceList extends Component {
                 entityMapFunc={(x) => (
                     <ResourceRow
                         onDelete={(resource) => this.resourceDeleted(resource)}
-                        onChange={() => { console.log("azc") }}
+                        onChange={(resource) => this.resourceChanged(resource)}
                         key={x.id}
                         resource={x}
                     />
