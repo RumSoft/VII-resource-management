@@ -236,6 +236,7 @@ export default class ResourceManager extends Component {
         </Card >
 
         < Confirm
+          className="confirmDialog"
           open={this.state.isDeleteDialogOpen}
           onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
           onConfirm={() => this.handleDelete()}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import ResourceManager from "../../Components/ResourceManager";
-import ResourceService from "../../Services/ResourceService";
+import { ResourceService, NotificationService } from "../../Services/";
 
 import "./index.scss";
 
@@ -13,13 +13,13 @@ export default class AddResurcePage extends Component {
         };
     }
     addResource(res) {
-        ResourceService.addResource(res.name, res.quantity, res.attributes, res.room)
+        ResourceService.addResource(res)
             .then((res) => {
-                console.log(`Res added!\nName: ${res.name} Room: ${res.room} Quantity: ${res.quantity} Attributes: ${res.attributes}\nPass it to ResourceController.addResource`);
+                NotificationService.success(`Dodano zasób ${res.name}`);
                 this.setState({ redirect: true });
             })
             .catch((e) => {
-                console.log(e.response);
+                NotificationService.apiError(e, `Nie udało się dodać danych zasobu ${res.name}`);
             })
 
     }
