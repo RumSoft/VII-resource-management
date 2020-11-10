@@ -2,6 +2,7 @@ import React, { Component } from "react";
 //import { ResourceRow } from "../ListRows";
 import { Grid } from "semantic-ui-react";
 import { RequestList, ResourceList } from "../List";
+import { ResourceService } from "../../Services";
 
 export default class UserPanel extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class UserPanel extends Component {
   }
 
   componentDidMount() {
-    ResourceServise.getList()
+    ResourceService.getList()
       .then((res) => {
         this.setState({ resources: res.data });
       });
