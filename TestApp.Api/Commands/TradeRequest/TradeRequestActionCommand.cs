@@ -30,7 +30,7 @@ namespace TestApp.Api.Commands.TradeRequest
 
         [OnlyUser]
         [HttpPut("trade-request")]
-        public override IActionResult Execute(TradeRequestActionCommandInput input)
+        public override IActionResult Execute([FromBody] TradeRequestActionCommandInput input)
         {
             using var transaction = _context.Database.BeginTransaction();
 
