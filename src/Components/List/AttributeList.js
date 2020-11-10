@@ -39,11 +39,7 @@ export default class AttributeList extends Component {
       }).finally(() => this.setState({ newName: "" }));
   }
 
-  handleAttributeChanged(attr) {
-    this.setState({ isModalOpen: true, addOrEdit: true, passedAttribute: attr, newName: attr.name })
-  }
-
-  attributeChanged() {
+  changeAttributeClick() {
     let attr = this.state.passedAttribute;
     attr.name = this.state.newName;
     AttributeService.editAttribute(attr)
@@ -62,10 +58,6 @@ export default class AttributeList extends Component {
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się edytować atrybutu");
       }).finally(() => this.setState({ newName: "" }));
-  }
-
-  handleAttributeDeleted(attr) {
-    this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })
   }
 
   attributeDeleted(attr) {
@@ -106,7 +98,7 @@ export default class AttributeList extends Component {
             onClick={() => {
               this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
-                this.state.addOrEdit ? this.attributeChanged() : this.addAttributeClick();
+                this.state.addOrEdit ? this.changeAttributeClick() : this.addAttributeClick();
               }
             }}
             positive
@@ -132,8 +124,8 @@ export default class AttributeList extends Component {
         entityName="attributes"
         entityMapFunc={(x) => (
           <AttributeRow
-            onDelete={(attr) => this.handleAttributeDeleted(attr)}
-            onChange={(attr) => this.handleAttributeChanged(attr)}
+            onDelete={(attr) => this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })}
+            onChange={(attr) => this.setState({ isModalOpen: true, addOrEdit: true, passedAttribute: attr, newName: attr.name })}
             key={x.id}
             attribute={x}
           />
