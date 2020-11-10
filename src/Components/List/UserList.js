@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { UserRow } from "../ListRows";
 import { NotificationService, UserService } from "../../Services";
 import EntityList from "./EntityList";
+import { Confirm } from 'semantic-ui-react';
 import "./index.scss";
 
 export default class UserList extends Component {
   state = {
     users: null,
+    isDeleteDialogOpen: false
   };
   componentDidMount() {
     this.fetchUsers();
@@ -19,7 +21,8 @@ export default class UserList extends Component {
     });
   }
 
-  userDeleted(user) {
+  deleteUserClicked(user) {
+    console.log(user)
     UserService.deleteUser(user.id)
       .then(() => {
         NotificationService.success(`Usunięto użytkownika ${user.fullname}`);
@@ -29,12 +32,22 @@ export default class UserList extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
-      });
+      }).finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
   render() {
     const { users } = this.state;
-    return (
+    return (<>
+      < Confirm
+        className="confirmDialog"
+        size="mini"
+        open={this.state.isDeleteDialogOpen}
+        onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+        onConfirm={() => this.deleteUserClicked(this.state.passedUser)}
+        content={(`Czy usunąć użytkownika ${this.state.passedUser?.firstName} ${this.state.passedUser?.lastName} ?`)}
+        cancelButton="Nie"
+        confirmButton="Tak"
+      />
       <EntityList
         onReloadClick={() => this.fetchUsers()}
         onAddClick={() => {
@@ -45,14 +58,14 @@ export default class UserList extends Component {
         entityName="users"
         entityMapFunc={(x) => (
           <UserRow
-            onDelete={(user) => this.userDeleted(user)}
-            onChange={(user) => console.log("user edit click")}
+            onDelete={(user) => this.setState({ isDeleteDialogOpen: true, passedUser: user })}
             key={x.id}
             user={x}
           />
         )}
         title="Użytkownicy"
       />
+    </>
     );
   }
 }
