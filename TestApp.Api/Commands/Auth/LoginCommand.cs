@@ -47,7 +47,8 @@ namespace TestApp.Api.Commands.Auth
                 return Ok(new LoginCommandResult
                 {
                     Token = token.AccessToken,
-                    Role = role
+                    Role = role,
+                    Id = user.Id
                 });
             }
             catch (Exception e)
@@ -66,6 +67,7 @@ namespace TestApp.Api.Commands.Auth
         {
             public string Token { get; set; }
             public string Role { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class LoginCommandInputValidator : AbstractValidator<LoginCommandInput>

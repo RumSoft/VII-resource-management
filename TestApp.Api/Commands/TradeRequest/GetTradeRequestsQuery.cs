@@ -35,7 +35,16 @@ namespace TestApp.Api.Commands.TradeRequest
                 if (!_userInfo.IsAdmin)
                     tr = tr.Where(x => x.Taker == user || x.Resource.Owner == user);
 
-                var result = _mapper.Map<GetTradeRequestsQueryResult[]>(tr.ToList());
+                var result = _mapper.Map<GetTradeRequestsQueryResult[]>(tr.ToList()).Select(x =>
+                {
+                    x.UserInfo = new GetTradeRequestsQueryResultUserInfo
+                    {
+                        IsOwner = x.Owner.Id == user.Id,
+                        IsTaker = x.Taker.Id == user.Id
+                    };
+                    return x;
+                });
+                
                 return Ok(result);
             }
             catch (Exception e)
@@ -50,6 +59,12 @@ namespace TestApp.Api.Commands.TradeRequest
             public UserDto Owner { get; set; }
             public UserDto Taker { get; set; }
             public ResourceDto Resource { get; set; }
+            public GetTradeRequestsQueryResultUserInfo UserInfo { get; set; }
+        }
+        public class GetTradeRequestsQueryResultUserInfo
+        {
+            public bool IsTaker { get; set; }
+            public bool IsOwner { get; set; }
         }
     }
 }
