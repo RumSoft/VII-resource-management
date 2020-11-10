@@ -20,7 +20,7 @@ namespace TestApp.Api.Commands.TradeRequest
 
         [OnlyUser]
         [HttpPost("trade-request")]
-        public override IActionResult Execute(CreateTradeRequestCommandInput input)
+        public override IActionResult Execute([FromBody] CreateTradeRequestCommandInput input)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
