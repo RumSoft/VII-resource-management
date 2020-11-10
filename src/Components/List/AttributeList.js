@@ -44,10 +44,7 @@ export default class AttributeList extends Component {
     attr.name = this.state.newName;
     AttributeService.editAttribute(attr)
       .then(() => {
-        NotificationService.success(
-          `Pomyślnie zmieniono nazwę atrybutu`,
-          ` → ${attr.name}`
-        );
+        NotificationService.success(`Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`);
         this.setState({
           attributes: this.state.attributes.map((x) => {
             if (x.id === attr.id) x.name = attr.name;

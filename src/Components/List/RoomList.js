@@ -44,10 +44,7 @@ export default class RoomList extends Component {
     room.name = this.state.newName;
     RoomService.editRoom(room)
       .then(() => {
-        NotificationService.success(
-          `Pomyślnie zmieniono nazwę pokoju`,
-          ` → ${room.name}`
-        );
+        NotificationService.success(`Pomyślnie zmieniono nazwę pokoju na ${room.name}`);
         this.setState({
           rooms: this.state.rooms.map((x) => {
             if (x.id === room.id) x.name = room.name;
