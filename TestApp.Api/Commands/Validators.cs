@@ -54,7 +54,8 @@ namespace TestApp.Api.Commands
 
         public static IRuleBuilderOptions<T, string> HexColorValidator<T>(this IRuleBuilder<T, string> rule)
         {
-            return rule.Matches(new Regex("^((#[0-9a-fA-F]{3})|(#[0-9a-fA-F]{6})(#[0-9a-fA-F]{8}))$"));
+            return rule.Must(x => string.IsNullOrEmpty(x)
+                                  || Regex.IsMatch(x, "^((#[0-9a-fA-F]{3})|(#[0-9a-fA-F]{6})(#[0-9a-fA-F]{8}))$"));
         }
     }
 }
