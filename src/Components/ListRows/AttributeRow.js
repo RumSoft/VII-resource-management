@@ -4,11 +4,12 @@ import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {
   handleEditClick() {
-    const { name, id } = this.props.attribute;
-    const newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
-    newAttributeName &&
-      this.props.onChange &&
-      this.props.onChange({ id: id, name: newAttributeName });
+    this.props.onChange && this.props.onChange(this.props.attribute);
+    // const { name, id } = this.props.attribute;
+    // const newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
+    // newAttributeName &&
+    //   this.props.onChange &&
+    //   this.props.onChange({ id: id, name: newAttributeName });
   }
 
   handleDeleteClick() {
