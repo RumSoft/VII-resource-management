@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AttributeRow } from "../ListRows";
 import { AttributeService, NotificationService } from "../../Services";
 import EntityList from "./EntityList";
-import { Modal, Button, Input } from 'semantic-ui-react';
+import { Modal, Button, Input, Confirm } from 'semantic-ui-react';
 import "./index.scss";
 
 export default class AttributeList extends Component {
@@ -10,7 +10,8 @@ export default class AttributeList extends Component {
     attributes: null,
     isModalOpen: false,
     addOrEdit: null, // 0 = add, 1 = edit
-    newName: ""
+    newName: "",
+    isDeleteDialogOpen: false
   };
   componentDidMount() {
     this.fetchAttributes();
@@ -39,11 +40,11 @@ export default class AttributeList extends Component {
   }
 
   handleAttributeChanged(attr) {
-    this.setState({ isModalOpen: true, addOrEdit: true, editedAttribute: attr, newName: attr.name })
+    this.setState({ isModalOpen: true, addOrEdit: true, passedAttribute: attr, newName: attr.name })
   }
 
   attributeChanged() {
-    let attr = this.state.editedAttribute;
+    let attr = this.state.passedAttribute;
     attr.name = this.state.newName;
     AttributeService.editAttribute(attr)
       .then(() => {
@@ -60,7 +61,11 @@ export default class AttributeList extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się edytować atrybutu");
-      }).finally(() => this.setState({ newName: "" }));;
+      }).finally(() => this.setState({ newName: "" }));
+  }
+
+  handleAttributeDeleted(attr) {
+    this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })
   }
 
   attributeDeleted(attr) {
@@ -73,14 +78,14 @@ export default class AttributeList extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
-      });
+      }).finally(() => this.setState({ isDeleteDialogOpen: false }));;
   }
 
   render() {
     const { attributes } = this.state;
     return (<>
       <Modal open={this.state.isModalOpen} size="mini">
-        <Modal.Header>Podaj {this.state.addOrEdit && "nową"} nazwę atrybutu {this.state.addOrEdit && this.state.editedAttribute.name}</Modal.Header>
+        <Modal.Header>Podaj {this.state.addOrEdit && "nową"} nazwę atrybutu {this.state.addOrEdit && this.state.passedAttribute.name}</Modal.Header>
         <Modal.Content>
           <Input
             type="text"
@@ -109,6 +114,17 @@ export default class AttributeList extends Component {
         </Modal.Actions>
       </Modal>
 
+      < Confirm
+        className="confirmDialog"
+        size="mini"
+        open={this.state.isDeleteDialogOpen}
+        onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+        onConfirm={() => this.attributeDeleted(this.state.passedAttribute)}
+        content={(`Czy usunąć zasób ${this.state.passedAttribute?.name}?`)}
+        cancelButton="Nie"
+        confirmButton="Tak"
+      />
+
       <EntityList
         onReloadClick={() => this.fetchAttributes()}
         onAddClick={() => this.setState({ isModalOpen: true, addOrEdit: false })}
@@ -116,7 +132,7 @@ export default class AttributeList extends Component {
         entityName="attributes"
         entityMapFunc={(x) => (
           <AttributeRow
-            onDelete={(attr) => this.attributeDeleted(attr)}
+            onDelete={(attr) => this.handleAttributeDeleted(attr)}
             onChange={(attr) => this.handleAttributeChanged(attr)}
             key={x.id}
             attribute={x}
