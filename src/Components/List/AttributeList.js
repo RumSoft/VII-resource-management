@@ -60,7 +60,7 @@ export default class AttributeList extends Component {
       }).finally(() => this.setState({ newName: "" }));
   }
 
-  attributeDeleted(attr) {
+  deleteAttributeClicked(attr) {
     AttributeService.deleteAttribute(attr.id)
       .then(() => {
         NotificationService.success(`Usunięto atrybut ${attr.name}`);
@@ -70,7 +70,7 @@ export default class AttributeList extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
-      }).finally(() => this.setState({ isDeleteDialogOpen: false }));;
+      }).finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
   render() {
@@ -111,7 +111,7 @@ export default class AttributeList extends Component {
         size="mini"
         open={this.state.isDeleteDialogOpen}
         onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
-        onConfirm={() => this.attributeDeleted(this.state.passedAttribute)}
+        onConfirm={() => this.deleteAttributeClicked(this.state.passedAttribute)}
         content={(`Czy usunąć zasób ${this.state.passedAttribute?.name}?`)}
         cancelButton="Nie"
         confirmButton="Tak"
