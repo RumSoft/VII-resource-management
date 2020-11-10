@@ -9,12 +9,12 @@ export default class RequestRow extends Component {
     }
 
     render() {
-        const { owner, taker, resource, room, attributes, id } = this.props.request;
-        console.log(this.props);
+        const { owner, id } = this.props.request;
+
         return (
             <div className="list-row request-row">
                 <div className="list-row__content">
-                    {owner.firstName} {owner.lastName} {taker.firstName} {taker.lastName} {resource.name} {resource.quantity} {room.name} {attributes.name}
+
                 </div>
                 <div className="list-row__actions">
                     <Button

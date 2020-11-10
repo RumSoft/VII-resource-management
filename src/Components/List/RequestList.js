@@ -57,21 +57,29 @@ export default class RequestList extends Component {
 
     render() {
         const { requests } = this.state;
-        return (
-            <EntityList
+        let requestPanel = "";
+        if (requests) {
+            requestPanel = <EntityList
                 onReloadClick={() => this.fetchRequests()}
                 onAddClick={() => this.addRequestClick()}
                 entities={requests}
                 entityName="requests"
                 entityMapFunc={(x) => (
                     <RequestRow
-                        onChange={(request) => this.requestChanged(request)}
                         key={x.id}
                         request={x}
                     />
                 )}
                 title="Przekazania"
             />
+        } else {
+            requestPanel = <p>Brak przekazań</p>
+        }
+        console.log(requests);
+        return (
+            <div>
+                {requestPanel}
+            </div>
         );
     }
 }

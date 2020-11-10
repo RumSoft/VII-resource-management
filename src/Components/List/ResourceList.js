@@ -21,7 +21,7 @@ export default class ResourceList extends Component {
 
     render() {
         const { resources } = this.state;
-        console.log(resources);
+
         return (
             <EntityList
                 onReloadClick={() => this.fetchUsers()}
@@ -32,7 +32,6 @@ export default class ResourceList extends Component {
                 entityName="resources"
                 entityMapFunc={(x) => (
                     <ResourceRow
-
                         key={x.id}
                         resource={x}
                     />

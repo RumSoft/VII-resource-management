@@ -12,7 +12,6 @@ export default class ResourceRow extends Component {
 
         const { id, name, quantity, room } = this.props.resource;
 
-
         return (
             <div className="list-row resource-row">
                 <div className="list-row__content">{name} {quantity} {room && room.name}</div>
@@ -20,7 +19,7 @@ export default class ResourceRow extends Component {
                     <Button
                         circular
                         as={Link}
-                        to={`/user/edit?requestId=${id}`}
+                        to={`/user/edit?resourceId=${id}`}
                         icon="edit"
                         color="yellow"
                     />
