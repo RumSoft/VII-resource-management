@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ResourceService } from "../../Services";
+import { ResourceService, NotificationService } from "../../Services";
 import { ResourceRow } from "../ListRows";
 import EntityList from "./EntityList";
 import "./index.scss";
@@ -19,6 +19,19 @@ export default class ResourceList extends Component {
         });
     }
 
+    resourceDeleted(resource) {
+        ResourceService.deleteResource(resource.id)
+            .then(() => {
+                NotificationService.success(`Usunięto zasób ${resource.name}`);
+                this.setState({
+                    resource: this.state.resource.filter((x) => x.id !== resource.id),
+                });
+            })
+            .catch((e) => {
+                NotificationService.apiError(e, "Nie udało się usunąć zasobu");
+            });
+    }
+
     render() {
         const { resources } = this.state;
 
@@ -26,12 +39,14 @@ export default class ResourceList extends Component {
             <EntityList
                 onReloadClick={() => this.fetchUsers()}
                 onAddClick={() => {
-                    window.location = "/resources/add";
+                    window.location = "/resource/add";
                 }}
                 entities={resources}
                 entityName="resources"
                 entityMapFunc={(x) => (
                     <ResourceRow
+                        onDelete={(resource) => this.resourceDeleted(resource)}
+                        onChange={console.log("azc")}
                         key={x.id}
                         resource={x}
                     />

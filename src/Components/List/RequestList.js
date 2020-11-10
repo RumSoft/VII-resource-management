@@ -19,67 +19,37 @@ export default class RequestList extends Component {
         });
     }
 
-    addRequestClick() {
-        let resourceId = prompt("Podaj id zasobu");
-        let takerId = prompt("Podaj id odbiorcy");
-        let quantity = prompt("Podaj ilość zasobu, którą chcesz przekazać")
-        if (!resourceId || !takerId || !quantity) return;
-
-        RequestService.addRequest(resourceId, takerId, quantity)
+    onAction(request) {
+        RequestService.editRequest(request)
             .then(() => {
-                NotificationService.success(`Dodano przekazanie zasobu o id "${resourceId}" w ilości "${quantity}" użytkownikowi o id "${takerId}"`);
-                this.fetchRequests();
+                NotificationService.success(`Zmodyfikowano żądanie`);
             })
             .catch((e) => {
-                NotificationService.apiError(e, "Nie udało się dodać przekazania zasobu");
-            });
-    }
-
-    requestChanged(request, action) {
-        RequestService.editRequest(request.id, action)
-            .then(() => {
-                NotificationService.success(
-                    `Pomyślnie zmieniono tryb przekazania zasobu o id`,
-                    ` → ${request.id}`
-                );
-                /* stricte nic sie nie zmienia, wiec nie ma sensu albo ja jestem glupi
-                 this.setState({
-                   requests: this.state.requests.map((x) => {
-                     if (x.id === room.id) x.name = room.name;
-                     return x;
-                   }),
-                 }); */
-            })
-            .catch((e) => {
-                NotificationService.apiError(e, "Nie udało się zmienić trybu przekazania zasobu");
+                NotificationService.apiError(e, "Nie udało się zmodyfikować żądania");
             });
     }
 
     render() {
         const { requests } = this.state;
-        let requestPanel = "";
-        if (requests) {
-            requestPanel = <EntityList
+
+        return (
+            <EntityList
                 onReloadClick={() => this.fetchRequests()}
-                onAddClick={() => this.addRequestClick()}
+                onAddClick={() => {
+                    window.location = "/request/add";
+                }}
                 entities={requests}
                 entityName="requests"
                 entityMapFunc={(x) => (
                     <RequestRow
+                        onDelete={console.log("ad")}
+                        onChange={console.log("xd")}
                         key={x.id}
                         request={x}
                     />
                 )}
                 title="Przekazania"
             />
-        } else {
-            requestPanel = <p>Brak przekazań</p>
-        }
-        console.log(requests);
-        return (
-            <div>
-                {requestPanel}
-            </div>
         );
     }
 }

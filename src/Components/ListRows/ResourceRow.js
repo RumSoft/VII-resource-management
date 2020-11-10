@@ -19,7 +19,7 @@ export default class ResourceRow extends Component {
                     <Button
                         circular
                         as={Link}
-                        to={`/user/edit?resourceId=${id}`}
+                        to={`/resource/edit?resourceId=${id}`}
                         icon="edit"
                         color="yellow"
                     />
