@@ -9,7 +9,7 @@ export default class AttributeList extends Component {
   state = {
     attributes: null,
     isModalOpen: false,
-    addOrEdit: null, // 0 = add, 1 = edit
+    isEdit: null, // 0 = add, 1 = edit
     newName: "",
     isDeleteDialogOpen: false
   };
@@ -40,7 +40,7 @@ export default class AttributeList extends Component {
   }
 
   changeAttributeClick() {
-    let attr = this.state.passedAttribute;
+    let attr = { ...this.state.passedAttribute };
     attr.name = this.state.newName;
     AttributeService.editAttribute(attr)
       .then(() => {
@@ -77,7 +77,7 @@ export default class AttributeList extends Component {
     const { attributes } = this.state;
     return (<>
       <Modal open={this.state.isModalOpen} size="mini">
-        <Modal.Header>Podaj {this.state.addOrEdit && "nową"} nazwę atrybutu {this.state.addOrEdit && this.state.passedAttribute.name}</Modal.Header>
+        <Modal.Header>Podaj {this.state.isEdit && "nową"} nazwę atrybutu {this.state.isEdit && this.state.passedAttribute.name}</Modal.Header>
         <Modal.Content>
           <Input
             type="text"
@@ -92,13 +92,13 @@ export default class AttributeList extends Component {
             Anuluj
         </Button>
           <Button
-            content={this.state.addOrEdit ? "Zapisz atrybut" : "Dodaj atrybut"}
+            content={this.state.isEdit ? "Zapisz atrybut" : "Dodaj atrybut"}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
               this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
-                this.state.addOrEdit ? this.changeAttributeClick() : this.addAttributeClick();
+                this.state.isEdit ? this.changeAttributeClick() : this.addAttributeClick();
               }
             }}
             positive
@@ -119,13 +119,13 @@ export default class AttributeList extends Component {
 
       <EntityList
         onReloadClick={() => this.fetchAttributes()}
-        onAddClick={() => this.setState({ isModalOpen: true, addOrEdit: false })}
+        onAddClick={() => this.setState({ isModalOpen: true, isEdit: false })}
         entities={attributes}
         entityName="attributes"
         entityMapFunc={(x) => (
           <AttributeRow
             onDelete={(attr) => this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })}
-            onChange={(attr) => this.setState({ isModalOpen: true, addOrEdit: true, passedAttribute: attr, newName: attr.name })}
+            onChange={(attr) => this.setState({ isModalOpen: true, isEdit: true, passedAttribute: attr, newName: attr.name })}
             key={x.id}
             attribute={x}
           />
