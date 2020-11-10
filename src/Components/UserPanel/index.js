@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 //import { ResourceRow } from "../ListRows";
-import ResourceServise from "../../Services/ResourceService";
+import { Grid } from "semantic-ui-react";
+import { RequestList, ResourceList } from "../List";
+import { ResourceService } from "../../Services";
 
 export default class UserPanel extends Component {
   constructor(props) {
@@ -11,7 +13,7 @@ export default class UserPanel extends Component {
   }
 
   componentDidMount() {
-    ResourceServise.getList()
+    ResourceService.getList()
       .then((res) => {
         this.setState({ resources: res.data });
       });
@@ -26,28 +28,21 @@ export default class UserPanel extends Component {
   }
 
   render() {
-    //  console.log(this.state.resources);
 
     return (
       <div>
         <p> Logged in as User.</p>
-        {this.state.resources.map((x) => {
-          return <div key={x.id} >
-            {x.id} - {x.name} - {x.quantity} - {x.room === null ? "POKÓJ==NULL" : x.room.name}: {x.attributes.map((x) => { return `"${x.name}",` })}
-            <button type="button" onClick={() => this.handleDelete()}>
-              X
-            </button>
-            < br />
-          </div>
-        })
-        }
-        <button onClick={() => this.addResource()}>
-          Dodaj zasób
-          </button>
-        <button onClick={() => this.handleEdit()}>
-          Edytuj zasób (temp)
-            </button>
-      </div >
+        <div className="container-fluid d-flex">
+          <Grid>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
+              <ResourceList />
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
+              <RequestList />
+            </Grid.Column>
+          </Grid>
+        </div>
+      </div>
     )
   };
 }

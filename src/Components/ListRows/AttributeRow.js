@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "semantic-ui-react";
 import "./AttributeRow.scss";
 
@@ -16,16 +17,17 @@ export default class AttributeRow extends Component {
   }
 
   render() {
-    const { name } = this.props.attribute;
+    const { id, name } = this.props.attribute;
     return (
       <div className="list-row">
         <div className="list-row__content">{name}</div>
         <div className="list-row__actions">
           <Button
             circular
-            onClick={() => this.handleEditClick()}
+            as={Link}
+            to={`/attribute/edit?attributeId=${id}`}
             icon="edit"
-            color="blue"
+            color="yellow"
           />
           <Button
             circular
