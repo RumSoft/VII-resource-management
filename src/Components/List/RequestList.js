@@ -42,8 +42,7 @@ export default class RequestList extends Component {
                 entityName="requests"
                 entityMapFunc={(x) => (
                     <RequestRow
-                        onDelete={console.log("ad")}
-                        onChange={console.log("xd")}
+                        onChange={() => { console.log("xd") }}
                         key={x.id}
                         request={x}
                     />

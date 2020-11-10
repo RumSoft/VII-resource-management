@@ -17,18 +17,8 @@ export default class ResourceService {
     return APIService.get("resource");
   }
 
-  static addResource(
-    resourceName,
-    resourceQuantity,
-    resourceAttributes,
-    resourceRoom
-  ) {
-    return APIService.post("resource", {
-      name: resourceName,
-      quantity: resourceQuantity,
-      attributes: resourceAttributes,
-      room: resourceRoom,
-    });
+  static addResource(res) {
+    return APIService.post("resource", res);
   }
 
   static splitResource(res) {

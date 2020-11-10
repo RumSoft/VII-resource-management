@@ -2,16 +2,8 @@ import APIService from "./APIService";
 
 export default class RequestService {
 
-    static addRequest(
-        requestId,
-        takerId,
-        quantity
-    ) {
-        return APIService.post("trade-request", {
-            RequestId: requestId,
-            TakerId: takerId,
-            Quantity: quantity
-        });
+    static addRequest(request) {
+        return APIService.post("trade-request", request);
     }
 
     static getList() {

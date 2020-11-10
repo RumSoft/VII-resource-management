@@ -46,7 +46,7 @@ export default class ResourceList extends Component {
                 entityMapFunc={(x) => (
                     <ResourceRow
                         onDelete={(resource) => this.resourceDeleted(resource)}
-                        onChange={console.log("azc")}
+                        onChange={() => { console.log("azc") }}
                         key={x.id}
                         resource={x}
                     />

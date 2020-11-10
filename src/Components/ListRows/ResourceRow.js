@@ -18,13 +18,6 @@ export default class ResourceRow extends Component {
                 <div className="list-row__actions">
                     <Button
                         circular
-                        as={Link}
-                        to={`/resource/edit?resourceId=${id}`}
-                        icon="edit"
-                        color="yellow"
-                    />
-                    <Button
-                        circular
                         onClick={() => this.handleDeleteClick()}
                         icon="delete"
                         color="red"
