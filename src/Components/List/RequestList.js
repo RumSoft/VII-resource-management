@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NotificationService, RequestService } from "../../Services";
 import { RequestRow } from "../ListRows";
 import EntityList from "./EntityList";
+import { Card } from "semantic-ui-react";
 import "./index.scss";
 
 export default class RequestList extends Component {
@@ -41,11 +42,13 @@ export default class RequestList extends Component {
                 entities={requests}
                 entityName="requests"
                 entityMapFunc={(x) => (
-                    <RequestRow
-                        onChange={() => { console.log("xd") }}
-                        key={x.id}
-                        request={x}
-                    />
+                    <Card.Group>
+                        <RequestRow
+                            onChange={() => { console.log("xd") }}
+                            key={x.id}
+                            request={x}
+                        />
+                    </Card.Group>
                 )}
                 title="Przekazania"
             />
