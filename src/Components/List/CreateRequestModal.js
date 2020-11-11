@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { UserService, RequestService } from "../../Services";
+import { UserService, RequestService, NotificationService } from "../../Services";
 import { Modal, Button, Grid, Form, Radio } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
@@ -26,15 +26,16 @@ export default class CreateRequestModal extends Component {
     }
 
     sendRequest() {
+        const sentQuantity = this.state.splitquantity ?? this.props.resource.quantity;
         RequestService.addRequest({
             resourceId: this.props.resource.id,
             takerId: this.state.selectedUser.id,
-            quantity: this.state.splitquantity ?? this.props.resource.quantity
+            quantity: sentQuantity
         }).then(() => {
-            console.log("UDALO SIE")
-            this.props.onSuccess()
+            NotificationService.success(`Wysłano zasób ${this.props.resource.name} w ilości ${sentQuantity}`);
+            this.props.onSuccess();
         }).catch((e) => {
-            console.log('Nie udalo sie ')
+            NotificationService.apiError(e, "Nie udało się wysłać zasobu");
         })
     }
 
