@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { UserService } from "../../Services";
 import { Modal, Button, Grid, Form, Radio } from "semantic-ui-react";
+import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 
 export default class CreateRequestModal extends Component {
@@ -8,7 +9,8 @@ export default class CreateRequestModal extends Component {
         super(props);
         this.state = {
             users: [],
-            selectedUser: null
+            selectedUser: null,
+            splitquantity: null
         };
     }
 
@@ -23,12 +25,29 @@ export default class CreateRequestModal extends Component {
         });
     }
 
-    render() {
+    sendRequest() {
 
-        const { isOpen } = this.props;
-        // console.log(this.state.users)
+
+        console.log("WYSYŁAMY: ")
+        console.log(this.props.resource);
+        console.log("DO: ")
+        console.log(this.state.selectedUser);
+        console.log("ILE: ")
+        console.log(this.state.splitquantity ?? this.props.resource.quantity);
+
+    }
+
+    handleClosing() {
+        this.setState({ splitquantity: null, selectedUser: null })
+        this.props.onClose();
+    }
+
+    render() {
+        const { isOpen, resource } = this.props;
+        const startingquantity = resource?.quantity;
+
         return (
-            <Modal open={isOpen} closeOnDocumentClick={true} onClose={() => { this.props.onClose() }}>
+            <Modal open={isOpen} closeOnDocumentClick={true} onClose={() => this.handleClosing()}>
                 <Modal.Header>Tutaj będzie Trade Request</Modal.Header>
                 {/* <Modal.Content>
                 <Input
@@ -43,7 +62,23 @@ export default class CreateRequestModal extends Component {
                     <Grid columns="2">
                         <Grid.Column>
                             <div> Tutaj będzie komponent Przemka</div>
-                            <div>A tutaj suwak</div>
+                            <div className="quantity-slider">
+                                <label>Ilość: <b>{this.state?.splitquantity || startingquantity}</b></label>
+                                {/* <label>Ilość: <b>{this.state.splitquantity}</b></label> */}
+                                {startingquantity > 1 &&
+                                    <Slider
+                                        color="blue"
+                                        discrete
+                                        settings={{
+                                            start: startingquantity,
+                                            min: 1,
+                                            max: startingquantity,
+                                            step: 1,
+                                            onChange: value => { this.setState({ splitquantity: value }) }
+                                        }}
+                                    />
+                                }
+                            </div>
                         </Grid.Column>
 
                         <Grid.Column>
@@ -69,14 +104,15 @@ export default class CreateRequestModal extends Component {
                     </Grid>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='black' onClick={() => { this.props.onClose() }}>
+                    <Button color='black' onClick={() => this.handleClosing()}>
                         Anuluj
         </Button>
                     <Button
-                        content="XD"
+                        content="Wyślij"
+                        disabled={this.state.selectedUser === null}
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={() => { this.props.onClose() }}
+                        onClick={() => { this.handleClosing(); this.sendRequest() }}
                         positive
                     />
                 </Modal.Actions>
