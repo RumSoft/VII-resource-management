@@ -47,7 +47,6 @@ export default class CreateRequestModal extends Component {
     render() {
         const { isOpen, resource } = this.props;
         const startingquantity = resource?.quantity;
-
         return (
             <Modal open={isOpen} closeOnDocumentClick={true} onClose={() => this.handleClosing()}>
                 <Modal.Header>Tutaj będzie Trade Request</Modal.Header>
@@ -81,7 +80,7 @@ export default class CreateRequestModal extends Component {
                                         : "Wybierz użytkownika"}
                                 </Form.Field>
                                 <Form.Field>
-                                    {this.state.users.map(x =>
+                                    {this.state.users.filter((x) => x.id !== resource?.owner.id).map(x =>
                                         <Radio
                                             key={x.id}
                                             name="selectedUser"

@@ -22,7 +22,6 @@ export default class ResourceList extends Component {
         });
     }
 
-
     resourceDeleted(resource) {
         ResourceService.deleteResource(resource.id)
             .then(() => {
