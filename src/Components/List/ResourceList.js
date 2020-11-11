@@ -3,11 +3,14 @@ import { ResourceService, NotificationService } from "../../Services";
 import { ResourceRow } from "../ListRows";
 import EntityList from "./EntityList";
 import "./index.scss";
+import CreateRequestModal from "./CreateRequestModal"
 
 export default class ResourceList extends Component {
     state = {
         resources: [],
+        isModalOpen: false
     };
+
     componentDidMount() {
         this.fetchResources();
     }
@@ -18,6 +21,7 @@ export default class ResourceList extends Component {
             this.setState({ resources });
         });
     }
+
 
     resourceDeleted(resource) {
         ResourceService.deleteResource(resource.id)
@@ -39,7 +43,9 @@ export default class ResourceList extends Component {
     render() {
         const { resources } = this.state;
 
-        return (
+        return (<>
+
+            <CreateRequestModal isOpen={this.state.isModalOpen} onClose={() => this.setState({ isModalOpen: false })} />
             <EntityList
                 onReloadClick={() => this.fetchUsers()}
                 onAddClick={() => {
@@ -51,12 +57,13 @@ export default class ResourceList extends Component {
                     <ResourceRow
                         onDelete={(resource) => this.resourceDeleted(resource)}
                         onChange={(resource) => this.resourceChanged(resource)}
+                        onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
                         key={x.id}
                         resource={x}
                     />
                 )}
                 title="Zasoby"
-            />
+            /></>
         );
     }
 }

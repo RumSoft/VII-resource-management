@@ -4,7 +4,7 @@ import "./ResourceRow.scss";
 
 export default class ResourceRow extends Component {
     handleRequestClick() {
-        alert("Work in progress...");
+        this.props.onRequest && this.props.onRequest(this.props.resource);
     }
     handleEditClick() {
         this.props.onChange && this.props.onChange(this.props.resource);

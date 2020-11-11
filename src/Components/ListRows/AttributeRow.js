@@ -1,16 +1,10 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "semantic-ui-react";
 import "./AttributeRow.scss";
 
 export default class AttributeRow extends Component {
   handleEditClick() {
     this.props.onChange && this.props.onChange(this.props.attribute);
-    // const { name, id } = this.props.attribute;
-    // const newAttributeName = prompt("Podaj nową nazwę atrybutu.", name);
-    // newAttributeName &&
-    //   this.props.onChange &&
-    //   this.props.onChange({ id: id, name: newAttributeName });
   }
 
   handleDeleteClick() {
@@ -18,15 +12,14 @@ export default class AttributeRow extends Component {
   }
 
   render() {
-    const { id, name } = this.props.attribute;
+    const { name } = this.props.attribute;
     return (
       <div className="list-row">
         <div className="list-row__content">{name}</div>
         <div className="list-row__actions">
           <Button
             circular
-            as={Link}
-            to={`/attribute/edit?attributeId=${id}`}
+            onClick={() => this.handleEditClick()}
             icon="edit"
             color="yellow"
           />

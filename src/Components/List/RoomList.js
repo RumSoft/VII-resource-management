@@ -73,7 +73,7 @@ export default class RoomList extends Component {
   render() {
     const { rooms } = this.state;
     return (<>
-      <Modal open={this.state.isModalOpen} size="mini">
+      <Modal open={this.state.isModalOpen} size="mini" onClose={() => this.setState({ isModalOpen: false, newName: "" })}>
         <Modal.Header>Podaj {this.state.isEdit && "nową"} nazwę pokoju {this.state.isEdit && this.state.passedRoom.name}</Modal.Header>
         <Modal.Content>
           <Input
