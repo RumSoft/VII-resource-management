@@ -7,7 +7,8 @@ export default class CreateRequestModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: []
+            users: [],
+            selectedUser: null
         };
     }
 
@@ -25,6 +26,7 @@ export default class CreateRequestModal extends Component {
     render() {
 
         const { isOpen } = this.props;
+        // console.log(this.state.users)
         return (
             <Modal open={isOpen} closeOnDocumentClick={true} onClose={() => { this.props.onClose() }}>
                 <Modal.Header>Tutaj będzie Trade Request</Modal.Header>
@@ -45,10 +47,22 @@ export default class CreateRequestModal extends Component {
                         </Grid.Column>
 
                         <Grid.Column>
-                            Tutaj będzie userlist
                             <Form>
                                 <Form.Field>
-                                    Selected user: <b>{this.state.selectedUser}</b>
+                                    {this.state.selectedUser
+                                        ? <span>Wybrano użytkownika: <b> {this.state.selectedUser.firstName} {this.state.selectedUser.lastName}</b></span>
+                                        : "Wybierz użytkownika"}
+                                </Form.Field>
+                                <Form.Field>
+                                    {this.state.users.map(x =>
+                                        <Radio
+                                            key={x.id}
+                                            name="selectedUser"
+                                            checked={this.state.selectedUser === x}
+                                            label={`${x.firstName} ${x.lastName} ${x.emailAddress}`}
+                                            onChange={() => this.setState({ selectedUser: x })}
+                                        />
+                                    )}
                                 </Form.Field>
                             </Form>
                         </Grid.Column>

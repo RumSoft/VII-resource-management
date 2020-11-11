@@ -43,7 +43,12 @@ export default class ResourceList extends Component {
     render() {
         const { resources } = this.state;
 
-        return (
+        return (<>
+            <CreateRequestModal
+                isOpen={this.state.isModalOpen}
+                onClose={() => this.setState({ isModalOpen: false })}
+            />
+
             <EntityList
                 onReloadClick={() => this.fetchResources()}
                 onAddClick={() => {
@@ -55,12 +60,13 @@ export default class ResourceList extends Component {
                     <ResourceRow
                         onDelete={(resource) => this.resourceDeleted(resource)}
                         onChange={(resource) => this.resourceChanged(resource)}
+                        onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
                         key={x.id}
                         resource={x}
                     />
                 )}
                 title="Zasoby"
-            />
+            /></>
         );
     }
 }
