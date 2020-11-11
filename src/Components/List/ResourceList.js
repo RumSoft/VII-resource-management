@@ -37,17 +37,15 @@ export default class ResourceList extends Component {
     }
 
     resourceChanged(resource) {
-        window.location = `/resource/edit?resourceId=${resource.id}`
+        window.location = `/resource/edit?resourceId=${resource.id}`;
     }
 
     render() {
         const { resources } = this.state;
 
-        return (<>
-
-            <CreateRequestModal isOpen={this.state.isModalOpen} onClose={() => this.setState({ isModalOpen: false })} />
+        return (
             <EntityList
-                onReloadClick={() => this.fetchUsers()}
+                onReloadClick={() => this.fetchResources()}
                 onAddClick={() => {
                     window.location = "/resource/add";
                 }}
@@ -57,13 +55,12 @@ export default class ResourceList extends Component {
                     <ResourceRow
                         onDelete={(resource) => this.resourceDeleted(resource)}
                         onChange={(resource) => this.resourceChanged(resource)}
-                        onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
                         key={x.id}
                         resource={x}
                     />
                 )}
                 title="Zasoby"
-            /></>
+            />
         );
     }
 }
