@@ -47,6 +47,7 @@ export default class ResourceList extends Component {
             <CreateRequestModal
                 isOpen={this.state.isModalOpen}
                 onClose={() => this.setState({ isModalOpen: false })}
+                onSuccess={() => this.fetchResources()}
                 resource={this.state.requestResource}
             />
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { UserService } from "../../Services";
+import { UserService, RequestService } from "../../Services";
 import { Modal, Button, Grid, Form, Radio } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
@@ -26,15 +26,16 @@ export default class CreateRequestModal extends Component {
     }
 
     sendRequest() {
-
-
-        console.log("WYSYŁAMY: ")
-        console.log(this.props.resource);
-        console.log("DO: ")
-        console.log(this.state.selectedUser);
-        console.log("ILE: ")
-        console.log(this.state.splitquantity ?? this.props.resource.quantity);
-
+        RequestService.addRequest({
+            resourceId: this.props.resource.id,
+            takerId: this.state.selectedUser.id,
+            quantity: this.state.splitquantity ?? this.props.resource.quantity
+        }).then(() => {
+            console.log("UDALO SIE")
+            this.props.onSuccess()
+        }).catch((e) => {
+            console.log('Nie udalo sie ')
+        })
     }
 
     handleClosing() {
@@ -49,22 +50,12 @@ export default class CreateRequestModal extends Component {
         return (
             <Modal open={isOpen} closeOnDocumentClick={true} onClose={() => this.handleClosing()}>
                 <Modal.Header>Tutaj będzie Trade Request</Modal.Header>
-                {/* <Modal.Content>
-                <Input
-                    type="text"
-                    name="newName"
-                    placeholder="nowa nazwa"
-                    value={this.state.newName}
-                    onChange={(e) => this.handleChange(e)}
-                />
-            </Modal.Content> */}
                 <Modal.Content>
                     <Grid columns="2">
                         <Grid.Column>
                             <div> Tutaj będzie komponent Przemka</div>
                             <div className="quantity-slider">
                                 <label>Ilość: <b>{this.state?.splitquantity || startingquantity}</b></label>
-                                {/* <label>Ilość: <b>{this.state.splitquantity}</b></label> */}
                                 {startingquantity > 1 &&
                                     <Slider
                                         color="blue"
@@ -112,7 +103,7 @@ export default class CreateRequestModal extends Component {
                         disabled={this.state.selectedUser === null}
                         labelPosition='right'
                         icon='checkmark'
-                        onClick={() => { this.handleClosing(); this.sendRequest() }}
+                        onClick={() => { this.sendRequest(); this.handleClosing(); }}
                         positive
                     />
                 </Modal.Actions>
