@@ -4,7 +4,6 @@ import "./RequestRow.scss";
 
 export default class RequestRow extends Component {
 
-
     handleDeleteClick() {
         this.props.onDelete && this.props.onDelete(this.props.request);
     }
