@@ -48,8 +48,9 @@ export default class LoginPage extends Component {
             {/* <Form.Field> */}
             {/* <label>Adres e-mail</label> */}
             <Form.Input
-              label="Adres e-mail"
               fluid
+              submit
+              label="Adres e-mail"
               type="text"
               name="email"
               placeholder="e-mail"
@@ -62,6 +63,7 @@ export default class LoginPage extends Component {
             {/* <label>Hasło</label> */}
             <Form.Input
               fluid
+              submit
               label="Hasło"
               type="password"
               name="password"
@@ -70,12 +72,12 @@ export default class LoginPage extends Component {
               onChange={(e) => this.handleChange(e)}
             />
             {/* </Form.Field> */}
-            <Button
+            {/* <Button
               style={{ display: "none" }} //super hack xD
               color="green"
               type="submit"
               onClick={(e) => this.handleSubmit(e)}
-            />
+            /> */}
           </Form>
         </Card.Content>
 
