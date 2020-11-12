@@ -73,7 +73,7 @@ export default class AttributeList extends Component {
   render() {
     const { attributes } = this.state;
     return (<>
-      <Modal open={this.state.isModalOpen} size="mini">
+      <Modal open={this.state.isModalOpen} size="mini" closeOnDocumentClick={true} onClose={() => this.setState({ isModalOpen: false, newName: "" })}>
         <Modal.Header>Podaj {this.state.isEdit && "nową"} nazwę atrybutu {this.state.isEdit && this.state.passedAttribute.name}</Modal.Header>
         <Modal.Content>
           <Input
