@@ -33,6 +33,12 @@ namespace TestApp.Api.Commands.TradeRequest
                     return BadRequest(ReturnMessages.Message_400_TradeRequestNotFound);
 
                 var result = _mapper.Map<GetTradeRequestsDetailsQueryResult>(tr);
+                result.UserInfo = new GetTradeRequestsQueryResultUserInfo
+                {
+                    IsTaker = result.Taker.Id == _userInfo.Id,
+                    IsOwner = result.Owner.Id == _userInfo.Id
+                };
+
                 return Ok(result);
             }
             catch (Exception e)
@@ -50,6 +56,13 @@ namespace TestApp.Api.Commands.TradeRequest
             public ResourceDto Resource { get; set; }
             public DateTime CreatedAt { get; set; }
             public DateTime? FinalizedAt { get; set; }
+            public GetTradeRequestsQueryResultUserInfo UserInfo { get; set; }
+        }
+
+        public class GetTradeRequestsQueryResultUserInfo
+        {
+            public bool IsTaker { get; set; }
+            public bool IsOwner { get; set; }
         }
     }
 }

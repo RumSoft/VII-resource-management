@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.VisualBasic;
 using TestApp.Api.Commands.Resource;
 using TestApp.Api.Commands.TradeRequest;
 using TestApp.Api.Commands.User;
@@ -25,9 +26,17 @@ namespace TestApp.Api.Commands
             CreateMap<Models.Resource, GetResourceDetailsCommand.GetResourceDetailsCommandResult>()
                 .ForMember(x => x.TradeRequest, x => x.MapFrom(y => y.TradeRequest.Id))
                 .ReverseMap();
-            CreateMap<UpdateResourceCommand.UpdateResourceCommandInput, CreateResourceCommand.CreateResourceCommandInput>().ReverseMap();
+            CreateMap<UpdateResourceCommand.UpdateResourceCommandInput, CreateResourceCommand.CreateResourceCommandInput>()
+                .ReverseMap();
 
-            CreateMap<Models.TradeRequest, GetTradeRequestsQuery.GetTradeRequestsQueryResult>().ReverseMap();
+            CreateMap<Models.TradeRequest, GetTradeRequestsQuery.GetTradeRequestsQueryResult>()
+                .ForMember(x => x.Owner, opts => opts.MapFrom(src => src.Resource.Owner))
+                .ReverseMap();
+
+            CreateMap<Models.TradeRequest, GetTradeRequestsDetailsQuery.GetTradeRequestsDetailsQueryResult>()
+                .ForMember(x => x.Owner, opts => opts.MapFrom(src => src.Resource.Owner))
+                .ReverseMap();
+
         }
     }
 }
