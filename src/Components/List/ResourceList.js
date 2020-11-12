@@ -27,7 +27,7 @@ export default class ResourceList extends Component {
             .then(() => {
                 NotificationService.success(`Usunięto zasób ${resource.name}`);
                 this.setState({
-                    resource: this.state.resource.filter((x) => x.id !== resource.id),
+                    resources: this.state.resources.filter((x) => x.id !== resource.id),
                 });
             })
             .catch((e) => {
