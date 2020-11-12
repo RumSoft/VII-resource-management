@@ -27,7 +27,7 @@ namespace TestApp.Api.Commands.User
 
                 _context.Users.Remove(user);
                 _context.SaveChanges();
-                Log.Information("Deleted user {user}", user);
+                Log.Information("User deleted {id}: {email}", user.Id, user.EmailAddress);
                 return Ok();
             }
 

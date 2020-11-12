@@ -42,12 +42,12 @@ namespace TestApp.Api.Commands.User
                 user = _mapper.Map(input, user);
                 _context.Users.Update(user);
                 _context.SaveChanges();
-                Log.Information("Updated user {user}", user);
+                Log.Information("User updated {id}: {email}", user.Id, user.EmailAddress);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't update user {input}", input);
+                Log.Error(e, "Couldn't update user {@input}", input);
                 return BadRequest(e);
             }
         }

@@ -49,12 +49,12 @@ namespace TestApp.Api.Commands.User
                 PasswordResetHelper.RandomizePasswordAndSendPasswordReset(user, _context, _mailer, _hashService);
 
                 transaction.Commit();
-                Log.Information("Created user {userEmail} {userId}", user.EmailAddress, user.Id);
+                Log.Information("User created {id}: {email}", user.Id, user.EmailAddress);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't create user {input}", input);
+                Log.Error(e, "Couldn't create user {@input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }
