@@ -18,21 +18,23 @@ namespace TestApp.Api.Helpers
         /// <summary>
         ///     try merge resources when resource when attribute is deleted
         /// </summary>
-        public static void TryMergeByAttribute(Attribute attr, DataContext context)
+        public static int TryMergeByAttribute(Attribute attr, DataContext context)
         {
             var res = Resources(context).Where(x => x.Attributes.Contains(attr))
                 .ToList();
+
             if (res.Count > 2)
-                Merge(res, context);
+                return Merge(res, context);
+
+            return 0;
         }
 
         /// <summary>
         ///     try merge resources when resource is changed
         /// </summary>
-        public static void TryMergeByResource(Resource resource, DataContext context)
+        public static int TryMergeByResource(Resource resource, DataContext context)
         {
             var attributeIds = resource.Attributes?.Select(x => x.Id) ?? new[] {-1};
-
             var matchingResources = Resources(context).Where(x => x.Owner == resource.Owner
                                                                   && x.Name == resource.Name
                                                                   && x.Room == resource.Room)
@@ -41,22 +43,29 @@ namespace TestApp.Api.Helpers
                 .ToList();
 
             if (matchingResources.Count >= 2)
-                Merge(matchingResources, context);
+                return Merge(matchingResources, context);
+
+            return 0;
         }
 
         /// <summary>
         ///     try merge resources when room is deleted
         /// </summary>
-        public static void TryMergeByRoom(Room room, DataContext context)
+        public static int TryMergeByRoom(Room room, DataContext context)
         {
             var res = Resources(context).Where(x => x.Room == room)
                 .ToList();
+
             if (res.Count > 2)
-                Merge(res, context);
+                return Merge(res, context);
+
+            return 0;
         }
 
-        private static void Merge(IList<Resource> resources, DataContext context)
+        private static int Merge(IList<Resource> resources, DataContext context)
         {
+            var merged = 0;
+
             foreach (var pre_group in resources.GroupBy(x => new {x.Name, x.Room, x.Owner}).ToList())
             {
                 //https://stackoverflow.com/questions/31724512/linq-group-by-using-the-elements-inside-an-array-property]
@@ -74,12 +83,15 @@ namespace TestApp.Api.Helpers
                         var others = @group.Skip(1).ToList();
 
                         first.Quantity += others.Sum(x => x.Quantity);
+                        merged += others.Count;
 
                         context.Resources.RemoveRange(others);
                         context.Resources.Update(first);
                         context.SaveChanges();
                     }
             }
+
+            return merged;
         }
     }
 }

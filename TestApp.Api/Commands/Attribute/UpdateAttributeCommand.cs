@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -31,9 +32,6 @@ namespace TestApp.Api.Commands.Attribute
                 if (attribute == null)
                     return BadRequest(ReturnMessages.Message_400_AttributeNotFound);
 
-                if (attribute.Name.Equals(input.Name, StringComparison.InvariantCultureIgnoreCase))
-                    return Ok();
-
                 if (_context.Attributes.Any(x => x.Name == input.Name))
                     return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
 
@@ -41,17 +39,19 @@ namespace TestApp.Api.Commands.Attribute
                 attribute.Color = input.Color;
                 _context.Attributes.Update(attribute);
                 _context.SaveChanges();
-
+                Log.Information("Updated attribute {attribute}", attribute);
                 return Ok();
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't update attribute {input}",input);
                 return BadRequest(e);
             }
         }
 
         public class UpdateAttributeCommandInput : IdNameColor
-        { }
+        {
+        }
 
         public class UpdateAttributeCommandInputValidator : AbstractValidator<UpdateAttributeCommandInput>
         {

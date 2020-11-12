@@ -3,6 +3,7 @@ using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Services;
@@ -43,7 +44,8 @@ namespace TestApp.Api.Commands.Auth
 
                 user.LastLoginAt = DateTime.Now;
                 _context.SaveChanges();
-               
+                Log.Information("User {userId} logged in", user.Id);
+
                 return Ok(new LoginCommandResult
                 {
                     Token = token.AccessToken,
@@ -53,6 +55,7 @@ namespace TestApp.Api.Commands.Auth
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't execute login command");
                 return BadRequest(e);
             }
         }

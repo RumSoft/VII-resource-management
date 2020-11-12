@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
 
 namespace TestApp.Api.Commands.User
@@ -32,6 +33,7 @@ namespace TestApp.Api.Commands.User
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't get user {id} details", id);
                 return BadRequest(e);
             }
         }

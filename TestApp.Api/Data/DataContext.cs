@@ -1,6 +1,8 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Models;
+using Attribute = TestApp.Api.Models.Attribute;
 
 namespace TestApp.Api.Data
 {
@@ -20,6 +22,8 @@ namespace TestApp.Api.Data
         
         public DbSet<TradeRequest> TradeRequests { get; set; }
 
+        public DbSet<LogObject> Log { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var resource = modelBuilder.Entity<Resource>();

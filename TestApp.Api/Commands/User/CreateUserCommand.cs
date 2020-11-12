@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -53,6 +54,7 @@ namespace TestApp.Api.Commands.User
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't create user {input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }

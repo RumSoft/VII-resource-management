@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TestApp.Api.Commands.TradeRequest;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
@@ -45,6 +46,7 @@ namespace TestApp.Api.Commands.Search
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't execute search query for {@input}", input);
                 return BadRequest(e);
             }
         }

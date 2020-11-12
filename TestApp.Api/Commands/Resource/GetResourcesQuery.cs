@@ -27,7 +27,7 @@ namespace TestApp.Api.Commands.Resource
         public override ActionResult<GetResourcesCommandResult[]> Execute()
         {
             var resources = _context.Resources.AsQueryable();
-            
+
             if (!_userInfo.IsAdmin)
                 resources = resources.Where(x => x.Owner.Id == _userInfo.Id);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -33,17 +34,20 @@ namespace TestApp.Api.Commands.Attribute
                 }
                 else
                 {
-                    ResourceMerger.TryMergeByAttribute(attr, _context);
+                    Log.Information("Merging resources for attribute {attribute}", attr);
+                    var mergedCount = ResourceMerger.TryMergeByAttribute(attr, _context);
+                    Log.Warning("Merged {mergedCount} resource entities in total", mergedCount);
                 }
 
                 _context.Attributes.Remove(attr);
                 _context.SaveChanges();
-
+                Log.Information("Deleted attribute {id}", id);
                 return Ok();
             }
 
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't delete attribute {id}", id);
                 return BadRequest(e);
             }
         }

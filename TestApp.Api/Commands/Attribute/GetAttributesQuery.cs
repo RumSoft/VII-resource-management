@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
 using TestApp.Api.Models.Dto;
 
@@ -22,9 +24,17 @@ namespace TestApp.Api.Commands.Attribute
         [HttpGet("attribute")]
         public override ActionResult<IdNameColor> Execute()
         {
-            var attributes = _context.Attributes;
-            var result = _mapper.Map<IdNameColor[]>(attributes.ToList());
-            return Ok(result);
+            try
+            {
+                var attributes = _context.Attributes;
+                var result = _mapper.Map<IdNameColor[]>(attributes.ToList());
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Couldn't get attributes");
+                return BadRequest(e);
+            }
         }
     }
 }

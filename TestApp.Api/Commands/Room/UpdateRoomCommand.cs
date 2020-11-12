@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -46,13 +47,13 @@ namespace TestApp.Api.Commands.Room
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't update room {input}", input);
                 return BadRequest(e);
             }
         }
 
         public class UpdateRoomCommandInput : IdNameColor
         {
-
         }
 
         public class UpdateRoomCommandInputValidator : AbstractValidator<UpdateRoomCommandInput>

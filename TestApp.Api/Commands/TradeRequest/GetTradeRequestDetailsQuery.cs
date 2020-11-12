@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
-using TestApp.Api.Models;
 using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 
@@ -38,6 +37,7 @@ namespace TestApp.Api.Commands.TradeRequest
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't get trade request {id} details", id);
                 return BadRequest(e);
             }
         }

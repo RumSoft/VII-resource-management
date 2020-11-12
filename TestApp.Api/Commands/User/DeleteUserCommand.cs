@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 
@@ -32,6 +33,7 @@ namespace TestApp.Api.Commands.User
 
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't delete user {id}", id);
                 return BadRequest(e);
             }
         }

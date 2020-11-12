@@ -3,8 +3,8 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
-using TestApp.Api.Models;
 using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
 
@@ -13,8 +13,8 @@ namespace TestApp.Api.Commands.TradeRequest
     public class GetTradeRequestsQuery : Query<GetTradeRequestsQuery.GetTradeRequestsQueryResult>
     {
         private readonly DataContext _context;
-        private readonly IUserInfo _userInfo;
         private readonly IMapper _mapper;
+        private readonly IUserInfo _userInfo;
 
         public GetTradeRequestsQuery(DataContext context, IUserInfo userInfo, IMapper mapper)
         {
@@ -44,11 +44,12 @@ namespace TestApp.Api.Commands.TradeRequest
                     };
                     return x;
                 });
-                
+
                 return Ok(result);
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't get trade requests");
                 return BadRequest(e);
             }
         }
@@ -61,6 +62,7 @@ namespace TestApp.Api.Commands.TradeRequest
             public ResourceDto Resource { get; set; }
             public GetTradeRequestsQueryResultUserInfo UserInfo { get; set; }
         }
+
         public class GetTradeRequestsQueryResultUserInfo
         {
             public bool IsTaker { get; set; }

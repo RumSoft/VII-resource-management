@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TestApp.Api.Auth;
+using Serilog;
 using TestApp.Api.Data;
 
 namespace TestApp.Api.Commands.Resource
@@ -33,6 +33,7 @@ namespace TestApp.Api.Commands.Resource
 
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't delete resource {id}", id);
                 return BadRequest(e);
             }
         }

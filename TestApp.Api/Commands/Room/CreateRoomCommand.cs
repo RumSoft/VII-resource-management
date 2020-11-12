@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -37,6 +38,7 @@ namespace TestApp.Api.Commands.Room
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't create room {input}", input);
                 return BadRequest(e);
             }
         }

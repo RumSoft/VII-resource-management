@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -82,6 +83,7 @@ namespace TestApp.Api.Commands.TradeRequest
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't execute action on trade request {input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }
@@ -90,10 +92,11 @@ namespace TestApp.Api.Commands.TradeRequest
         public class TradeRequestActionCommandInput
         {
             public Guid Id { get; set; }
+
             /// <summary>
-            /// CancelByOwner = 0,
-            /// Accept = 1,
-            /// Decline = 2
+            ///     CancelByOwner = 0,
+            ///     Accept = 1,
+            ///     Decline = 2
             /// </summary>
             public TradeRequestAction? Action { get; set; }
         }

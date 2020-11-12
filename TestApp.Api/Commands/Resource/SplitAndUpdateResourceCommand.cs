@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Services;
@@ -46,10 +47,7 @@ namespace TestApp.Api.Commands.Resource
                 var createResourceCommand = new CreateResourceCommand(_context, _userInfo);
                 var newResourceResult = createResourceCommand.Execute(_mapper.Map<CreateResourceCommand.CreateResourceCommandInput>(input));
 
-                if (!(newResourceResult.Result is OkObjectResult r))
-                {
-                    throw new Exception(ReturnMessages.CatastrophicFailure);
-                }
+                if (!(newResourceResult.Result is OkObjectResult r)) throw new Exception(ReturnMessages.CatastrophicFailure);
 
                 baseResource.Quantity -= input.Quantity;
                 _context.Resources.Update(baseResource);
@@ -59,6 +57,7 @@ namespace TestApp.Api.Commands.Resource
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't split and update resource {input}", input);
                 return BadRequest(e);
             }
         }

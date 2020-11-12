@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -33,10 +34,12 @@ namespace TestApp.Api.Commands.Attribute
 
                 _context.Attributes.Add(attr);
                 _context.SaveChanges();
+                Log.Information("Attribute added: {attribute}'", attr);
                 return Ok();
             }
             catch (Exception e)
             {
+                Log.Error(e, "Attribute not added");
                 return BadRequest(e);
             }
         }

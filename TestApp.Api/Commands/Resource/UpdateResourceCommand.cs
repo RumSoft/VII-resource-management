@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -56,7 +57,6 @@ namespace TestApp.Api.Commands.Resource
                 else
                     _context.Entry(resource).Property("RoomId").CurrentValue = null;
 
-        
                 resource.Attributes.Clear();
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
@@ -65,7 +65,9 @@ namespace TestApp.Api.Commands.Resource
                 _context.SaveChanges();
 
                 //merge with existing
-                ResourceMerger.TryMergeByResource(resource, _context);
+                Log.Information("Trying to merge resource");
+                var mergedCount = ResourceMerger.TryMergeByResource(resource, _context);
+                Log.Warning("Merged {mergedCount} resources", mergedCount);
 
                 _context.SaveChanges();
                 transaction.Commit();
@@ -76,6 +78,7 @@ namespace TestApp.Api.Commands.Resource
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't update resource {input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }

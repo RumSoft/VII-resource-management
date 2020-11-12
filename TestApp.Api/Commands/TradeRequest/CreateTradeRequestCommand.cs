@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Services;
@@ -33,7 +34,7 @@ namespace TestApp.Api.Commands.TradeRequest
                 var taker = _context.Users.Find(input.TakerId);
                 var resource = _context.Resources.Find(input.ResourceId);
 
-                if (user == null || taker == null || resource == null)
+                if (user == null || taker == null || resource == null || user.Id == taker.Id)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
 
                 if (resource.IsLocked || resource.Quantity < input.Quantity)
@@ -74,6 +75,7 @@ namespace TestApp.Api.Commands.TradeRequest
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't create trade request {input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }
@@ -91,6 +93,8 @@ namespace TestApp.Api.Commands.TradeRequest
             public CreateTradeRequestCommandInputValidator()
             {
                 RuleFor(x => x.Quantity).GreaterThan(0);
+                RuleFor(x => x.TakerId).NotEmpty();
+                RuleFor(x => x.ResourceId).NotEmpty();
             }
         }
     }

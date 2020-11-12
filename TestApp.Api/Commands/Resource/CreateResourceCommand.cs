@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -48,15 +49,17 @@ namespace TestApp.Api.Commands.Resource
                     resource.Room = _context.Rooms.Find(input.Room);
                 else
                     resource.Room = null;
-                
+
                 if (input.Attributes != null && input.Attributes.Length > 0)
                     resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
 
                 _context.Resources.Add(resource);
                 _context.SaveChanges();
 
-                //merge with existing
-                ResourceMerger.TryMergeByResource(resource, _context);
+                // merge with existing
+                Log.Information("Trying to merge resource");
+                var mergedCount = ResourceMerger.TryMergeByResource(resource, _context);
+                Log.Warning("Merged {mergedCount} resources", mergedCount);
 
                 transaction.Commit();
 
@@ -68,6 +71,7 @@ namespace TestApp.Api.Commands.Resource
             catch (Exception e)
             {
                 transaction.Rollback();
+                Log.Error(e, "Couldn't create resource {input}, rolling back transaction", input);
                 return BadRequest(e);
             }
         }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
 using TestApp.Api.Models.Dto;
 
@@ -33,6 +34,7 @@ namespace TestApp.Api.Commands.Resource
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't get resource {id} details", id);
                 return BadRequest(e);
             }
         }

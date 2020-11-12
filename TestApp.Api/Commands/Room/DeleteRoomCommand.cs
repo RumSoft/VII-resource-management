@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -44,6 +45,7 @@ namespace TestApp.Api.Commands.Room
 
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't delete room {id}", id);
                 return BadRequest(e);
             }
         }
