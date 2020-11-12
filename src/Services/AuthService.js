@@ -20,6 +20,10 @@ export default class AuthService {
     return window.localStorage.getItem(authTokenKey) !== null;
   }
 
+  static isAdmin() {
+    return window.localStorage.getItem(roleKey) === "Admin";
+  }
+
   static logout() {
     window.localStorage.removeItem(authTokenKey);
     window.localStorage.removeItem(roleKey);

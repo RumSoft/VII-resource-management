@@ -20,6 +20,7 @@ import {
 import "./App.scss";
 import "semantic-ui-css/semantic.min.css";
 import Navbar from "./Components/Navbar";
+import LogViewPage from "./Pages/LogViewPage";
 
 class App extends Component {
   renderRouting() {
@@ -34,6 +35,7 @@ class App extends Component {
         <Route path="/user/edit" component={EditUserPage} />
         <Route path="/resource/add" component={AddResourcePage} />
         <Route path="/resource/edit" component={EditResourcePage} />
+        <Route path="/logs" component={LogViewPage} />
         <Route component={ErrorPage} />
       </Switch>
     );

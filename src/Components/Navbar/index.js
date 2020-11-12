@@ -48,6 +48,13 @@ export default class Navbar extends Component {
             <Icon name="gamepad" />
             Panel
           </Menu.Item>
+          {AuthService.isAdmin() && (
+            <Menu.Item as={Link} to="/logs">
+              <Icon name="gamepad" />
+              Logi
+            </Menu.Item>
+          )}
+
           <div className="bottom-aligned">
             {this.state.isLogged ? (
               <Menu.Item
