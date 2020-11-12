@@ -45,8 +45,6 @@ export default class LoginPage extends Component {
 
         <Card.Content>
           <Form onSubmit={(e) => this.handleSubmit(e)}>
-            {/* <Form.Field> */}
-            {/* <label>Adres e-mail</label> */}
             <Form.Input
               fluid
               submit
@@ -57,10 +55,7 @@ export default class LoginPage extends Component {
               value={this.state.email}
               onChange={(e) => this.handleChange(e)}
             />
-            {/* </Form.Field> */}
 
-            {/* <Form.Field> */}
-            {/* <label>Hasło</label> */}
             <Form.Input
               fluid
               submit
@@ -71,18 +66,19 @@ export default class LoginPage extends Component {
               value={this.state.password}
               onChange={(e) => this.handleChange(e)}
             />
-            {/* </Form.Field> */}
-            {/* <Button
+
+            <Button
               style={{ display: "none" }} //super hack xD
               color="green"
               type="submit"
               onClick={(e) => this.handleSubmit(e)}
-            /> */}
+            />
           </Form>
         </Card.Content>
 
         <Card.Content>
           <Button
+            fluid
             color="green"
             type="submit"
             onClick={(e) => this.handleSubmit(e)}
@@ -91,36 +87,6 @@ export default class LoginPage extends Component {
           </Button>
         </Card.Content>
       </Card >
-      // <div className="login-form">
-      //   <form onSubmit={(e) => this.handleSubmit(e)}>
-      //     <h2 className="text-center">Panel logowania</h2>
-      //     <div className="form-group">
-      //       <input
-      //         type="text"
-      //         className="form-control"
-      //         name="email"
-      //         placeholder="e-mail"
-      //         onChange={(e) => this.handleChange(e)}
-      //       />
-      //     </div>
-
-      //     <div className="form-group">
-      //       <input
-      //         type="password"
-      //         className="form-control"
-      //         name="password"
-      //         placeholder="hasło"
-      //         onChange={(e) => this.handleChange(e)}
-      //       />
-      //     </div>
-
-      //     <div className="form-group">
-      //       <button type="submit" className="btn btn-primary btn-block">
-      //         Zaloguj się
-      //       </button>
-      //     </div>
-      //   </form>
-      // </div>
     );
   }
 }

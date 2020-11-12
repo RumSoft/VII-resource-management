@@ -21,7 +21,7 @@ export default class UserRow extends Component {
             as={Link}
             to={`/user/edit?userId=${id}`}
             icon="edit"
-            color="blue"
+            color="yellow"
           />
           <Button
             circular
