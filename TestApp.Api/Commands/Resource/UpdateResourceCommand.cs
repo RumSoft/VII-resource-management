@@ -71,6 +71,7 @@ namespace TestApp.Api.Commands.Resource
 
                 _context.SaveChanges();
                 transaction.Commit();
+                Log.Information("Updated resource {resource}", resource);
                 return Ok(new CreateResourceCommand.CreateResourceCommandResult
                 {
                     Id = resource.Id

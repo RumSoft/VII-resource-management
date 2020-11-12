@@ -39,7 +39,7 @@ namespace TestApp.Api.Commands.Room
 
                 _context.Rooms.Remove(room);
                 _context.SaveChanges();
-
+                Log.Information("Deleted room {room}", room);
                 return Ok();
             }
 

@@ -42,7 +42,7 @@ namespace TestApp.Api.Commands.User
                 user = _mapper.Map(input, user);
                 _context.Users.Update(user);
                 _context.SaveChanges();
-
+                Log.Information("Updated user {user}", user);
                 return Ok();
             }
             catch (Exception e)

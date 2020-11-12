@@ -42,7 +42,7 @@ namespace TestApp.Api.Commands.Room
                 room.Color = input.Color;
                 _context.Rooms.Update(room);
                 _context.SaveChanges();
-
+                Log.Information("Updated room {room}", room);
                 return Ok();
             }
             catch (Exception e)

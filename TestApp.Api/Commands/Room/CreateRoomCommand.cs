@@ -34,6 +34,7 @@ namespace TestApp.Api.Commands.Room
 
                 _context.Add(room);
                 _context.SaveChanges();
+                Log.Information("Room {room} created", room);
                 return Ok();
             }
             catch (Exception e)

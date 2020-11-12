@@ -53,6 +53,7 @@ namespace TestApp.Api.Commands.Resource
                 _context.Resources.Update(baseResource);
                 _context.SaveChanges();
 
+                Log.Information("Split resource {baseResource} to new", baseResource);
                 return Ok();
             }
             catch (Exception e)

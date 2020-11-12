@@ -79,6 +79,7 @@ namespace TestApp.Api.Commands.TradeRequest
                 ResourceMerger.TryMergeByResource(resource, _context);
 
                 transaction.Commit();
+                Log.Information("Updated tradeRequest {tr} with action {action}", tr, input.Action);
                 return Ok();
             }
             catch (Exception e)

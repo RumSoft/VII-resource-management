@@ -57,12 +57,12 @@ namespace TestApp.Api.Commands.Resource
                 _context.SaveChanges();
 
                 // merge with existing
-                Log.Information("Trying to merge resource");
+                Log.Information("Trying to merge resource {resource}", resource);
                 var mergedCount = ResourceMerger.TryMergeByResource(resource, _context);
                 Log.Warning("Merged {mergedCount} resources", mergedCount);
 
                 transaction.Commit();
-
+                Log.Information("Created resource {resource}", resource);
                 return Ok(new CreateResourceCommandResult
                 {
                     Id = resource.Id

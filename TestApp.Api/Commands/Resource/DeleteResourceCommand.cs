@@ -28,6 +28,7 @@ namespace TestApp.Api.Commands.Resource
                 _context.Resources.Remove(resource);
                 _context.SaveChanges();
 
+                Log.Information("Deleted resource {resource}", resource);
                 return Ok();
             }
 

@@ -49,7 +49,7 @@ namespace TestApp.Api.Commands.User
                 PasswordResetHelper.RandomizePasswordAndSendPasswordReset(user, _context, _mailer, _hashService);
 
                 transaction.Commit();
-
+                Log.Information("Created user {userEmail} {userId}", user.EmailAddress, user.Id);
                 return Ok();
             }
             catch (Exception e)

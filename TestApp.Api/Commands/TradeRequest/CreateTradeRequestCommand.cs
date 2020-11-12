@@ -75,6 +75,7 @@ namespace TestApp.Api.Commands.TradeRequest
                 _context.SaveChanges();
 
                 transaction.Commit();
+                Log.Information("Created trade request {tr}", tr);
                 return Ok();
             }
             catch (Exception e)
