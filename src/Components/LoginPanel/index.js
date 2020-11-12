@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AuthService from "../../Services/AuthService";
 import { Redirect } from "react-router-dom";
 import { NotificationService } from "../../Services";
+import { Card, Form, Button } from 'semantic-ui-react'
 import "./index.scss";
 
 export default class LoginPage extends Component {
@@ -35,36 +36,57 @@ export default class LoginPage extends Component {
     }
 
     return (
-      <div className="login-form">
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <h2 className="text-center">Panel logowania</h2>
-          <div className="form-group">
-            <input
+      <Card className="login-form" >
+        <Card.Content>
+          <Card.Header as="h1">
+            Panel logowania
+          </Card.Header>
+        </Card.Content>
+
+        <Card.Content>
+          <Form onSubmit={(e) => this.handleSubmit(e)}>
+            <Form.Input
+              fluid
+              submit
+              label="Adres e-mail"
               type="text"
-              className="form-control"
               name="email"
               placeholder="e-mail"
+              value={this.state.email}
               onChange={(e) => this.handleChange(e)}
             />
-          </div>
 
-          <div className="form-group">
-            <input
+            <Form.Input
+              fluid
+              submit
+              label="Hasło"
               type="password"
-              className="form-control"
               name="password"
               placeholder="hasło"
+              value={this.state.password}
               onChange={(e) => this.handleChange(e)}
             />
-          </div>
 
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary btn-block">
-              Zaloguj się
-            </button>
-          </div>
-        </form>
-      </div>
+            <Button
+              style={{ display: "none" }} //super hack xD
+              color="green"
+              type="submit"
+              onClick={(e) => this.handleSubmit(e)}
+            />
+          </Form>
+        </Card.Content>
+
+        <Card.Content>
+          <Button
+            fluid
+            color="green"
+            type="submit"
+            onClick={(e) => this.handleSubmit(e)}
+          >
+            Zaloguj się
+          </Button>
+        </Card.Content>
+      </Card >
     );
   }
 }

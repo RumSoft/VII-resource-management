@@ -26,7 +26,7 @@ export default class RoomRow extends Component {
             circular
             onClick={() => this.handleEditClick()}
             icon="edit"
-            color="blue"
+            color="yellow"
           />
           <Button
             circular
