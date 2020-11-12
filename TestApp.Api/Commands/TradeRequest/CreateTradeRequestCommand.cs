@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
+using TestApp.Api.Models;
 using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.TradeRequest
@@ -34,7 +35,10 @@ namespace TestApp.Api.Commands.TradeRequest
                 var taker = _context.Users.Find(input.TakerId);
                 var resource = _context.Resources.Find(input.ResourceId);
 
-                if (user == null || taker == null || resource == null || user.Id == taker.Id)
+                if (user == null || taker == null || resource == null 
+                    || user.Id == taker.Id
+                    || user.Role != UserRoles.User
+                    || taker.Role != UserRoles.User)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
 
                 if (resource.IsLocked || resource.Quantity < input.Quantity)
