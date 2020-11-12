@@ -34,12 +34,12 @@ namespace TestApp.Api.Commands.Room
 
                 _context.Add(room);
                 _context.SaveChanges();
-                Log.Information("Room {room} created", room);
+                Log.Information("Room created {id}: {name}", room.Id, room.Name);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't create room {input}", input);
+                Log.Error(e, "Couldn't create room {@input}", input);
                 return BadRequest(e);
             }
         }

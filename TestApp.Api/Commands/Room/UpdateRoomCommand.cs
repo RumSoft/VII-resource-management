@@ -42,12 +42,12 @@ namespace TestApp.Api.Commands.Room
                 room.Color = input.Color;
                 _context.Rooms.Update(room);
                 _context.SaveChanges();
-                Log.Information("Updated room {room}", room);
+                Log.Information("Room updated {id}: {name}", room.Id, room.Name);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't update room {input}", input);
+                Log.Error(e, "Couldn't update room {@input}", input);
                 return BadRequest(e);
             }
         }
