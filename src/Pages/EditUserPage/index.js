@@ -25,7 +25,7 @@ export default class EditUserPage extends Component {
     UserService.editUser(user)
       .then((e) => {
         NotificationService.success(
-          `Zmieniono dane użytkownika ${this.state.firstName} ${this.state.lastName} o adresie ${this.state.emailAddress} na ${user.firstName} ${user.lastName} o adresie ${user.emailAddress}`
+          `Zmieniono dane użytkownika na ${user.firstName} ${user.lastName} o adresie ${user.emailAddress}`
         );
         this.setState({ redirect: true });
       })
