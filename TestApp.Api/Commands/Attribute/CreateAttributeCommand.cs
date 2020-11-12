@@ -34,12 +34,12 @@ namespace TestApp.Api.Commands.Attribute
 
                 _context.Attributes.Add(attr);
                 _context.SaveChanges();
-                Log.Information("Attribute added: {attribute}'", attr);
+                Log.Information("Attribute added: {id}: {name}", attr.Id, attr.Name);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Attribute not added");
+                Log.Error(e, "Attribute not added, {@input}", input);
                 return BadRequest(e);
             }
         }

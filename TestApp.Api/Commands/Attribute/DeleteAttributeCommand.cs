@@ -41,7 +41,7 @@ namespace TestApp.Api.Commands.Attribute
 
                 _context.Attributes.Remove(attr);
                 _context.SaveChanges();
-                Log.Information("Deleted attribute {id}", id);
+                Log.Information("Deleted attribute {id}: {name}", id, attr.Name);
                 return Ok();
             }
 

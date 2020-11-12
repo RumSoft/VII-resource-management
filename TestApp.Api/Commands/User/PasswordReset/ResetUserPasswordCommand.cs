@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
@@ -33,6 +34,7 @@ namespace TestApp.Api.Commands.User.PasswordReset
 
                 transaction.Commit();
 
+                Log.Information("Sent new password for user {id}: {email}", user.Id, user.EmailAddress);
                 return Ok(new ResetUserPasswordCommandOutput
                 {
                     Token = token
@@ -40,6 +42,7 @@ namespace TestApp.Api.Commands.User.PasswordReset
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't reset password for user {id}", id);
                 transaction.Rollback();
                 return BadRequest(e);
             }

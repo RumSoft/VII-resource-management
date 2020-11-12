@@ -57,12 +57,12 @@ namespace TestApp.Api.Commands.Resource
                 _context.SaveChanges();
 
                 // merge with existing
-                Log.Information("Trying to merge resource {resource}", resource);
+                Log.Information("Trying to merge resource {id}: {name}", resource.Id, resource.Name);
                 var mergedCount = ResourceMerger.TryMergeByResource(resource, _context);
                 Log.Warning("Merged {mergedCount} resources", mergedCount);
 
                 transaction.Commit();
-                Log.Information("Created resource {resource}", resource);
+                Log.Information("Created resource {id}: {name}", resource.Id, resource.Name);
                 return Ok(new CreateResourceCommandResult
                 {
                     Id = resource.Id
@@ -71,7 +71,7 @@ namespace TestApp.Api.Commands.Resource
             catch (Exception e)
             {
                 transaction.Rollback();
-                Log.Error(e, "Couldn't create resource {input}, rolling back transaction", input);
+                Log.Error(e, "Couldn't create resource {@input}, rolling back transaction", input);
                 return BadRequest(e);
             }
         }

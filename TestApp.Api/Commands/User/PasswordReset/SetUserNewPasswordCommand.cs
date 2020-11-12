@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestApp.Api.Data;
 using TestApp.Api.Helpers;
 using TestApp.Api.Services;
@@ -41,10 +42,13 @@ namespace TestApp.Api.Commands.User.PasswordReset
                 _context.Users.Update(user);
                 _context.SaveChanges();
 
+                Log.Information("Set new password for user {id}: {email}", user.Id, user.EmailAddress);
+
                 return Ok();
             }
             catch (Exception e)
             {
+                Log.Error(e, "Couldn't set new password for reset-token {token}", input.Token);
                 return BadRequest(e);
             }
         }

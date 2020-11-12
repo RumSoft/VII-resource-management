@@ -75,12 +75,12 @@ namespace TestApp.Api.Commands.TradeRequest
                 _context.SaveChanges();
 
                 transaction.Commit();
-                Log.Information("Created trade request {tr}", tr);
+                Log.Information("Created trade request {trid}: {resname}", tr.Id, resource.Name);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't create trade request {input}", input);
+                Log.Error(e, "Couldn't create trade request {@input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }

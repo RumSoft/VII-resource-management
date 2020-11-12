@@ -39,12 +39,12 @@ namespace TestApp.Api.Commands.Attribute
                 attribute.Color = input.Color;
                 _context.Attributes.Update(attribute);
                 _context.SaveChanges();
-                Log.Information("Updated attribute {attribute}", attribute);
+                Log.Information("Updated attribute {id}: {name}", attribute.Id, attribute.Name);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't update attribute {input}",input);
+                Log.Error(e, "Couldn't update attribute {@input}", input);
                 return BadRequest(e);
             }
         }

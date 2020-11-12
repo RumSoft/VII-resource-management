@@ -53,12 +53,12 @@ namespace TestApp.Api.Commands.Resource
                 _context.Resources.Update(baseResource);
                 _context.SaveChanges();
 
-                Log.Information("Split resource {baseResource} to new", baseResource);
+                Log.Information("Split resource {id}: {name} to new {@input}", baseResource.Id, baseResource.Name, input);
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't split and update resource {input}", input);
+                Log.Error(e, "Couldn't split and update resource {@input}", input);
                 return BadRequest(e);
             }
         }

@@ -79,12 +79,12 @@ namespace TestApp.Api.Commands.TradeRequest
                 ResourceMerger.TryMergeByResource(resource, _context);
 
                 transaction.Commit();
-                Log.Information("Updated tradeRequest {tr} with action {action}", tr, input.Action);
+                Log.Information("Updated tradeRequest {trid}:{resname} with action {action}", tr.Id, resource.Name, input.Action.ToString());
                 return Ok();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't execute action on trade request {input}", input);
+                Log.Error(e, "Couldn't execute action on trade request {@input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }

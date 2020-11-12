@@ -71,7 +71,7 @@ namespace TestApp.Api.Commands.Resource
 
                 _context.SaveChanges();
                 transaction.Commit();
-                Log.Information("Updated resource {resource}", resource);
+                Log.Information("Updated resource {resid}: {resname}", resource.Id, resource.Name);
                 return Ok(new CreateResourceCommand.CreateResourceCommandResult
                 {
                     Id = resource.Id
@@ -79,7 +79,7 @@ namespace TestApp.Api.Commands.Resource
             }
             catch (Exception e)
             {
-                Log.Error(e, "Couldn't update resource {input}", input);
+                Log.Error(e, "Couldn't update resource {@input}", input);
                 transaction.Rollback();
                 return BadRequest(e);
             }
