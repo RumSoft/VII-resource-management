@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Table, Header, Form } from "semantic-ui-react";
+import { Card, Table, Header, Form, Label } from "semantic-ui-react";
 import { QueryService } from "../../Services";
 import qs from "query-string";
 import "./index.scss";
@@ -40,7 +40,7 @@ export default class QueryManager extends Component {
     columnConfiguration = {
         rooms: [
             {
-                name: "Id",
+                name: "ID",
                 selector: (x) => x.id,
             },
             {
@@ -62,17 +62,11 @@ export default class QueryManager extends Component {
                 selector: (x) => x.resourceCount,
             },
         ],
-        attributes: [
-            {
-                name: "Nazwa",
-                selector: (x) => x.name,
-            },
-            {
-                name: "Ilość zasobów",
-                selector: (x) => x.resourceCount,
-            },
-        ],
         users: [
+            {
+                name: "ID",
+                selector: (x) => x.id.substring(0, x.id.indexOf('-')) + "...",
+            },
             {
                 name: "Imie",
                 selector: (x) => x.firstName,
@@ -98,7 +92,75 @@ export default class QueryManager extends Component {
                 selector: (x) => x.resourceCount,
             },
         ],
+        resources: [
+            {
+                name: "ID",
+                selector: (x) => x.id.substring(0, x.id.indexOf('-')) + "...",
+            },
+            {
+                name: "Nazwa",
+                selector: (x) => x.name,
+            },
+            {
+                name: "Ilość",
+                selector: (x) => x.quantity,
+            },
+            {
+                name: "Właściciel",
+                selector: (x) => x.owner.firstName + " " + x.owner.lastName,
+            },
+            {
+                name: "E-mail",
+                selector: (x) => x.owner.emailAddress,
+            },
+            {
+                name: "Atrybuty",
+                selector: (x) => x.attributes.length ? x.attributes.map(y => <Label style={{ backgroundColor: y.color }}>{y.name}</Label>) : <Label>brak atrybutów</Label>,
+            },
+            {
+                name: "Pokój",
+                selector: (x) => <Label style={{ backgroundColor: x.room && x.room.color }} > {`${x.room?.name || 'brak pokoju'}`}</Label >
+            },
+        ],
+        traderequests: [
+            {
+                name: "Właściciel",
+                selector: (x) => x.owner.firstName + " " + x.owner.lastName,
+            },
+            {
+                name: "Odbiorca",
+                selector: (x) => x.taker.firstName + " " + x.taker.lastName,
+            },
+            {
+                name: "ID zasobu",
+                selector: (x) => x.resource.id.substring(0, x.resource.id.indexOf('-')) + "...",
+            },
+            {
+                name: "Nazwa",
+                selector: (x) => x.resource.name,
+            },
+            {
+                name: "Ilość",
+                selector: (x) => x.resource.quantity,
+            },
+            {
+                name: "Atrybuty",
+                selector: (x) => x.resource.attributes.length ? x.resource.attributes.map(y => <Label style={{ backgroundColor: y.color }}>{y.name}</Label>) : <Label>brak atrybutów</Label>,
+            },
+            {
+                name: "Pokój",
+                selector: (x) => <Label style={{ backgroundColor: x.room && x.room.color }} > {`${x.resource.room?.name || 'brak pokoju'}`}</Label >
+            },
+        ],
     };
+
+    headerConfiguration = {
+        rooms: { name: "Pokoje" },
+        attributes: { name: "Atrybuty" },
+        users: { name: "Użytkownicy" },
+        resources: { name: "Zasoby" },
+        traderequests: { name: "Przekazanie" }
+    }
 
     renderLoading() {
         return (
@@ -150,8 +212,8 @@ export default class QueryManager extends Component {
 
     render() {
         const { entityList, type } = this.state;
-        console.log(entityList);
         const columns = this.columnConfiguration[type];
+        const header = this.headerConfiguration[type];
         const content = this.renderContent(entityList || [], columns);
 
         return (
@@ -182,7 +244,9 @@ export default class QueryManager extends Component {
                 </Card>
 
                 {/* pdf download button */}
-                {entityList && !!entityList.length && <PdfRenderer content={content} />}
+                {entityList && !!entityList.length && <PdfRenderer header={header.name} content={content} />}
+
+                <Header as="h3">{header?.name}</Header>
 
                 {/* content loader */}
                 {!entityList && this.renderLoading()}

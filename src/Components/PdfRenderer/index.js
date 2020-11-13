@@ -37,7 +37,7 @@ export default class PdfRenderer extends React.Component {
                 padding: "0.5rem",
               }}
             >
-              <h3>Raport</h3>
+              <h3>{`Raport - ${this.props.header}`}</h3>
               {this.props.content || "no content"}
             </div>
           </PDFExport>
