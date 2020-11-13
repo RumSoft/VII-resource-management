@@ -2,13 +2,13 @@
 
 .requestRow{
     text-align: left;
-}
 
-.requestOwner, .requestTaker, .requestResource{
-    font-weight: bolder;
-}
+    .requestResource{
+        font-weight: bolder;
+    }
 
-.requestQuantity{
-    color: lightgrey !important;
-    font-style: italic;
+    .requestQuantity{
+        color: lightgrey !important;
+        font-style: italic;
+    }
 }

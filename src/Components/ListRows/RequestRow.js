@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, CardContent, CardDescription, Icon, Label, List } from "semantic-ui-react";
+import { Button, Card, CardContent, CardDescription, Icon, Label } from "semantic-ui-react";
 import "./RequestRow.scss";
 
 export default class RequestRow extends Component {
