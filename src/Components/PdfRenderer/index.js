@@ -13,7 +13,14 @@ export default class PdfRenderer extends React.Component {
     return (
       <>
         <button onClick={this.exportPDF}>download</button>
-        <div style={{ opacity: "0.0", height: "0", width: "0" }}>
+        <div
+          style={{
+            opacity: "0.0",
+            height: "0",
+            width: "0",
+            pointerEvents: "none",
+          }}
+        >
           <PDFExport
             paperSize="A4"
             fileName="raport.pdf"
