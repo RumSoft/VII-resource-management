@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import bgmovie from "./resmgr.mp4";
+import bgmovie1 from "./resmgr.mp4";
+import bgmovie2 from "./resmgr2.mp4";
+import bgmovie3 from "./resmgr3.mp4";
 import "./index.scss";
 
 export default class HomePage extends Component {
   render() {
+    const bgmovies = [bgmovie1, bgmovie2, bgmovie3];
+    const i = Math.floor(Math.random() * bgmovies.length);
+    console.log(i);
+    const movie = bgmovies[i];
+
     return (
       <div className="home-page">
         <h1>home</h1>
@@ -13,7 +20,7 @@ export default class HomePage extends Component {
         <p>info o programie</p>
         <div className="background-video-container">
           <video autoPlay muted>
-            <source src={bgmovie} type="video/mp4" />
+            <source src={movie} type="video/mp4" />
           </video>
           <div className="gridbg"></div>
         </div>
