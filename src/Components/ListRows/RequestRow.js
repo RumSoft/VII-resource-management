@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card, CardContent, CardDescription, Icon } from "semantic-ui-react";
+import { Button, Card, CardContent, CardDescription, Icon, Label, List } from "semantic-ui-react";
 import "./RequestRow.scss";
 
 export default class RequestRow extends Component {
@@ -9,8 +9,7 @@ export default class RequestRow extends Component {
     }
 
     render() {
-        const { userInfo, taker, owner, resource, id } = this.props.request;
-        let row = "";
+        const { userInfo, taker, owner, resource } = this.props.request;
 
         let isOther = !userInfo.isTaker && !userInfo.isOwner;
         let header = "";
@@ -18,13 +17,13 @@ export default class RequestRow extends Component {
 
         if (isOther) {
             header = <CardDescription>
-                {`Użytkownik ${owner.FirstName} ${owner.LastName} chce przekazać użytkownikowi ${taker.FirstName} ${taker.LastName}`}
+                {<span><b>{owner.firstName}</b> <b>{owner.lastName}</b> chce przekazać <b>{taker.firstName}</b> <b>{taker.lastName}</b></span>}
             </CardDescription>
         } else if (userInfo.isTaker) {
             header = <CardDescription>
-                {`Użytkownik ${owner.FirstName} ${owner.LastName} chce Ci przekazać`}
+                {<span><b>{owner.firstName}</b> <b>{owner.lastName}</b> chce Ci przekazać</span>}
             </CardDescription>
-            footer = <CardDescription>
+            footer = <CardContent>
                 <div className='ui two buttons'>
                     <Button basic color="green" onClick={() => alert("123")}>
                         👌🏿 zaakceptuj
@@ -33,30 +32,39 @@ export default class RequestRow extends Component {
                         <Icon name="x" />odrzuć
                     </Button>
                 </div>
-            </CardDescription>
+            </CardContent>
         } else {
             header = <CardDescription>
-                {`Wysłano prośbę do użytkownika ${taker.FirstName} ${taker.LastName}`}
+                {<span>Wysłano prośbę do <b>{taker.firstName}</b> <b>{taker.lastName}</b></span>}
             </CardDescription>
-            footer = <CardDescription>
+            footer = <CardContent >
                 <div className='ui two buttons'>
                     <Button basic color="white" disabled>oczekiwanie</Button>
                     <Button basic color="red" onClick={() => alert("5555")}>
                         <Icon name="ban" />anuluj
                     </Button>
                 </div>
-            </CardDescription>
+            </CardContent >
         }
 
         return (
-            <Card>
+            <Card className="requestRow">
                 <CardContent>
                     {header}
-                    <CardDescription>{`nazwa: ${resource.name}, pokój: ${resource.room.name}, atrybuty: ${resource.attributes.name}`} </CardDescription>
-                    <CardDescription>{`x${resource.quantity}`}</CardDescription>
-                    {footer}
                 </CardContent>
-            </Card>
+                <CardContent>
+                    <CardDescription className="requestResource"><Icon name="tag" />{`${resource.name}`}</CardDescription>
+                    <CardDescription className="requestQuantity"><Icon name="stack overflow" />{`x${resource.quantity}`}</CardDescription>
+                    <CardDescription><Icon name="point" /><Label style={{ backgroundColor: resource.room && resource.room.color }}>{`${resource.room?.name || 'brak pokoju'}`}</Label></CardDescription>
+
+                </CardContent>
+                <CardContent>{resource.attributes?.map((x) => (
+                    <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
+                )) || 'brak atrybutów'}
+                </CardContent>
+                {footer}
+
+            </Card >
 
         );
     }
