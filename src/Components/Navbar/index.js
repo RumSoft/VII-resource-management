@@ -74,8 +74,10 @@ export default class Navbar extends Component {
             )}
           </div>
         </Sidebar>
-        <Sidebar.Pusher>
-          <Segment basic>{this.props.content}</Segment>
+        <Sidebar.Pusher style={{ overflow: "unset" }}>
+          <Segment basic style={{ position: "relative" }}>
+            {this.props.content}
+          </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     );
