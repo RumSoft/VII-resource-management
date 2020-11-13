@@ -23,7 +23,7 @@ export default class PdfRenderer extends React.Component {
         >
           <PDFExport
             paperSize="A4"
-            fileName="raport.pdf"
+            fileName={`${this.props.fileName || "raport"}.pdf`}
             title=""
             subject=""
             keywords=""
