@@ -31,6 +31,9 @@ namespace TestApp.Api.Commands.Resource
             if (!_userInfo.IsAdmin)
                 resources = resources.Where(x => x.Owner.Id == _userInfo.Id);
 
+            if (AppConfig.FilterResourcesWithTradeRequest)
+                resources = resources.Where(x => x.TradeRequest == null);
+
             var result = _mapper.Map<GetResourcesCommandResult[]>(resources.ToList());
             return Ok(result);
         }

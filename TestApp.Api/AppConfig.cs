@@ -15,6 +15,8 @@ namespace TestApp.Api
         public static bool CanRemoveAttributesWithResources => Features.GetValue<bool>("CanRemoveAttributesWithResources");
         public static bool CanRemoveRoomsWithResources => Features.GetValue<bool>("CanRemoveRoomsWithResources");
 
+        public static bool FilterResourcesWithTradeRequest => Features.GetValue<bool>("FilterResourcesWithTradeRequest");
+
         #endregion
 
         #region mailing

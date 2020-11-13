@@ -106,6 +106,9 @@ namespace TestApp.Api.Commands.Search
         {
             var resources = _context.Resources.AsQueryable();
 
+            if(AppConfig.FilterResourcesWithTradeRequest)
+                resources = resources.Where(x => x.TradeRequest == null);
+
             if (!string.IsNullOrWhiteSpace(input.Name))
                 resources = resources.Where(x => x.Name.Contains(input.Name));
 
