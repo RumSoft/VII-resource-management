@@ -5,7 +5,7 @@ import { NotificationService } from "../../Services";
 import { Card, Form, Button } from 'semantic-ui-react'
 import "./index.scss";
 
-export default class LoginPage extends Component {
+export default class LoginPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
