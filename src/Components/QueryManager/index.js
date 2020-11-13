@@ -8,19 +8,20 @@ export default class QueryManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // queryParams: null,
-            entityList: null
+            entityList: [],
+            type: null
         };
     }
 
     componentDidMount() {
         const queryParams = qs.parse(window.location.search);
         this.setState({ name: queryParams.name })
+        this.setState({ type: queryParams.type })
 
         QueryService.search(window.location.search)
             .then((res) => {
                 const entityList = res && res.data;
-                console.log(entityList)
+                console.log("POSZED REQUEST")
                 this.setState({ entityList })
             })
     }
@@ -36,7 +37,20 @@ export default class QueryManager extends Component {
         window.location.search = qs.stringify(queryParams);
     }
 
+    renderRow(x) {
+        const { type } = this.state;
+        console.log(x)
+        return (
+            <Table.Row key={x.id}>
+                {type === "rooms" && <Table.Cell>{x.id}</Table.Cell>}
+                {(type === "rooms" || type === "attributes") && <Table.Cell>{x.name}</Table.Cell>}
+                {(type === "rooms" || type === "attributes") && <Table.Cell>{x.resourceCount}</Table.Cell>}
+            </Table.Row>)
+    }
+
     render() {
+        const { entityList, type } = this.state;
+        console.log(entityList)
         return (<>
             <Header as="h1">Wyszukiwanie i filtrowanie</Header>
             <Card className="query-search"  >
@@ -66,20 +80,22 @@ export default class QueryManager extends Component {
             <Table>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>ID</Table.HeaderCell>
-                        <Table.HeaderCell>Nazwa</Table.HeaderCell>
-                        <Table.HeaderCell>Ilość zasobów</Table.HeaderCell>
+                        {type === "rooms" && <Table.HeaderCell>ID</Table.HeaderCell>}
+                        {(type === "rooms" || type === "attributes") && <Table.HeaderCell>Nazwa</Table.HeaderCell>}
+                        {(type === "rooms" || type === "attributes") && <Table.HeaderCell>Ilość zasobów</Table.HeaderCell>}
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    <Table.Row>
+                    {/* <Table.Row>
                         <Table.Cell>1</Table.Cell>
                         <Table.Cell>Nazwa</Table.Cell>
                         <Table.Cell>420</Table.Cell>
-                    </Table.Row>
+                    </Table.Row> */}
+                    {/* {console.log(entityList == [])} */}
+                    {entityList && entityList.length ? entityList.map((x) => this.renderRow(x)) : <Table.Row><Table.Cell>BRAK DANYCH!!!!</Table.Cell></Table.Row>}
                 </Table.Body>
             </Table>
-            {this.state.entityList && this.state.entityList.map(x => <span key={x.id}>{x.name}<br /></span>)}
+            {/* {this.state.entityList && this.state.entityList.map(x => <span key={x.id}>{x.name}<br /></span>)} */}
         </>
 
         );
