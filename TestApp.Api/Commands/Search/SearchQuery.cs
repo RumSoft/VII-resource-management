@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using TestApp.Api.Auth;
 using TestApp.Api.Commands.TradeRequest;
 using TestApp.Api.Data;
 using TestApp.Api.Models;
@@ -25,6 +26,7 @@ namespace TestApp.Api.Commands.Search
             _mapper = mapper;
         }
 
+        [OnlyAdmin]
         [HttpGet("search")]
         public override IActionResult Execute([FromQuery] SearchQueryInput input)
         {
