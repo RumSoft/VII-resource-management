@@ -8,20 +8,21 @@ export default class QueryManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            queryParams: null,
+            // queryParams: null,
             entityList: null
         };
     }
 
     componentDidMount() {
         const queryParams = qs.parse(window.location.search);
-        this.setState({ queryParams })
+        this.setState({ name: queryParams.name })
 
-        switch (queryParams.type) {
-            case "rooms": {
-                console.log("Wybrano pokoje")
-            }
-        }
+        QueryService.search(window.location.search)
+            .then((res) => {
+                const entityList = res && res.data;
+                console.log(entityList)
+                this.setState({ entityList })
+            })
     }
 
     handleChange(event) {
@@ -30,24 +31,9 @@ export default class QueryManager extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        let qp = this.state.queryParams
-        console.log(qp)
-        qp["name"] = this.state.name
-        console.log(qp);
-
-        const stringified = qs.stringify(qp);
-
-        console.log(stringified)
-        // let params = qs.parse(window.location.search);
-        // params.name = this.state?.nameQuery;
-        // console.log(params)
-        // QueryService.search(window.location.search)
-        //     .then((res) => {
-        //         const entityList = res && res.data;
-        //         this.setState({ entityList })
-        //     })
-
-
+        let queryParams = qs.parse(window.location.search);
+        queryParams["name"] = this.state.name === "" ? undefined : this.state.name;
+        window.location.search = qs.stringify(queryParams);
     }
 
     render() {
@@ -55,12 +41,9 @@ export default class QueryManager extends Component {
             <Header as="h1">Wyszukiwanie i filtrowanie</Header>
             <Card className="query-search"  >
                 <Card.Content>
-                    {/* <Grid columns={2} stretched > */}
                     <Form widths='equal'>
-                        {/* <Grid.Column > */}
                         <Form.Group>
                             <Form.Input
-
                                 label="Nazwa"
                                 type="text"
                                 placeholder="nazwa"
@@ -68,9 +51,6 @@ export default class QueryManager extends Component {
                                 value={this.state.name}
                                 onChange={(e) => this.handleChange(e)}
                             />
-                            {/* </Grid.Column> */}
-
-                            {/* <Grid.Column  > */}
                             <Form.Button
                                 className="submit-button"
                                 label="Szukaj"
@@ -79,9 +59,7 @@ export default class QueryManager extends Component {
                                 Szukaj
                         </Form.Button>
                         </Form.Group>
-                        {/* </Grid.Column> */}
                     </Form>
-                    {/* </Grid> */}
                 </Card.Content>
             </Card>
 
