@@ -5,8 +5,9 @@ import qs from "query-string";
 import "./index.scss";
 import ContentLoader from "react-content-loader";
 import PdfRenderer from "../PdfRenderer";
+import { withRouter } from "react-router-dom";
 
-export default class QueryManager extends Component {
+class QueryManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,11 +20,7 @@ export default class QueryManager extends Component {
         const queryParams = qs.parse(window.location.search);
         this.setState({ name: queryParams.name });
         this.setState({ type: queryParams.type });
-
-        QueryService.search(window.location.search).then((res) => {
-            const entityList = res && res.data;
-            this.setState({ entityList });
-        });
+        this.fetchEntityList();
     }
 
     handleChange(event) {
@@ -34,7 +31,18 @@ export default class QueryManager extends Component {
         event.preventDefault();
         let queryParams = qs.parse(window.location.search);
         queryParams["name"] = this.state.name === "" ? undefined : this.state.name;
-        window.location.search = qs.stringify(queryParams);
+        const stringified = qs.stringify(queryParams);
+        this.props.history.push({
+            search: stringified
+        })
+        this.fetchEntityList();
+    }
+
+    fetchEntityList() {
+        QueryService.search(window.location.search).then((res) => {
+            const entityList = res && res.data;
+            this.setState({ entityList });
+        });
     }
 
     columnConfiguration = {
@@ -260,3 +268,4 @@ export default class QueryManager extends Component {
         );
     }
 }
+export default withRouter(QueryManager)
