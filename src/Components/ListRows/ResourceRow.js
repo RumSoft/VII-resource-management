@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Card, CardContent, CardDescription, Icon, Label } from "semantic-ui-react";
 import "./ResourceRow.scss";
 
 export default class ResourceRow extends Component {
@@ -16,32 +16,40 @@ export default class ResourceRow extends Component {
 
     render() {
 
-        const { name, quantity, room } = this.props.resource;
+        const { attributes, name, quantity, room } = this.props.resource;
 
         return (
-            <div className="list-row resource-row">
-                <div className="list-row__content">{name} {quantity} {room && room.name}</div>
-                <div className="list-row__actions">
-                    <Button
-                        circular
-                        onClick={() => this.handleRequestClick()}
-                        icon="mail forward"
-                        color="blue"
-                    />
-                    <Button
-                        circular
-                        onClick={() => this.handleEditClick()}
-                        icon="edit"
-                        color="yellow"
-                    />
-                    <Button
-                        circular
-                        onClick={() => this.handleDeleteClick()}
-                        icon="delete"
-                        color="red"
-                    />
-                </div>
-            </div>
+            <Card className="resourceRow">
+                <CardContent>
+                    <CardDescription>
+                        <Icon name="tag" />{<span><b>{name}</b></span>}
+                    </CardDescription>
+                </CardContent>
+                <CardContent>
+                    <CardDescription>
+                        <Label style={{ backgroundColor: room && room.color }}><Icon name="point" />{`${room?.name || 'brak pokoju'}`}</Label>
+                        <Label style={{ backgroundColor: "white", float: "right" }}><Icon name="stack overflow" /> {`x${quantity}`} </Label>
+                    </CardDescription>
+                    <CardDescription className="attributesPanel">
+                        {attributes.length === 0 ? "brak atrybutów" : attributes.map((x) => (
+                            <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
+                        ))}
+                    </CardDescription>
+                </CardContent>
+                <CardContent>
+                    <div className='ui three buttons'>
+                        <Button className="button" basic color="yellow" onclick={() => this.handleEditClick()}>
+                            <Icon name="write" /> edytuj
+                        </Button>
+                        <Button className="button" basic color="blue" onClick={() => this.handleRequestClick()}>
+                            <Icon name="envelope outline" />prześlij
+                        </Button>
+                        <Button className="button" basic color="red" onclick={() => this.handleDeleteClick()}>
+                            <Icon name="x" />usuń
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
         );
     }
 }
