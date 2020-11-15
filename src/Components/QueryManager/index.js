@@ -27,11 +27,12 @@ class QueryManager extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmit(event) {
-        //event.preventDefault();
+    handleSubmit() {
+        const { type, name, parentName } = this.state;
         let queryParams = qs.parse(window.location.search);
-        queryParams["type"] = this.state.type === "" ? undefined : this.state.type;
-        queryParams["name"] = this.state.name === "" ? undefined : this.state.name;
+        queryParams["type"] = type === "" ? undefined : type;
+        queryParams["name"] = name === "" ? undefined : name;
+        queryParams["parentName"] = parentName === "" ? undefined : parentName;
         const stringified = qs.stringify(queryParams);
         this.props.history.push({
             search: stringified
@@ -171,6 +172,13 @@ class QueryManager extends Component {
         traderequests: { name: "Przekazanie" }
     }
 
+    fieldsConfiguration = {
+        rooms: { showParentTextfield: false },
+        attributes: { showParentTextfield: false },
+        users: { showParentTextfield: false },
+        resources: { showParentTextfield: true },
+        traderequests: { showParentTextfield: true }
+    }
     renderLoading() {
         return (
             <Card fluid>
@@ -220,7 +228,7 @@ class QueryManager extends Component {
     }
 
     changeSearchParams(obj) {
-        this.setState({ ...obj, entityList: null }, () => {
+        this.setState({ ...obj, entityList: null, name: "", parentName: "" }, () => {
             this.handleSubmit();
         });
     }
@@ -237,6 +245,7 @@ class QueryManager extends Component {
             { text: "pokoje", value: "rooms" },
             { text: "atrybuty", value: "attributes" },
             { text: "przekazania", value: "traderequests" }];
+        const fields = this.fieldsConfiguration[type];
 
         return (
             <>
@@ -260,8 +269,6 @@ class QueryManager extends Component {
                                         }}
                                     />}
                                 />
-
-
                                 <Form.Input
                                     label="Nazwa"
                                     type="text"
@@ -270,10 +277,19 @@ class QueryManager extends Component {
                                     value={this.state.name}
                                     onChange={(e) => this.handleChange(e)}
                                 />
+                                {fields?.showParentTextfield &&
+                                    < Form.Input
+                                        label="Właściciel"
+                                        type="text"
+                                        placeholder="właściciel"
+                                        name="parentName"
+                                        value={this.state.parentName}
+                                        onChange={(e) => this.handleChange(e)}
+                                    />}
                                 <Form.Button
                                     className="submit-button"
                                     label="Szukaj"
-                                    onClick={(e) => this.handleSubmit(e)}
+                                    onClick={() => this.handleSubmit()}
                                 >
                                     Szukaj
                                 </Form.Button>
