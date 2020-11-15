@@ -31,7 +31,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      isBusy: true,
+      isBusy: false,
     };
 
     EventService.Subscribe(Events.API_RequestStarted, () => {

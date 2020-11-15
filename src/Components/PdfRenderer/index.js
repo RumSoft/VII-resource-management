@@ -1,5 +1,6 @@
 import React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
+import "./index.scss";
 
 export default class PdfRenderer extends React.Component {
   resume = null;
@@ -13,17 +14,18 @@ export default class PdfRenderer extends React.Component {
       <>
         <button onClick={this.exportPDF}>download</button>
         <div
-          style={{
-            opacity: "0.0",
-            height: "0",
-            width: "0",
-            pointerEvents: "none",
-          }}
+          // style={{
+          //   opacity: "0.0",
+          //   height: "0",
+          //   width: "0",
+          //   pointerEvents: "none",
+          // }}
+          className="pdf-export"
         >
           <PDFExport
             paperSize="A4"
             fileName={`${this.props.fileName || "raport"}.pdf`}
-            title=""
+            title="lolz"
             subject=""
             keywords=""
             margin="0"
