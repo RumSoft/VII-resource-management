@@ -55,12 +55,13 @@ export default class RequestRow extends Component {
                 <CardContent>
                     <CardDescription className="requestResource"><Icon name="tag" />{`${resource.name}`}</CardDescription>
                     <CardDescription className="requestQuantity"><Icon name="stack overflow" />{`x${resource.quantity}`}</CardDescription>
-                    <CardDescription><Icon name="point" /><Label style={{ backgroundColor: resource.room && resource.room.color }}>{`${resource.room?.name || 'brak pokoju'}`}</Label></CardDescription>
+                    <CardDescription><Label style={{ backgroundColor: resource.room && resource.room.color }}><Icon name="point" />{`${resource.room?.name || 'brak pokoju'}`}</Label></CardDescription>
 
                 </CardContent>
-                <CardContent>{resource.attributes?.map((x) => (
-                    <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
-                )) || 'brak atrybutów'}
+                <CardContent>
+                    {resource.attributes.length === 0 ? "brak atrybutów" : resource.attributes.map((x) => (
+                        <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
+                    ))}
                 </CardContent>
                 {footer}
 

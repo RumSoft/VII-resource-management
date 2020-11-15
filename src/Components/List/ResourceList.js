@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { ResourceService, NotificationService } from "../../Services";
 import { ResourceRow } from "../ListRows";
+import { Card } from "semantic-ui-react"
 import EntityList from "./EntityList";
 import "./index.scss";
 import CreateRequestModal from "./CreateRequestModal"
@@ -58,13 +59,16 @@ export default class ResourceList extends Component {
                 entities={resources}
                 entityName="resources"
                 entityMapFunc={(x) => (
-                    <ResourceRow
-                        onDelete={(resource) => this.resourceDeleted(resource)}
-                        onChange={(resource) => this.resourceChanged(resource)}
-                        onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
-                        key={x.id}
-                        resource={x}
-                    />
+                    <Card.Group>
+                        <ResourceRow
+                            onDelete={(resource) => this.resourceDeleted(resource)}
+                            onChange={(resource) => this.resourceChanged(resource)}
+                            onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
+                            key={x.id}
+                            resource={x}
+                            showOwner={"true"}
+                        />
+                    </Card.Group>
                 )}
                 title="Zasoby"
             /></>

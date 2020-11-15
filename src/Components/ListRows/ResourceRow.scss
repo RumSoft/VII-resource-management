@@ -1,1 +1,19 @@
 @import "row.scss";
+
+.resourceRow{
+    text-align: left;
+
+    .resourceQuantity{
+        color: lightgrey !important;
+        font-style: italic;
+    }
+
+    .attributesPanel{
+        padding-top: 5px;
+    }
+
+    .button{
+        font-size: 11px !important;
+    }
+    
+}
