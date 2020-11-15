@@ -14,37 +14,47 @@ export default class ResourceRow extends Component {
         this.props.onDelete && this.props.onDelete(this.props.resource);
     }
 
+
+
     render() {
 
-        const { attributes, name, quantity, room } = this.props.resource;
+        const { attributes, name, quantity, room, owner } = this.props.resource;
+        console.log(this.props.showOwner)
+
+        let content = "";
+
+        if (this.props.showOwner) {
+            content = <CardDescription>
+                <Label style={{ color: "lightgrey", backgroundColor: "white" }}><Icon name="user" /> {`${owner.firstName} ${owner.lastName} ${owner.emailAddress}`}</Label>
+            </CardDescription>
+        }
 
         return (
             <Card className="resourceRow">
                 <CardContent>
+                    {content}
                     <CardDescription>
-                        <Icon name="tag" />{<span><b>{name}</b></span>}
+                        <Label style={{ backgroundColor: "white" }}><Icon name="tag" />{<span><b>{name}</b></span>}</Label>
                     </CardDescription>
-                </CardContent>
-                <CardContent>
                     <CardDescription>
                         <Label style={{ backgroundColor: room && room.color }}><Icon name="point" />{`${room?.name || 'brak pokoju'}`}</Label>
                         <Label style={{ backgroundColor: "white", float: "right" }}><Icon name="stack overflow" /> {`x${quantity}`} </Label>
                     </CardDescription>
                     <CardDescription className="attributesPanel">
-                        {attributes.length === 0 ? "brak atrybutów" : attributes.map((x) => (
+                        {attributes.length === 0 ? <Label style={{ backgroundColor: "white" }}>brak atrybutów</Label> : attributes.map((x) => (
                             <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
                         ))}
                     </CardDescription>
                 </CardContent>
                 <CardContent>
                     <div className='ui three buttons'>
-                        <Button className="button" basic color="yellow" onclick={() => this.handleEditClick()}>
+                        <Button className="button" basic color="yellow" onClick={() => this.handleEditClick()}>
                             <Icon name="write" /> edytuj
                         </Button>
                         <Button className="button" basic color="blue" onClick={() => this.handleRequestClick()}>
                             <Icon name="envelope outline" />prześlij
                         </Button>
-                        <Button className="button" basic color="red" onclick={() => this.handleDeleteClick()}>
+                        <Button className="button" basic color="red" onClick={() => this.handleDeleteClick()}>
                             <Icon name="x" />usuń
                         </Button>
                     </div>

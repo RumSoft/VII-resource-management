@@ -66,6 +66,7 @@ export default class ResourceList extends Component {
                             onRequest={(resource) => this.setState({ isModalOpen: true, requestResource: resource })}
                             key={x.id}
                             resource={x}
+                            showOwner={"true"}
                         />
                     </Card.Group>
                 )}
