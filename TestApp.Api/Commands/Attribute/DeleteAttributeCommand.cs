@@ -29,14 +29,15 @@ namespace TestApp.Api.Commands.Attribute
 
                 if (AppConfig.CanRemoveAttributesWithResources)
                 {
-                    if (attr.Resources.Any())
-                        return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
+                    Log.Information("Merging resources for attribute {attribute}", attr.Id);
+                    var mergedCount = ResourceMerger.TryMergeByAttribute(attr, _context);
+                    Log.Warning("Merged {mergedCount} resource entities in total", mergedCount);
+
                 }
                 else
                 {
-                    Log.Information("Merging resources for attribute {attribute}", attr);
-                    var mergedCount = ResourceMerger.TryMergeByAttribute(attr, _context);
-                    Log.Warning("Merged {mergedCount} resource entities in total", mergedCount);
+                    if (attr.Resources.Any())
+                        return BadRequest(ReturnMessages.Message_400_AttributeContainsResources);
                 }
 
                 _context.Attributes.Remove(attr);

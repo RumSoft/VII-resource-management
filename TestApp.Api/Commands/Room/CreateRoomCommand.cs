@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -26,6 +27,9 @@ namespace TestApp.Api.Commands.Room
 
             try
             {
+                if (_context.Rooms.Any(x => x.Name == input.Name))
+                    return BadRequest(ReturnMessages.Message_400_RoomAlreadyExists);
+
                 var room = new Models.Room
                 {
                     Name = input.Name.Cleanup(),

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -26,6 +27,9 @@ namespace TestApp.Api.Commands.Attribute
 
             try
             {
+                if (_context.Attributes.Any(x => x.Name == input.Name))
+                    return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
+
                 var attr = new Models.Attribute
                 {
                     Name = input.Name.Cleanup(),

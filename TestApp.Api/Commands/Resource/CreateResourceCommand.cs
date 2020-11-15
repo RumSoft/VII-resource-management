@@ -85,8 +85,8 @@ namespace TestApp.Api.Commands.Resource
         {
             public CreateResourceCommandInputValidator()
             {
-                RuleFor(x => x.Name).Transform(x => x.Cleanup()).ResourceNameValidator().WithName("Nazwa zasobu");
-                RuleFor(x => x.Quantity > 0);
+                RuleFor(x => x.Name).Transform(x => x.Cleanup()).ResourceNameValidator().WithName("Nazwa");
+                RuleFor(x => x.Quantity).GreaterThan(0).WithName("Ilość");
             }
         }
     }

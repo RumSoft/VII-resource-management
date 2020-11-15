@@ -24,6 +24,9 @@ namespace TestApp.Api.Commands.User.PasswordReset
         [HttpPost("user/new-password")]
         public override IActionResult Execute([FromBody] SetUserNewPasswordCommandInput input)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
                 var token = _context.Tokens.Find(input.Token);
@@ -35,7 +38,7 @@ namespace TestApp.Api.Commands.User.PasswordReset
                     return BadRequest(ReturnMessages.Message_400_UserNotFound);
 
                 token.IsUsed = true;
-                user.Password = _hashService.HashPassword(input.Password);
+                user.Password = _hashService.HashPassword(input.Password.Cleanup());
                 user.IsGeneratedPassword = false;
 
                 _context.Tokens.Update(token);

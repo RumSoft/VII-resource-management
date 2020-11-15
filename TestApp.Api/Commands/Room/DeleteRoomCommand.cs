@@ -29,16 +29,17 @@ namespace TestApp.Api.Commands.Room
 
                 if (AppConfig.CanRemoveRoomsWithResources)
                 {
-                    if (room.Resources.Any())
-                        return BadRequest(ReturnMessages.Message_400_RoomContainsResources);
+                    ResourceMerger.TryMergeByRoom(room, _context);
                 }
                 else
                 {
-                    ResourceMerger.TryMergeByRoom(room, _context);
+                    if (room.Resources.Any())
+                        return BadRequest(ReturnMessages.Message_400_RoomContainsResources);
                 }
 
                 _context.Rooms.Remove(room);
                 _context.SaveChanges();
+
                 Log.Information("Room deleted {id}: {name}", id, room.Name);
                 return Ok();
             }

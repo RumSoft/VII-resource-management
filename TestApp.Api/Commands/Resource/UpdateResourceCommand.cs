@@ -98,7 +98,7 @@ namespace TestApp.Api.Commands.Resource
             {
                 RuleFor(x => x.Name).Transform(x => x.Cleanup()).ResourceNameValidator().WithName("Nazwa");
                 RuleFor(x => x.Id).NotEmpty();
-                RuleFor(x => x.Quantity).GreaterThan(0);
+                RuleFor(x => x.Quantity).GreaterThan(0).WithName("Ilość");
             }
         }
     }
