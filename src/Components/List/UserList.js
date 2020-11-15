@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { UserRow } from "../ListRows";
 import { NotificationService, UserService } from "../../Services";
-import { Button, Confirm } from "semantic-ui-react";
+import { Button, Card, Confirm } from "semantic-ui-react";
 import "./index.scss";
 import { Link } from "react-router-dom";
 
@@ -56,9 +56,11 @@ export default class UserList extends Component {
   renderContent() {
     return (
       <>
-        {this.props.users.map((x) => (
-          <UserRow key={x.id} user={x} />
-        ))}
+        <Card.Group>
+          {this.props.users.map((x) => (
+            <UserRow key={x.id} user={x} isAdmin={"true"} />
+          ))}
+        </Card.Group>
         <div className="list-row room-row">
           <Button
             color="green"

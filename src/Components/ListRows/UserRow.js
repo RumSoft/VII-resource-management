@@ -1,6 +1,7 @@
+import { parseColor } from "@progress/kendo-drawing";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "semantic-ui-react";
+import { Button, Card, Image } from "semantic-ui-react";
 import "./UserRow.scss";
 
 export default class UserRow extends Component {
@@ -9,22 +10,35 @@ export default class UserRow extends Component {
   }
 
   render() {
-    const { firstName, lastName, id } = this.props.user;
+    const { firstName, lastName, emailAddress, id } = this.props.user;
+    const { isAdmin } = this.props;
+    let content = "";
+    console.log(isAdmin);
+
+    if (isAdmin) {
+      content = <Button
+        size="big"
+        square
+        as={Link}
+        to={`/user/edit?userId=${id}`}
+        icon="edit"
+        color="yellow" />
+    }
+
     return (
-      <div className="list-row room-row">
-        <div className="list-row__content">
-          {firstName} {lastName}
+      <Card className="userRow">
+        <div style={{ display: "inline-flex" }}>
+          <div className="userAvatar">
+            <Image src="http://placekitten.com/200/300" style={{ width: "60px", height: "60px" }} circular />
+          </div>
+          <div className="userProperietes">
+            <span><span className="userName">{firstName} {lastName}</span> <br></br> <span style={{ color: "gray" }}>{emailAddress}</span></span>
+          </div>
+          <div className="editButton">
+            {content}
+          </div>
         </div>
-        <div className="list-row__actions">
-          <Button
-            circular
-            as={Link}
-            to={`/user/edit?userId=${id}`}
-            icon="edit"
-            color="yellow"
-          />
-        </div>
-      </div>
+      </Card>
     );
   }
 }

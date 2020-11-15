@@ -1,1 +1,30 @@
 @import "row.scss";
+
+.userRow{
+
+    width: 100% !important; 
+    height: 80px; 
+
+    .userAvatar{
+        padding-top: 10px;
+        padding-left: 25px;
+    }
+
+    .userProperietes{
+        width: 50%;
+        padding-top: 25px;
+        padding-left: 40px;
+        font-size: 16px;
+    }
+
+    .userName{
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .editButton{
+        padding-top: 15px;
+        padding-left: 80px;
+    }
+
+}
