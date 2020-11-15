@@ -82,7 +82,7 @@ export default class ResourceManager extends Component {
         room: this.state.room === -1 ? null : this.state.room,
         quantity: this.state.split
           ? parseInt(this.state.splitquantity)
-          : parseInt(this.state.quantity),
+          : parseInt(this.state.quantity || 0),
         attributes: this.state.selectedAttributes,
       },
       this.state.split
@@ -95,7 +95,6 @@ export default class ResourceManager extends Component {
     ResourceService.deleteResource(id)
       .then(() => {
         NotificationService.success(`Usunięto zasób ${name}`);
-        // handleDeleteClick()
         this.setState({ redirect: true });
       })
       .catch((e) => {
@@ -111,7 +110,6 @@ export default class ResourceManager extends Component {
     const isEdit = this.props.edit;
     const isSplit = this.state.split;
     const errors = this.props.errors ?? {};
-    console.log(errors)
     const roomsArr = [
       {
         text: "bez pokoju",
