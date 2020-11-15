@@ -11,4 +11,12 @@
         color: lightgrey !important;
         font-style: italic;
     }
+
+    .ui.label {
+        margin: 2px;
+    }
+ 
+    &.row-fluid {
+        width: 100%;
+    }
 }

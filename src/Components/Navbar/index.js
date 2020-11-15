@@ -26,7 +26,11 @@ export default class Navbar extends Component {
     return (
       <Sidebar.Pushable
         as={Segment}
-        style={{ minHeight: "100vh", border: "none", borderRadius: "0" }}
+        style={{
+          minHeight: "100vh",
+          border: "none",
+          borderRadius: "0",
+        }}
       >
         <Sidebar
           as={Menu}
@@ -36,7 +40,7 @@ export default class Navbar extends Component {
           vertical
           visible={true}
           width="thin"
-          className="flex-container"
+          className="flex-container sidebar-menu"
         >
           {/* todo icons */}
           <Menu.Item as={Link} to="/">

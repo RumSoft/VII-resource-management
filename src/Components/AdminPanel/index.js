@@ -21,10 +21,10 @@ export default class AdminPanel extends Component {
         <div className="container-fluid d-flex">
           <Grid>
             <Grid.Column mobile={16} tablet={8} computer={3}>
-              <ResourceList />
+              <ResourceList isAdmin />
             </Grid.Column>
             <Grid.Column mobile={16} tablet={8} computer={4}>
-              <RequestList />
+              <RequestList isAdmin />
             </Grid.Column>
             <Grid.Column mobile={16} tablet={5} computer={3}>
               <UserList />

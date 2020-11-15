@@ -8,12 +8,15 @@
         font-style: italic;
     }
 
-    .attributesPanel{
-        padding-top: 5px;
+    .ui.label {
+        margin: 2px;
     }
 
     .button{
         font-size: 11px !important;
     }
     
+    &.row-fluid {
+        width: 100%;
+    }
 }

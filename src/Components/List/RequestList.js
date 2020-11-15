@@ -6,52 +6,53 @@ import { Card } from "semantic-ui-react";
 import "./index.scss";
 
 export default class RequestList extends Component {
-    state = {
-        requests: [],
-    };
-    componentDidMount() {
-        this.fetchRequests();
-    }
+  state = {
+    requests: [],
+  };
+  componentDidMount() {
+    this.fetchRequests();
+  }
 
-    fetchRequests() {
-        RequestService.getList().then((result) => {
-            const requests = result && result.data;
-            this.setState({ requests });
-        });
-    }
+  fetchRequests() {
+    RequestService.getList().then((result) => {
+      const requests = result && result.data;
+      this.setState({ requests });
+    });
+  }
 
-    onAction(request) {
-        RequestService.editRequest(request)
-            .then(() => {
-                NotificationService.success(`Zmodyfikowano żądanie`);
-            })
-            .catch((e) => {
-                NotificationService.apiError(e, "Nie udało się zmodyfikować żądania");
-            });
-    }
+  onAction(request) {
+    RequestService.editRequest(request)
+      .then(() => {
+        NotificationService.success(`Zmodyfikowano żądanie`);
+      })
+      .catch((e) => {
+        NotificationService.apiError(e, "Nie udało się zmodyfikować żądania");
+      });
+  }
 
-    render() {
-        const { requests } = this.state;
+  render() {
+    const { requests } = this.state;
 
-        return (
-            <EntityList
-                onReloadClick={() => this.fetchRequests()}
-                onAddClick={() => {
-                    window.location = "/request/add";
-                }}
-                entities={requests}
-                entityName="traderequests"
-                entityMapFunc={(x) => (
-                    <Card.Group>
-                        <RequestRow
-                            onChange={() => { console.log("xd") }}
-                            key={x.id}
-                            request={x}
-                        />
-                    </Card.Group>
-                )}
-                title="Przekazania"
-            />
-        );
-    }
+    return (
+      <EntityList
+        onReloadClick={() => this.fetchRequests()}
+        onAddClick={() => {
+          window.location = "/request/add";
+        }}
+        entities={requests}
+        entityName="traderequests"
+        entityMapFunc={(x) => (
+          <RequestRow
+            fluid
+            onChange={() => {
+              console.log("xd");
+            }}
+            key={x.id}
+            request={x}
+          />
+        )}
+        title="Przekazania"
+      />
+    );
+  }
 }
