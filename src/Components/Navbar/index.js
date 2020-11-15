@@ -34,12 +34,19 @@ export default class Navbar extends Component {
           <Icon name="gamepad" />
           Panel
         </Menu.Item>
-        {AuthService.isAdmin() && (
+        {AuthService.isAdmin() && <>
           <Menu.Item as={Link} to="/logs">
             <Icon name="gamepad" />
             Logi
           </Menu.Item>
-        )}
+
+          <Menu.Item as={Link} to="/query">
+            <Icon name="gamepad" />
+          Wyszukiwanie
+        </Menu.Item>
+        </>}
+
+
       </>
     );
   }
@@ -61,11 +68,11 @@ export default class Navbar extends Component {
             Wyloguj
           </Menu.Item>
         ) : (
-          <Menu.Item as={Link} to="/login">
-            <Icon name="gamepad" />
+            <Menu.Item as={Link} to="/login">
+              <Icon name="gamepad" />
             Zaloguj
-          </Menu.Item>
-        )}
+            </Menu.Item>
+          )}
       </>
     );
   }

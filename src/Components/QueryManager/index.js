@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Table, Header, Form, Label } from "semantic-ui-react";
+import { Card, Table, Header, Form, Label, Dropdown } from "semantic-ui-react";
 import { QueryService } from "../../Services";
 import qs from "query-string";
 import "./index.scss";
@@ -28,8 +28,9 @@ class QueryManager extends Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
+        //event.preventDefault();
         let queryParams = qs.parse(window.location.search);
+        queryParams["type"] = this.state.type === "" ? undefined : this.state.type;
         queryParams["name"] = this.state.name === "" ? undefined : this.state.name;
         const stringified = qs.stringify(queryParams);
         this.props.history.push({
@@ -218,11 +219,25 @@ class QueryManager extends Component {
         );
     }
 
+    changeSearchParams(obj) {
+        this.setState({ ...obj }, () => {
+            this.handleSubmit();
+        });
+    }
+
     render() {
+
         const { entityList, type } = this.state;
+        console.log(type)
         const columns = this.columnConfiguration[type];
         const header = this.headerConfiguration[type];
         const content = this.renderContent(entityList || [], columns);
+        const optionsArray = [
+            { text: "użytkownicy", value: "users" },
+            { text: "zasoby", value: "resources" },
+            { text: "pokoje", value: "rooms" },
+            { text: "atrybuty", value: "attributes" },
+            { text: "przekazania", value: "traderequests" }];
 
         return (
             <>
@@ -231,6 +246,23 @@ class QueryManager extends Component {
                     <Card.Content>
                         <Form widths="equal">
                             <Form.Group>
+                                <Form.Input
+                                    fluid
+                                    label="Typ"
+                                    input={<Dropdown
+                                        fluid
+                                        selection
+                                        labeled
+                                        placeholder="wybierz typ"
+                                        value={this.state.type}
+                                        options={optionsArray}
+                                        onChange={(e, val) => {
+                                            this.changeSearchParams({ type: val.value });
+                                        }}
+                                    />}
+                                />
+
+
                                 <Form.Input
                                     label="Nazwa"
                                     type="text"
@@ -245,7 +277,7 @@ class QueryManager extends Component {
                                     onClick={(e) => this.handleSubmit(e)}
                                 >
                                     Szukaj
-                </Form.Button>
+                                </Form.Button>
                             </Form.Group>
                         </Form>
                     </Card.Content>
