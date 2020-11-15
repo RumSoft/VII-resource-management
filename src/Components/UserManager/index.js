@@ -46,7 +46,6 @@ export default class UserManager extends Component {
     render() {
         const isEdit = this.props.edit;
         const errors = this.props.errors ?? {};
-        console.log(errors)
         let deleteAndResetButton;
         if (isEdit === true) {
             deleteAndResetButton = <>
