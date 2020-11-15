@@ -8,6 +8,7 @@ import {
 } from "../../Services";
 import ResourceRequestDashboard from "../Dashboards/ResourceRequestDashboard";
 import CreateRequestModal from "./CreateRequestModal";
+import { Confirm } from "semantic-ui-react"
 import "./index.scss";
 
 export default class UserPanel extends Component {
@@ -16,6 +17,7 @@ export default class UserPanel extends Component {
     this.state = {
       resources: [],
       requests: [],
+      isDeleteDialogOpen: false
     };
 
     EventService.Subscribe(Events.User_RequestAction, () => {
@@ -49,7 +51,8 @@ export default class UserPanel extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć zasobu");
-      });
+      })
+      .finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
   handleCreateRequest(resource) {
@@ -70,16 +73,38 @@ export default class UserPanel extends Component {
     );
   }
 
+  renderConfirm() {
+    return (
+      <Confirm
+        className="confirmDialog"
+        size="mini"
+        open={this.state.isDeleteDialogOpen}
+        onCancel={() =>
+          this.setState({
+            isDeleteDialogOpen: !this.state.isDeleteDialogOpen,
+          })
+        }
+        onConfirm={() =>
+          this.handleResourceDelete(this.state.passedRes)
+        }
+        content={`Czy usunąć zasób ${this.state.passedRes?.name}?`}
+        cancelButton="Nie"
+        confirmButton="Tak"
+      />
+    );
+  }
+
   render() {
     return (
       <div>
         <p>Zalogowano jako użytkownik</p>
         {this.renderRequestModal()}
+        {this.renderConfirm()}
         <ResourceRequestDashboard
           isAdmin={false}
           resources={this.state.resources}
           requests={this.state.requests}
-          onResourceDeleteClick={(res) => this.handleResourceDelete(res)}
+          onResourceDeleteClick={(res) => this.setState({ isDeleteDialogOpen: true, passedRes: res })}
           onTradeRequestClick={(res) => this.handleCreateRequest(res)}
         />
       </div>
