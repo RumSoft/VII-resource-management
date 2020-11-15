@@ -11,12 +11,13 @@ import {
 } from "../../Services";
 import ResourceRequestDashboard from "../Dashboards/ResourceRequestDashboard";
 import UserRoomAttributeDashboard from "../Dashboards/UserRoomAttributeDashboard";
+import "./index.scss";
 
 export default class AdminPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visibleTab: 0,
+      visibleTab: 1,
     };
 
     EventService.Subscribe(Events.Dashboard_ReloadRooms, () =>
@@ -70,23 +71,23 @@ export default class AdminPanel extends Component {
   }
   //#endregion
 
+  transition = {
+    duration: 500,
+    type1: "fade right",
+    type2: "fade left",
+  };
+
   showLeftCard() {
-    if (this.state.visibleTab !== 0) {
-      this.setState({ visibleTab: 1 }, () => {
-        this.setState({ visibleTab: 0 });
-      }); //cos nie dziala XD
-    }
+    this.setState({ visibleTab: 1 });
   }
 
   showRightCard() {
-    if (this.state.visibleTab !== 2) {
-      this.setState({ visibleTab: 1 }, () => {
-        this.setState({ visibleTab: 2 });
-      }); //cos nie dziala XD
-    }
+    this.setState({ visibleTab: 2 });
   }
 
   render() {
+    const visible1 = this.state.visibleTab === 1;
+    const visible2 = this.state.visibleTab === 2;
     return (
       <div>
         <p>Zalogowano jako administrator</p>
@@ -98,22 +99,34 @@ export default class AdminPanel extends Component {
             2 Użytkownicy, pokoje oraz atrybuty
           </Button>
           <Divider />
-          <Transition.Group animation="fade right" duration={500}>
-            {this.state.visibleTab === 0 && (
-              <ResourceRequestDashboard
-                isAdmin
-                requests={this.state.requests}
-                resources={this.state.resources}
-              />
-            )}
-            {this.state.visibleTab === 2 && (
-              <UserRoomAttributeDashboard
-                attributes={this.state.attributes}
-                rooms={this.state.rooms}
-                users={this.state.users}
-              />
-            )}
-          </Transition.Group>
+          <div style={{ position: "relative" }}>
+            <Transition
+              visible={visible1}
+              animation={this.transition.type1}
+              duration={this.transition.duration}
+            >
+              <div className="admin-panel-item">
+                <ResourceRequestDashboard
+                  isAdmin
+                  requests={this.state.requests}
+                  resources={this.state.resources}
+                />
+              </div>
+            </Transition>
+            <Transition
+              visible={visible2}
+              animation={this.transition.type2}
+              duration={this.transition.duration}
+            >
+              <div className="admin-panel-item">
+                <UserRoomAttributeDashboard
+                  attributes={this.state.attributes}
+                  rooms={this.state.rooms}
+                  users={this.state.users}
+                />
+              </div>
+            </Transition>
+          </div>
         </div>
       </div>
     );
