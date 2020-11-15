@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -13,16 +14,13 @@ export default class ResourceRow extends Component {
   handleRequestClick() {
     this.props.onRequest && this.props.onRequest(this.props.resource);
   }
-  handleEditClick() {
-    this.props.onChange && this.props.onChange(this.props.resource);
-  }
 
   handleDeleteClick() {
     this.props.onDelete && this.props.onDelete(this.props.resource);
   }
 
   render() {
-    const { attributes, name, quantity, room, owner } = this.props.resource;
+    const { id, attributes, name, quantity, room, owner } = this.props.resource;
     const { isAdmin } = this.props;
     let topContent = "";
 
@@ -74,7 +72,8 @@ export default class ResourceRow extends Component {
                 className="button"
                 basic
                 color="yellow"
-                onClick={() => this.handleEditClick()}
+                as={Link}
+                to={`resource/edit?resourceId=${id}`}
               >
                 <Icon name="write" /> edytuj
               </Button>

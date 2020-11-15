@@ -48,10 +48,6 @@ export default class ResourceList extends Component {
       });
   }
 
-  resourceChanged(resource) {
-    window.location = `/resource/edit?resourceId=${resource.id}`;
-  }
-
   render() {
     const { resources } = this.state;
 
@@ -74,7 +70,6 @@ export default class ResourceList extends Component {
           entityMapFunc={(x) => (
             <ResourceRow
               onDelete={(resource) => this.resourceDeleted(resource)}
-              onChange={(resource) => this.resourceChanged(resource)}
               onRequest={(resource) =>
                 this.setState({
                   isModalOpen: true,

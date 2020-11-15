@@ -8,27 +8,17 @@ export default class UserPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      resources: []
+      resources: [],
     };
   }
 
   componentDidMount() {
-    ResourceService.getList()
-      .then((res) => {
-        this.setState({ resources: res.data });
-      });
-  }
-
-  handleEdit() {
-    window.location = "/resource/edit?resourceId=4a784cb1-5340-4b60-fd1d-08d884f6727c";
-  }
-
-  addResource() {
-    window.location = "/resource/add";
+    ResourceService.getList().then((res) => {
+      this.setState({ resources: res.data });
+    });
   }
 
   render() {
-
     return (
       <div>
         <p> Logged in as User.</p>
@@ -43,6 +33,6 @@ export default class UserPanel extends Component {
           </Grid>
         </div>
       </div>
-    )
-  };
+    );
+  }
 }
