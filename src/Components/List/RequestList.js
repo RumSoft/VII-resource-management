@@ -1,14 +1,22 @@
 import React, { Component } from "react";
-import { NotificationService, RequestService } from "../../Services";
+import { Events, EventService, RequestService } from "../../Services";
 import { RequestRow } from "../ListRows";
 import EntityList from "./EntityList";
-import { Card } from "semantic-ui-react";
 import "./index.scss";
 
 export default class RequestList extends Component {
+  constructor(props) {
+    super(props);
+
+    EventService.Subscribe(Events.User_RequestAction, () => {
+      this.fetchRequests();
+    });
+  }
+
   state = {
     requests: [],
   };
+
   componentDidMount() {
     this.fetchRequests();
   }
@@ -20,37 +28,15 @@ export default class RequestList extends Component {
     });
   }
 
-  onAction(request) {
-    RequestService.editRequest(request)
-      .then(() => {
-        NotificationService.success(`Zmodyfikowano żądanie`);
-      })
-      .catch((e) => {
-        NotificationService.apiError(e, "Nie udało się zmodyfikować żądania");
-      });
-  }
-
   render() {
     const { requests } = this.state;
 
     return (
       <EntityList
         onReloadClick={() => this.fetchRequests()}
-        onAddClick={() => {
-          window.location = "/request/add";
-        }}
         entities={requests}
         entityName="traderequests"
-        entityMapFunc={(x) => (
-          <RequestRow
-            fluid
-            onChange={() => {
-              console.log("xd");
-            }}
-            key={x.id}
-            request={x}
-          />
-        )}
+        entityMapFunc={(x) => <RequestRow fluid key={x.id} request={x} />}
         title="Przekazania"
       />
     );

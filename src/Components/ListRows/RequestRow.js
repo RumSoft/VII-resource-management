@@ -7,11 +7,51 @@ import {
   Icon,
   Label,
 } from "semantic-ui-react";
+import {
+  Events,
+  EventService,
+  NotificationService,
+  RequestService,
+} from "../../Services";
 import "./RequestRow.scss";
 
 export default class RequestRow extends Component {
   handleDeleteClick() {
     this.props.onDelete && this.props.onDelete(this.props.request);
+  }
+
+  actions = {
+    cancel: {
+      id: 0,
+      successText:
+        "Anulowano prośbę o przekazanie przedmiotu. Przedmiot powrócił do Twojej listy zasobów",
+      failedText: "Nie udało się anulować prośby o przekazanie przedmiotu",
+    },
+    accept: {
+      id: 1,
+      successText:
+        "Zaakceptowano prośbę o przekazanie przedmiotu. Możesz teraz go znaleźć liście swoich zasobów",
+      failedText: "Nie udało się zaakceptować prośby o przekazanie przedmiotu",
+    },
+    decline: {
+      id: 2,
+      successText:
+        "Anulowano prośbę o przekazanie przedmiotu. Przedmiot powrócił do właściciela",
+      failedText: "Nie udało się anulować prośby o przekazanie przedmiotu",
+    },
+  };
+
+  requestAction(actionName) {
+    const action = this.actions[actionName];
+
+    RequestService.editRequest({ id: this.props.request.id, action: action.id })
+      .then((res) => {
+        EventService.Emit(Events.User_RequestAction);
+        NotificationService.success(action.successText);
+      })
+      .catch((res) => {
+        NotificationService.error(res, action.failedText);
+      });
   }
 
   render() {
@@ -24,31 +64,35 @@ export default class RequestRow extends Component {
     if (isOther) {
       header = (
         <CardDescription>
-          {
-            <span>
-              <b>{owner.firstName}</b> <b>{owner.lastName}</b> chce przekazać{" "}
-              <b>{taker.firstName}</b> <b>{taker.lastName}</b>
-            </span>
-          }
+          <span>
+            <b>{owner.firstName}</b> <b>{owner.lastName}</b> chce przekazać{" "}
+            <b>{taker.firstName}</b> <b>{taker.lastName}</b>
+          </span>
         </CardDescription>
       );
     } else if (userInfo.isTaker) {
       header = (
         <CardDescription>
-          {
-            <span>
-              <b>{owner.firstName}</b> <b>{owner.lastName}</b> chce Ci przekazać
-            </span>
-          }
+          <span>
+            <b>{owner.firstName}</b> <b>{owner.lastName}</b> chce Ci przekazać
+          </span>
         </CardDescription>
       );
       footer = (
         <CardContent>
           <div className="ui two buttons">
-            <Button basic color="green" onClick={() => alert("123")}>
+            <Button
+              basic
+              color="green"
+              onClick={() => this.requestAction("accept")}
+            >
               👌🏿 zaakceptuj
             </Button>
-            <Button basic color="red" onClick={() => alert("321")}>
+            <Button
+              basic
+              color="red"
+              onClick={() => this.requestAction("decline")}
+            >
               <Icon name="x" />
               odrzuć
             </Button>
@@ -58,20 +102,22 @@ export default class RequestRow extends Component {
     } else {
       header = (
         <CardDescription>
-          {
-            <span>
-              Wysłano prośbę do <b>{taker.firstName}</b> <b>{taker.lastName}</b>
-            </span>
-          }
+          <span>
+            Wysłano prośbę do <b>{taker.firstName}</b> <b>{taker.lastName}</b>
+          </span>
         </CardDescription>
       );
       footer = (
         <CardContent>
           <div className="ui two buttons">
-            <Button basic color="white" disabled>
+            <Button basic disabled>
               oczekiwanie
             </Button>
-            <Button basic color="red" onClick={() => alert("5555")}>
+            <Button
+              basic
+              color="red"
+              onClick={() => this.requestAction("cancel")}
+            >
               <Icon name="ban" />
               anuluj
             </Button>
@@ -83,17 +129,17 @@ export default class RequestRow extends Component {
     return (
       <Card className={`requestRow ${this.props.fluid ? "row-fluid" : ""}`}>
         <CardContent>
-          <p>{header}</p>
+          <div>{header}</div>
           <CardDescription className="requestResource">
             <Icon name="tag" />
-            {`${resource.name}`}
+            {resource.name}
           </CardDescription>
           <CardDescription
             style={{ display: "flex", justifyContent: "space-between" }}
           >
             <Label style={{ backgroundColor: resource.room?.color }}>
               <Icon name="point" />
-              {`${resource.room?.name || "brak pokoju"}`}
+              {resource.room?.name || "brak pokoju"}
             </Label>
             <span style={{ marginTop: "auto", marginBottom: "auto" }}>
               <Icon name="stack overflow" /> x{resource.quantity}
@@ -104,7 +150,9 @@ export default class RequestRow extends Component {
               <Label>brak atrybutów</Label>
             ) : (
               resource.attributes.map((x) => (
-                <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
+                <Label key={x.id} style={{ backgroundColor: x.color }}>
+                  {x.name}
+                </Label>
               ))
             )}
           </CardDescription>

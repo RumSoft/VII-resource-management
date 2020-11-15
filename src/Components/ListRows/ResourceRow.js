@@ -60,7 +60,9 @@ export default class ResourceRow extends Component {
               <Label>brak atrybutów</Label>
             ) : (
               attributes.map((x) => (
-                <Label style={{ backgroundColor: x.color }}>{x.name}</Label>
+                <Label key={x.id} style={{ backgroundColor: x.color }}>
+                  {x.name}
+                </Label>
               ))
             )}
           </CardDescription>

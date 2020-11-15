@@ -3,3 +3,18 @@ body, #root {
     min-width: 100vw;
     min-height: 100vh;
 }
+
+.busy-indicator {
+  position: sticky;
+  display: flex;
+  left: 0;
+  right: 0;
+  top:0;
+  bottom: 0;
+  min-height: 100vh;
+  background-color: rgba(white, 0.2);
+
+  & > * {
+    margin: auto !important;
+  }
+}

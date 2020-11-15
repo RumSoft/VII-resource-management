@@ -1,6 +1,5 @@
 import React from "react";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import { Card } from "semantic-ui-react";
 
 export default class PdfRenderer extends React.Component {
   resume = null;
@@ -35,7 +34,6 @@ export default class PdfRenderer extends React.Component {
               style={{
                 height: 1230,
                 width: 930,
-                padding: "none",
                 backgroundColor: "white",
                 boxShadow: "5px 5px 5px rgba(0,0,0,0.3)",
                 margin: "auto",

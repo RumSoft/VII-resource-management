@@ -1,9 +1,5 @@
-import { APIService, EventService } from ".";
-import Events from "./Events";
+import { APIService } from ".";
 import qs from "query-string";
-
-const authTokenKey = "auth_token";
-const roleKey = "role";
 
 export default class LogService {
   static get(level = 3, length = 100) {

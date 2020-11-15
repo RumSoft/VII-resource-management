@@ -60,6 +60,9 @@ export default class Navbar extends Component {
           )}
 
           <div className="bottom-aligned">
+            <Menu.Item as={Link} to="/about">
+              <Icon name="gamepad" />O aplikacji
+            </Menu.Item>
             {this.state.isLogged ? (
               <Menu.Item
                 as="a"

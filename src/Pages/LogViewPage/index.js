@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Card, Dropdown, Select, Table } from "semantic-ui-react";
+import { Card, Dropdown, Table } from "semantic-ui-react";
 import { LogService } from "../../Services";
 import qs from "query-string";
 

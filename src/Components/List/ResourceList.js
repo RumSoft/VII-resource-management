@@ -1,12 +1,24 @@
 import React, { Component } from "react";
-import { ResourceService, NotificationService } from "../../Services";
+import {
+  ResourceService,
+  NotificationService,
+  EventService,
+  Events,
+} from "../../Services";
 import { ResourceRow } from "../ListRows";
-import { Card } from "semantic-ui-react";
 import EntityList from "./EntityList";
 import "./index.scss";
 import CreateRequestModal from "./CreateRequestModal";
 
 export default class ResourceList extends Component {
+  constructor(props) {
+    super(props);
+
+    EventService.Subscribe(Events.User_RequestAction, () => {
+      this.fetchResources();
+    });
+  }
+
   state = {
     resources: [],
     isModalOpen: false,
@@ -48,7 +60,7 @@ export default class ResourceList extends Component {
         <CreateRequestModal
           isOpen={this.state.isModalOpen}
           onClose={() => this.setState({ isModalOpen: false })}
-          onSuccess={() => this.fetchResources()}
+          onSuccess={() => EventService.Emit(Events.User_RequestAction)}
           resource={this.state.requestResource}
         />
 
