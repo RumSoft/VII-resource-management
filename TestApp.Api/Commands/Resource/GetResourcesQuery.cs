@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TestApp.Api.Data;
 using TestApp.Api.Models.Dto;
 using TestApp.Api.Services;
@@ -26,7 +27,12 @@ namespace TestApp.Api.Commands.Resource
         [HttpGet("resource")]
         public override ActionResult<GetResourcesCommandResult[]> Execute()
         {
-            var resources = _context.Resources.AsQueryable();
+            var resources = _context.Resources
+                .Include(x => x.Attributes)
+                .Include(x => x.Owner)
+                .Include(x => x.TradeRequest)
+                .Include(x => x.Room)
+                .AsQueryable();
 
             if (!_userInfo.IsAdmin)
                 resources = resources.Where(x => x.Owner.Id == _userInfo.Id);

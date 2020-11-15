@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TestApp.Api.Data;
 using TestApp.Api.Models.Dto;
@@ -29,7 +30,15 @@ namespace TestApp.Api.Commands.TradeRequest
         {
             try
             {
-                var tr = _context.TradeRequests.AsQueryable();
+                var tr = _context.TradeRequests
+                    .Include(x => x.Taker)
+                    .Include(x => x.Resource)
+                    .ThenInclude(x => x.Attributes)
+                    .Include(x => x.Resource)
+                    .ThenInclude(x => x.Room)
+                    .Include(x => x.Resource)
+                    .ThenInclude(x => x.Owner)
+                    .AsQueryable();
 
                 var user = _userInfo.GetCurrentUser();
                 if (!_userInfo.IsAdmin)
