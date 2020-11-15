@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { UserRow } from "../ListRows";
 import { NotificationService, UserService } from "../../Services";
-import EntityList from "./EntityList";
-import { Confirm } from 'semantic-ui-react';
+import { Button, Confirm } from "semantic-ui-react";
 import "./index.scss";
+import { Link } from "react-router-dom";
 
 export default class UserList extends Component {
   state = {
     users: null,
-    isDeleteDialogOpen: false
+    isDeleteDialogOpen: false,
   };
   componentDidMount() {
     this.fetchUsers();
@@ -22,7 +22,7 @@ export default class UserList extends Component {
   }
 
   deleteUserClicked(user) {
-    console.log(user)
+    console.log(user);
     UserService.deleteUser(user.id)
       .then(() => {
         NotificationService.success(`Usunięto użytkownika ${user.fullname}`);
@@ -32,40 +32,53 @@ export default class UserList extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
-      }).finally(() => this.setState({ isDeleteDialogOpen: false }));
+      })
+      .finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
-  render() {
-    const { users } = this.state;
-    return (<>
-      < Confirm
+  renderConfirm() {
+    return (
+      <Confirm
         className="confirmDialog"
         size="mini"
         open={this.state.isDeleteDialogOpen}
-        onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+        onCancel={() =>
+          this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })
+        }
         onConfirm={() => this.deleteUserClicked(this.state.passedUser)}
-        content={(`Czy usunąć użytkownika ${this.state.passedUser?.firstName} ${this.state.passedUser?.lastName} ?`)}
+        content={`Czy usunąć użytkownika ${this.state.passedUser?.firstName} ${this.state.passedUser?.lastName} ?`}
         cancelButton="Nie"
         confirmButton="Tak"
       />
-      <EntityList
-        onReloadClick={() => this.fetchUsers()}
-        onAddClick={() => {
-          //todo: fix this
-          window.location = "/user/add";
-        }}
-        entities={users}
-        entityName="users"
-        entityMapFunc={(x) => (
-          <UserRow
-            onDelete={(user) => this.setState({ isDeleteDialogOpen: true, passedUser: user })}
-            key={x.id}
-            user={x}
-          />
-        )}
-        title="Użytkownicy"
-      />
-    </>
+    );
+  }
+
+  renderContent() {
+    return (
+      <>
+        {this.props.users.map((x) => (
+          <UserRow key={x.id} user={x} />
+        ))}
+        <div className="list-row room-row">
+          <Button
+            color="green"
+            style={{ margin: "auto" }}
+            as={Link}
+            to="/user/add"
+          >
+            Dodaj użytkownika
+          </Button>
+        </div>
+      </>
+    );
+  }
+
+  render() {
+    return (
+      <>
+        {this.renderConfirm()}
+        {this.renderContent()}
+      </>
     );
   }
 }

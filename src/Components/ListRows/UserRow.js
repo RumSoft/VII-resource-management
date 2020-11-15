@@ -23,12 +23,6 @@ export default class UserRow extends Component {
             icon="edit"
             color="yellow"
           />
-          <Button
-            circular
-            onClick={() => this.handleDeleteClick()}
-            icon="delete"
-            color="red"
-          />
         </div>
       </div>
     );

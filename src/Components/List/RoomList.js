@@ -1,28 +1,21 @@
 import React, { Component } from "react";
-import { NotificationService, RoomService } from "../../Services";
+import {
+  Events,
+  EventService,
+  NotificationService,
+  RoomService,
+} from "../../Services";
 import { RoomRow } from "../ListRows";
-import EntityList from "./EntityList";
-import { Modal, Button, Input, Confirm } from 'semantic-ui-react';
+import { Modal, Button, Input, Confirm } from "semantic-ui-react";
 import "./index.scss";
 
 export default class RoomList extends Component {
   state = {
-    rooms: null,
     isModalOpen: false,
     isEdit: null, // 0 = add, 1 = edit
     newName: "",
-    isDeleteDialogOpen: false
+    isDeleteDialogOpen: false,
   };
-  componentDidMount() {
-    this.fetchRooms();
-  }
-
-  fetchRooms() {
-    RoomService.getList().then((result) => {
-      const rooms = result && result.data;
-      this.setState({ rooms });
-    });
-  }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -32,11 +25,12 @@ export default class RoomList extends Component {
     RoomService.addRoom(this.state.newName)
       .then(() => {
         NotificationService.success(`Dodano pokój "${this.state.newName}"`);
-        this.fetchRooms();
+        EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać pokoju");
-      }).finally(() => this.setState({ newName: "" }));
+      })
+      .finally(() => this.setState({ newName: "" }));
   }
 
   changeRoomClicked() {
@@ -44,37 +38,41 @@ export default class RoomList extends Component {
     room.name = this.state.newName;
     RoomService.editRoom(room)
       .then(() => {
-        NotificationService.success(`Pomyślnie zmieniono nazwę pokoju na ${room.name}`);
-        this.setState({
-          rooms: this.state.rooms.map((x) => {
-            if (x.id === room.id) x.name = room.name;
-            return x;
-          }),
-        });
+        NotificationService.success(
+          `Pomyślnie zmieniono nazwę pokoju na ${room.name}`
+        );
+        EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się pokoju atrybutu");
-      }).finally(() => this.setState({ newName: "" }));
+      })
+      .finally(() => this.setState({ newName: "" }));
   }
 
   deleteRoomClicked(room) {
     RoomService.deleteRoom(room.id)
       .then(() => {
         NotificationService.success(`Usunięto pokój ${room.name}`);
-        this.setState({
-          rooms: this.state.rooms.filter((x) => x.id !== room.id),
-        });
+        EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć pokoju");
-      }).finally(() => this.setState({ isDeleteDialogOpen: false }));
+      })
+      .finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
-  render() {
-    const { rooms } = this.state;
-    return (<>
-      <Modal open={this.state.isModalOpen} size="mini" onClose={() => this.setState({ isModalOpen: false, newName: "" })}>
-        <Modal.Header>Podaj {this.state.isEdit && "nową"} nazwę pokoju {this.state.isEdit && this.state.passedRoom.name}</Modal.Header>
+  //#region rendering
+  renderEditModal() {
+    return (
+      <Modal
+        open={this.state.isModalOpen}
+        size="mini"
+        onClose={() => this.setState({ isModalOpen: false, newName: "" })}
+      >
+        <Modal.Header>
+          Podaj {this.state.isEdit && "nową"} nazwę pokoju{" "}
+          {this.state.isEdit && this.state.passedRoom.name}
+        </Modal.Header>
         <Modal.Content>
           <Input
             type="text"
@@ -85,51 +83,93 @@ export default class RoomList extends Component {
           />
         </Modal.Content>
         <Modal.Actions>
-          <Button color='black' onClick={() => this.setState({ isModalOpen: false, newName: "" })}>
+          <Button
+            color="black"
+            onClick={() => this.setState({ isModalOpen: false, newName: "" })}
+          >
             Anuluj
-        </Button>
+          </Button>
           <Button
             content={this.state.isEdit ? "Zapisz pokój" : "Dodaj pokój"}
-            labelPosition='right'
-            icon='checkmark'
+            labelPosition="right"
+            icon="checkmark"
             onClick={() => {
               this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
-                this.state.isEdit ? this.changeRoomClicked() : this.addRoomClick();
+                this.state.isEdit
+                  ? this.changeRoomClicked()
+                  : this.addRoomClick();
               }
             }}
             positive
           />
         </Modal.Actions>
       </Modal>
+    );
+  }
 
-      < Confirm
+  renderEditConfirm() {
+    return (
+      <Confirm
         className="confirmDialog"
         size="mini"
         open={this.state.isDeleteDialogOpen}
-        onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+        onCancel={() =>
+          this.setState({
+            isDeleteDialogOpen: !this.state.isDeleteDialogOpen,
+          })
+        }
         onConfirm={() => this.deleteRoomClicked(this.state.passedRoom)}
-        content={(`Czy usunąć zasób ${this.state.passedRoom?.name}?`)}
+        content={`Czy usunąć zasób ${this.state.passedRoom?.name}?`}
         cancelButton="Nie"
         confirmButton="Tak"
       />
+    );
+  }
 
-      <EntityList
-        onReloadClick={() => this.fetchRooms()}
-        onAddClick={() => this.setState({ isModalOpen: true, isEdit: false })}
-        entities={rooms}
-        entityName="rooms"
-        entityMapFunc={(x) => (
+  renderContent() {
+    return (
+      <>
+        {this.props.rooms?.map((x) => (
           <RoomRow
-            onDelete={(room) => this.setState({ isDeleteDialogOpen: true, passedRoom: room })}
-            onChange={(room) => this.setState({ isModalOpen: true, isEdit: true, passedRoom: room, newName: room.name })}
             key={x.id}
             room={x}
+            onChange={(room) =>
+              this.setState({
+                isModalOpen: true,
+                isEdit: true,
+                passedRoom: room,
+                newName: room.name,
+              })
+            }
+            onDelete={(room) =>
+              this.setState({ isDeleteDialogOpen: true, passedRoom: room })
+            }
           />
-        )}
-        title="Pokoje"
-      />
-    </>
+        ))}
+
+        <div className="list-row room-row">
+          <Button
+            color="green"
+            style={{ margin: "auto" }}
+            onClick={() => this.setState({ isModalOpen: true, isEdit: false })}
+          >
+            Dodaj pokój
+          </Button>
+        </div>
+      </>
+    );
+  }
+  //#endregion
+
+  render() {
+    return (
+      <>
+        {this.renderEditModal()}
+        {this.renderEditModal()}
+        {this.renderEditConfirm()}
+        {this.renderContent()}
+      </>
     );
   }
 }

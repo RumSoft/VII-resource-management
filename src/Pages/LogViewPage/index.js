@@ -44,13 +44,10 @@ class LogViewPage extends Component {
   }
 
   render() {
-    const { logs, level, length } = this.state;
+    const { logs, level } = this.state;
 
     return (
       <>
-        <p>
-          {level} {length}
-        </p>
         <Card>
           <Card.Content>
             <Dropdown

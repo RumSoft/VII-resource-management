@@ -1,28 +1,21 @@
 import React, { Component } from "react";
 import { AttributeRow } from "../ListRows";
-import { AttributeService, NotificationService } from "../../Services";
-import EntityList from "./EntityList";
-import { Modal, Button, Input, Confirm } from 'semantic-ui-react';
+import {
+  AttributeService,
+  Events,
+  EventService,
+  NotificationService,
+} from "../../Services";
+import { Modal, Button, Input, Confirm } from "semantic-ui-react";
 import "./index.scss";
 
 export default class AttributeList extends Component {
   state = {
-    attributes: null,
     isModalOpen: false,
     isEdit: null, // 0 = add, 1 = edit
     newName: "",
-    isDeleteDialogOpen: false
+    isDeleteDialogOpen: false,
   };
-  componentDidMount() {
-    this.fetchAttributes();
-  }
-
-  fetchAttributes() {
-    AttributeService.getList().then((result) => {
-      const attributes = result && result.data;
-      this.setState({ attributes });
-    });
-  }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -32,11 +25,12 @@ export default class AttributeList extends Component {
     AttributeService.addAttribute(this.state.newName)
       .then(() => {
         NotificationService.success(`Dodano atrybut "${this.state.newName}"`);
-        this.fetchAttributes();
+        EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać atrybutu");
-      }).finally(() => this.setState({ newName: "" }));
+      })
+      .finally(() => this.setState({ newName: "" }));
   }
 
   changeAttributeClick() {
@@ -44,37 +38,62 @@ export default class AttributeList extends Component {
     attr.name = this.state.newName;
     AttributeService.editAttribute(attr)
       .then(() => {
-        NotificationService.success(`Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`);
-        this.setState({
-          attributes: this.state.attributes.map((x) => {
-            if (x.id === attr.id) x.name = attr.name;
-            return x;
-          }),
-        });
+        NotificationService.success(
+          `Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`
+        );
+        EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się edytować atrybutu");
-      }).finally(() => this.setState({ newName: "" }));
+      })
+      .finally(() => this.setState({ newName: "" }));
   }
 
   deleteAttributeClicked(attr) {
     AttributeService.deleteAttribute(attr.id)
       .then(() => {
         NotificationService.success(`Usunięto atrybut ${attr.name}`);
-        this.setState({
-          attributes: this.state.attributes.filter((x) => x.id !== attr.id),
-        });
+        EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć atrybutu");
-      }).finally(() => this.setState({ isDeleteDialogOpen: false }));
+      })
+      .finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
-  render() {
-    const { attributes } = this.state;
-    return (<>
-      <Modal open={this.state.isModalOpen} size="mini" closeOnDocumentClick={true} onClose={() => this.setState({ isModalOpen: false, newName: "" })}>
-        <Modal.Header>Podaj {this.state.isEdit && "nową"} nazwę atrybutu {this.state.isEdit && this.state.passedAttribute.name}</Modal.Header>
+  renderConfirm() {
+    return (
+      <Confirm
+        className="confirmDialog"
+        size="mini"
+        open={this.state.isDeleteDialogOpen}
+        onCancel={() =>
+          this.setState({
+            isDeleteDialogOpen: !this.state.isDeleteDialogOpen,
+          })
+        }
+        onConfirm={() =>
+          this.deleteAttributeClicked(this.state.passedAttribute)
+        }
+        content={`Czy usunąć zasób ${this.state.passedAttribute?.name}?`}
+        cancelButton="Nie"
+        confirmButton="Tak"
+      />
+    );
+  }
+
+  renderModal() {
+    return (
+      <Modal
+        open={this.state.isModalOpen}
+        size="mini"
+        closeOnDocumentClick={true}
+        onClose={() => this.setState({ isModalOpen: false, newName: "" })}
+      >
+        <Modal.Header>
+          Podaj {this.state.isEdit && "nową"} nazwę atrybutu{" "}
+          {this.state.isEdit && this.state.passedAttribute.name}
+        </Modal.Header>
         <Modal.Content>
           <Input
             type="text"
@@ -85,51 +104,71 @@ export default class AttributeList extends Component {
           />
         </Modal.Content>
         <Modal.Actions>
-          <Button color='black' onClick={() => this.setState({ isModalOpen: false, newName: "" })}>
+          <Button
+            color="black"
+            onClick={() => this.setState({ isModalOpen: false, newName: "" })}
+          >
             Anuluj
-        </Button>
+          </Button>
           <Button
             content={this.state.isEdit ? "Zapisz atrybut" : "Dodaj atrybut"}
-            labelPosition='right'
-            icon='checkmark'
+            labelPosition="right"
+            icon="checkmark"
             onClick={() => {
               this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
-                this.state.isEdit ? this.changeAttributeClick() : this.addAttributeClick();
+                this.state.isEdit
+                  ? this.changeAttributeClick()
+                  : this.addAttributeClick();
               }
             }}
             positive
           />
         </Modal.Actions>
       </Modal>
+    );
+  }
 
-      < Confirm
-        className="confirmDialog"
-        size="mini"
-        open={this.state.isDeleteDialogOpen}
-        onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
-        onConfirm={() => this.deleteAttributeClicked(this.state.passedAttribute)}
-        content={(`Czy usunąć zasób ${this.state.passedAttribute?.name}?`)}
-        cancelButton="Nie"
-        confirmButton="Tak"
-      />
-
-      <EntityList
-        onReloadClick={() => this.fetchAttributes()}
-        onAddClick={() => this.setState({ isModalOpen: true, isEdit: false })}
-        entities={attributes}
-        entityName="attributes"
-        entityMapFunc={(x) => (
+  renderContent() {
+    return (
+      <>
+        {this.props.attributes.map((x) => (
           <AttributeRow
-            onDelete={(attr) => this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })}
-            onChange={(attr) => this.setState({ isModalOpen: true, isEdit: true, passedAttribute: attr, newName: attr.name })}
+            onDelete={(attr) =>
+              this.setState({ isDeleteDialogOpen: true, passedAttribute: attr })
+            }
+            onChange={(attr) =>
+              this.setState({
+                isModalOpen: true,
+                isEdit: true,
+                passedAttribute: attr,
+                newName: attr.name,
+              })
+            }
             key={x.id}
             attribute={x}
           />
-        )}
-        title="Atrybuty"
-      />
-    </>
+        ))}
+        <div className="list-row">
+          <Button
+            color="green"
+            style={{ margin: "auto" }}
+            onClick={() => this.setState({ isModalOpen: true, isEdit: false })}
+          >
+            Dodaj atrybut
+          </Button>
+        </div>
+      </>
+    );
+  }
+
+  render() {
+    return (
+      <>
+        {this.renderConfirm()}
+        {this.renderModal()}
+        {this.renderContent()}
+      </>
     );
   }
 }
