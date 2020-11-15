@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Card, Form, Button, Confirm } from 'semantic-ui-react'
+import { Card, Form, Button, Confirm, Label } from 'semantic-ui-react'
 
 import "./index.scss";
 
@@ -45,6 +45,8 @@ export default class UserManager extends Component {
 
     render() {
         const isEdit = this.props.edit;
+        const errors = this.props.errors ?? {};
+        console.log(errors)
         let deleteAndResetButton;
         if (isEdit === true) {
             deleteAndResetButton = <>
@@ -98,6 +100,13 @@ export default class UserManager extends Component {
                             value={this.state.firstName}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["FirstName"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["FirstName"][0]}
+                            </Label>
+                        )}
                         <Form.Input
                             label="Nazwisko"
                             fluid
