@@ -9,6 +9,7 @@ export default class EditUserPage extends Component {
     this.state = {
       user: null,
       redirect: false,
+      errors: {},
     };
   }
 
@@ -31,16 +32,24 @@ export default class EditUserPage extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Edycja użytkownika nie powiodła się");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
       });
   }
 
   render() {
-    const { user, redirect } = this.state;
+    const { user, redirect, errors } = this.state;
     return (
       <>
         {redirect && <Redirect to="/dashboard" />}
         {user && (
-          <UserManager onSave={(u) => this.editUser(u)} edit user={user} />
+          <UserManager
+            onSave={(u) => this.editUser(u)}
+            edit
+            user={user}
+            errors={errors}
+          />
         )}
       </>
     );

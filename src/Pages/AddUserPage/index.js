@@ -8,6 +8,7 @@ export default class AddUserPage extends Component {
     super(props);
     this.state = {
       redirect: false,
+      errors: {},
     };
   }
 
@@ -21,6 +22,9 @@ export default class AddUserPage extends Component {
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać użytkownika");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
       });
   }
 
@@ -32,7 +36,10 @@ export default class AddUserPage extends Component {
     return (
       <>
         {this.state.redirect && <Redirect to="/dashboard" />}
-        <UserManager onSave={(user) => this.addUser(user)} />
+        <UserManager
+          onSave={(user) => this.addUser(user)}
+          errors={this.state.errors}
+        />
       </>
     );
   }
