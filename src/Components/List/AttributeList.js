@@ -33,6 +33,9 @@ export default class AttributeList extends Component {
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
         }
+        else {
+          this.setState({ errors: {} });
+        }
       })
 
   }
@@ -52,6 +55,9 @@ export default class AttributeList extends Component {
         NotificationService.apiError(e, "Nie udało się edytować atrybutu");
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
         }
       })
   }

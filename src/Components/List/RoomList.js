@@ -33,6 +33,9 @@ export default class RoomList extends Component {
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
         }
+        else {
+          this.setState({ errors: {} });
+        }
       })
   }
 
@@ -49,6 +52,9 @@ export default class RoomList extends Component {
         NotificationService.apiError(e, "Nie udało się pokoju atrybutu");
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
         }
       })
   }

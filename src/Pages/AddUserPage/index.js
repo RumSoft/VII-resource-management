@@ -25,6 +25,9 @@ export default class AddUserPage extends Component {
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
         }
+        else {
+          this.setState({ errors: {} });
+        }
       });
   }
 
