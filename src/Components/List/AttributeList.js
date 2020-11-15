@@ -91,7 +91,6 @@ export default class AttributeList extends Component {
 
   renderModal() {
     const errors = this.state.errors ?? {};
-    console.log(errors);
     return (
       <Modal
         open={this.state.isModalOpen}
