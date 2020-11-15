@@ -2,7 +2,8 @@
 
 .requestRow{
     text-align: left;
-
+    overflow: hidden;
+    
     .requestResource{
         font-weight: bolder;
     }
@@ -15,8 +16,5 @@
     .ui.label {
         margin: 2px;
     }
- 
-    &.row-fluid {
-        width: 100%;
-    }
+
 }

@@ -127,7 +127,7 @@ export default class RequestRow extends Component {
     }
 
     return (
-      <Card className={`requestRow ${this.props.fluid ? "row-fluid" : ""}`}>
+      <Card className="requestRow" fluid={this.props.fluid} color="yellow">
         <CardContent>
           <div>{header}</div>
           <CardDescription className="requestResource">

@@ -33,7 +33,7 @@ export default class ResourceRow extends Component {
     }
 
     return (
-      <Card className={`resourceRow ${this.props.fluid ? "row-fluid" : ""}`}>
+      <Card fluid={this.props.fluid} className="resourceRow" color="blue">
         <CardContent>
           {topContent}
           <CardDescription>

@@ -22,6 +22,54 @@ export default class Navbar extends Component {
     });
   }
 
+  renderTopMenu() {
+    return (
+      <>
+        <Menu.Item as={Link} to="/">
+          <Icon name="gamepad" />
+          Home
+        </Menu.Item>
+
+        <Menu.Item as={Link} to="/dashboard">
+          <Icon name="gamepad" />
+          Panel
+        </Menu.Item>
+        {AuthService.isAdmin() && (
+          <Menu.Item as={Link} to="/logs">
+            <Icon name="gamepad" />
+            Logi
+          </Menu.Item>
+        )}
+      </>
+    );
+  }
+
+  renderBottomMenu() {
+    return (
+      <>
+        <Menu.Item as={Link} to="/about">
+          <Icon name="gamepad" />O aplikacji
+        </Menu.Item>
+        {this.state.isLogged ? (
+          <Menu.Item
+            as="a"
+            to="/logout"
+            onClick={() => AuthService.logout()}
+            className="bottom-aligned"
+          >
+            <Icon name="gamepad" />
+            Wyloguj
+          </Menu.Item>
+        ) : (
+          <Menu.Item as={Link} to="/login">
+            <Icon name="gamepad" />
+            Zaloguj
+          </Menu.Item>
+        )}
+      </>
+    );
+  }
+
   render() {
     return (
       <Sidebar.Pushable
@@ -40,46 +88,10 @@ export default class Navbar extends Component {
           vertical
           visible={true}
           width="thin"
-          className="flex-container sidebar-menu"
+          className="sidebar-menu"
         >
-          {/* todo icons */}
-          <Menu.Item as={Link} to="/">
-            <Icon name="gamepad" />
-            Home
-          </Menu.Item>
-
-          <Menu.Item as={Link} to="/dashboard">
-            <Icon name="gamepad" />
-            Panel
-          </Menu.Item>
-          {AuthService.isAdmin() && (
-            <Menu.Item as={Link} to="/logs">
-              <Icon name="gamepad" />
-              Logi
-            </Menu.Item>
-          )}
-
-          <div className="bottom-aligned">
-            <Menu.Item as={Link} to="/about">
-              <Icon name="gamepad" />O aplikacji
-            </Menu.Item>
-            {this.state.isLogged ? (
-              <Menu.Item
-                as="a"
-                to="/logout"
-                onClick={() => AuthService.logout()}
-                className="bottom-aligned"
-              >
-                <Icon name="gamepad" />
-                Wyloguj
-              </Menu.Item>
-            ) : (
-              <Menu.Item as={Link} to="/login">
-                <Icon name="gamepad" />
-                Zaloguj
-              </Menu.Item>
-            )}
-          </div>
+          <div className="top-aligned">{this.renderTopMenu()}</div>
+          <div className="bottom-aligned">{this.renderBottomMenu()}</div>
         </Sidebar>
         <Sidebar.Pusher style={{ overflow: "unset" }}>
           <Segment basic style={{ position: "relative" }}>

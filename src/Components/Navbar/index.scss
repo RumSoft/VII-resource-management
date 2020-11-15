@@ -1,5 +1,6 @@
 
-$sidebarWidth: 10%;
+$sidebarWidth: 150px;
+$sidebarHeight: 70px;
 
 .ui.segment.pushable {
   margin: 0;
@@ -20,15 +21,39 @@ $sidebarWidth: 10%;
   left: 0;
 }
 
-
-.flex-container {
+.sidebar-menu {
   display: flex !important;
+  flex-direction: column !important;
   justify-content: space-between;
   height: 100%;
+  
+  &::after {
+    content: none !important;
+  }
+
 }
 
-.bottom-aligned {
-  margin: 0px;
-  margin-top: auto;
-}
+@media only screen and (max-width: 767px) {
+  $sidebarWidth: 100%;
+  .ui.sidebar.visible {
+    width: $sidebarWidth !important;
+    height: $sidebarHeight !important;
+  }
+  .ui.sidebar.visible ~ .pusher {
+    margin-left: 0 !important;
+    margin-top: $sidebarHeight !important;
+  }
 
+  .sidebar-menu {
+    flex-direction: row !important;
+  
+    &::after {
+      content: none !important;
+    }
+    
+    & > div {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+}
