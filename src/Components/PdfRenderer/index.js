@@ -14,12 +14,12 @@ export default class PdfRenderer extends React.Component {
       <>
         <button onClick={this.exportPDF}>download</button>
         <div
-          // style={{
-          //   opacity: "0.0",
-          //   height: "0",
-          //   width: "0",
-          //   pointerEvents: "none",
-          // }}
+          style={{
+            opacity: "0.0",
+            height: "0",
+            width: "0",
+            pointerEvents: "none",
+          }}
           className="pdf-export"
         >
           <PDFExport
