@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-//import { ResourceRow } from "../ListRows";
-import { Button, Card, Grid, Icon } from "semantic-ui-react";
 import {
   Events,
   EventService,
@@ -9,8 +6,8 @@ import {
   RequestService,
   ResourceService,
 } from "../../Services";
-import CreateRequestModal from "../List/CreateRequestModal";
-import { RequestRow, ResourceRow } from "../ListRows";
+import ResourceRequestDashboard from "../Dashboards/ResourceRequestDashboard";
+import CreateRequestModal from "./CreateRequestModal";
 import "./index.scss";
 
 export default class UserPanel extends Component {
@@ -44,20 +41,25 @@ export default class UserPanel extends Component {
     });
   }
 
-  resourceDeleted(resource) {
+  handleResourceDelete(resource) {
     ResourceService.deleteResource(resource.id)
       .then(() => {
         NotificationService.success(`Usunięto zasób ${resource.name}`);
-        this.setState({
-          resources: this.state.resources.filter((x) => x.id !== resource.id),
-        });
+        this.fetchResources();
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć zasobu");
       });
   }
 
-  renderModal() {
+  handleCreateRequest(resource) {
+    this.setState({
+      isModalOpen: true,
+      requestResource: resource,
+    });
+  }
+
+  renderRequestModal() {
     return (
       <CreateRequestModal
         isOpen={this.state.isModalOpen}
@@ -68,92 +70,18 @@ export default class UserPanel extends Component {
     );
   }
 
-  renderResourceList() {
-    return (
-      <div>
-        <p>
-          <h2>Twoje przedmioty</h2>
-        </p>
-        <ul className="user-resource-list">
-          {this.state?.resources?.map((x) => (
-            <li className="user-resource-list__item" key={x.id}>
-              <ResourceRow
-                fluid
-                isAdmin={false}
-                resource={x}
-                onDelete={(resource) => this.resourceDeleted(resource)}
-                onRequest={(resource) =>
-                  this.setState({
-                    isModalOpen: true,
-                    requestResource: resource,
-                  })
-                }
-              />
-            </li>
-          ))}
-          <li className="user-resource-list__item" key={-1}>
-            <Card as={Link} to="/resource/add" style={{ width: "100%" }}>
-              <div
-                style={{
-                  margin: "auto",
-                  width: "auto",
-                  padding: "1rem",
-                }}
-              >
-                <Button circular icon="add" color="green" />
-                <h4>Dodaj przedmiot</h4>
-              </div>
-            </Card>
-          </li>
-        </ul>
-      </div>
-    );
-  }
-
-  renderRequestList() {
-    return (
-      <div>
-        <p>
-          <h2>Przekazania przedmiotów</h2>
-        </p>
-
-        <ul className="user-request-list">
-          {this.state?.requests?.map((x) => (
-            <li className="user-request-list__item" key={x.id}>
-              <RequestRow
-                fluid
-                isAdmin={false}
-                request={x}
-                onDelete={(resource) => this.resourceDeleted(resource)}
-                onRequest={(resource) =>
-                  this.setState({
-                    isModalOpen: true,
-                    requestResource: resource,
-                  })
-                }
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div>
-        {this.renderModal()}
-        <p>Logged in as User.</p>
-        <div className="container-fluid d-flex">
-          <Grid divided={true}>
-            <Grid.Column mobile={16} computer={10}>
-              {this.renderResourceList()}
-            </Grid.Column>
-            <Grid.Column mobile={16} computer={6}>
-              {this.renderRequestList()}
-            </Grid.Column>
-          </Grid>
-        </div>
+        <p>Zalogowano jako użytkownik</p>
+        {this.renderRequestModal()}
+        <ResourceRequestDashboard
+          isAdmin={false}
+          resources={this.state.resources}
+          requests={this.state.requests}
+          onResourceDeleteClick={(res) => this.handleResourceDelete(res)}
+          onTradeRequestClick={(res) => this.handleCreateRequest(res)}
+        />
       </div>
     );
   }

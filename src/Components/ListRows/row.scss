@@ -16,6 +16,14 @@
 
     opacity: 0.9;
 
+    &:last-child {
+        border-bottom: none;
+
+        &:hover {
+            border-bottom: none;
+        }
+    }
+
     &:hover {
         background-color: $bgHoverColor;
         border-bottom: 1px solid #ddd;
@@ -32,12 +40,13 @@
 
     &__actions {
         white-space: nowrap;
+
         button {
             display: inline-block;
             cursor: pointer;
             text-decoration: none;
             border: none;
-            
+
             transition: background-color $transitionTime ease;
 
             &:hover {
@@ -66,9 +75,9 @@
         }
     }
 
-   
+
 }
 
-.content > .description {
+.content>.description {
     margin-bottom: 2px;
 }
