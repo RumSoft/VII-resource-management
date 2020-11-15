@@ -32,27 +32,19 @@ namespace TestApp.Api.Commands.Resource
             using var transaction = _context.Database.BeginTransaction();
 
             try
-            {
-                //add resource
-                var resource = new Models.Resource
-                {
-                    Name = input.Name.Cleanup(),
-                    Quantity = input.Quantity
-                };
-
-                var user = _userInfo.GetCurrentUser();
+            {   var user = _userInfo.GetCurrentUser();
                 if (user == null)
                     return BadRequest(ReturnMessages.CatastrophicFailure);
-                resource.Owner = user;
 
-                if (input.Room != null && input.Room >= 0)
-                    resource.Room = _context.Rooms.Find(input.Room);
-                else
-                    resource.Room = null;
-
-                if (input.Attributes != null && input.Attributes.Length > 0)
-                    resource.Attributes = _context.Attributes.Where(x => input.Attributes.Contains(x.Id)).ToList();
-
+                //add resource
+                var resource = new Models.Resource()
+                {
+                    Owner = user,
+                    Quantity = input.Quantity,
+                    Name = input.Name,
+                    Room = _context.Rooms.Find(input.Room ?? -1),
+                    Attributes = _context.Attributes.Where(x => (input.Attributes ?? new int[0]).Contains(x.Id)).ToList()
+                };
                 _context.Resources.Add(resource);
                 _context.SaveChanges();
 

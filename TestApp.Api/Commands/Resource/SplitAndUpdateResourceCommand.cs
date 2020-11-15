@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using TestApp.Api.Auth;
 using TestApp.Api.Data;
+using TestApp.Api.Helpers;
 using TestApp.Api.Services;
 
 namespace TestApp.Api.Commands.Resource
@@ -28,8 +31,11 @@ namespace TestApp.Api.Commands.Resource
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var transaction = _context.Database.BeginTransaction();
+
             try
             {
+                //prepare resource
                 var baseResource = _context.Resources.Find(input.Id);
                 if (baseResource == null)
                     return BadRequest(ReturnMessages.Message_400_ResourceNotFound);
@@ -44,20 +50,34 @@ namespace TestApp.Api.Commands.Resource
                     return BadRequest(ModelState);
                 }
 
-                var createResourceCommand = new CreateResourceCommand(_context, _userInfo);
-                var newResourceResult = createResourceCommand.Execute(_mapper.Map<CreateResourceCommand.CreateResourceCommandInput>(input));
-
-                if (!(newResourceResult.Result is OkObjectResult r)) throw new Exception(ReturnMessages.CatastrophicFailure);
-
                 baseResource.Quantity -= input.Quantity;
                 _context.Resources.Update(baseResource);
                 _context.SaveChanges();
 
+                //create new resource
+                var newResource = new Models.Resource()
+                {
+                    Owner = user,
+                    Quantity = input.Quantity,
+                    Name = input.Name,
+                    Room =  _context.Rooms.Find(input.Room ?? -1),
+                    Attributes = _context.Attributes.Where(x => (input.Attributes ?? new int[0]).Contains(x.Id)).ToList()
+                };
+                _context.Resources.Add(newResource);
+                _context.SaveChanges();
+
+                // merge with existing
+                Log.Information("Trying to merge resource {id}: {name}", newResource.Id, newResource.Name);
+                var mergedCount = ResourceMerger.TryMergeByResource(newResource, _context);
+                Log.Warning("Merged {mergedCount} resources", mergedCount);
+
+                transaction.Commit();
                 Log.Information("Split resource {id}: {name} to new {@input}", baseResource.Id, baseResource.Name, input);
                 return Ok();
             }
             catch (Exception e)
             {
+                transaction.Rollback();
                 Log.Error(e, "Couldn't split and update resource {@input}", input);
                 return BadRequest(e);
             }
