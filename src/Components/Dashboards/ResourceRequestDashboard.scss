@@ -41,7 +41,15 @@
     }
 }
 
+@media(max-width: 991px) {
+    .request-list__item {
+        width: 50%;
+        max-width: 50%;
+    }
+}
+
 @media(max-width: 600px) {
+    .request-list__item ,
     .resource-list__item {
         width: 100%;
         max-width: 100%;
@@ -54,6 +62,8 @@
         max-width: 25%;
     }
 }
+
+
 
 .request-list__item ,
 .resource-list__item {
