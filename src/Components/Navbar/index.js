@@ -26,24 +26,24 @@ export default class Navbar extends Component {
     return (
       <>
         <Menu.Item as={Link} to="/">
-          <Icon name="gamepad" />
+          <Icon name="home" />
           Home
         </Menu.Item>
 
         <Menu.Item as={Link} to="/dashboard">
-          <Icon name="gamepad" />
+          <Icon name="columns" />
           Panel
         </Menu.Item>
         {AuthService.isAdmin() && <>
-          <Menu.Item as={Link} to="/logs">
-            <Icon name="gamepad" />
-            Logi
-          </Menu.Item>
-
           <Menu.Item as={Link} to="/query">
-            <Icon name="gamepad" />
+            <Icon name="search" />
           Wyszukiwanie
         </Menu.Item>
+
+          <Menu.Item as={Link} to="/logs">
+            <Icon name="bug" />
+            Logi
+          </Menu.Item>
         </>}
 
 
@@ -55,7 +55,7 @@ export default class Navbar extends Component {
     return (
       <>
         <Menu.Item as={Link} to="/about">
-          <Icon name="gamepad" />O aplikacji
+          <Icon name="info circle" />O aplikacji
         </Menu.Item>
         {this.state.isLogged ? (
           <Menu.Item
@@ -64,12 +64,12 @@ export default class Navbar extends Component {
             onClick={() => AuthService.logout()}
             className="bottom-aligned"
           >
-            <Icon name="gamepad" />
+            <Icon name="sign-out" />
             Wyloguj
           </Menu.Item>
         ) : (
             <Menu.Item as={Link} to="/login">
-              <Icon name="gamepad" />
+              <Icon name="sign-in" />
             Zaloguj
             </Menu.Item>
           )}
