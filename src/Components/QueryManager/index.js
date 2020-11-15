@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Table, Header, Form, Label } from "semantic-ui-react";
+import { Card, Table, Header, Form, Label, Dropdown } from "semantic-ui-react";
 import { QueryService } from "../../Services";
 import qs from "query-string";
 import "./index.scss";
@@ -27,10 +27,12 @@ class QueryManager extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
+    handleSubmit() {
+        const { type, name, parentName } = this.state;
         let queryParams = qs.parse(window.location.search);
-        queryParams["name"] = this.state.name === "" ? undefined : this.state.name;
+        queryParams["type"] = type === "" ? undefined : type;
+        queryParams["name"] = name === "" ? undefined : name;
+        queryParams["parentName"] = parentName === "" ? undefined : parentName;
         const stringified = qs.stringify(queryParams);
         this.props.history.push({
             search: stringified
@@ -170,6 +172,13 @@ class QueryManager extends Component {
         traderequests: { name: "Przekazanie" }
     }
 
+    fieldsConfiguration = {
+        rooms: { showParentTextfield: false },
+        attributes: { showParentTextfield: false },
+        users: { showParentTextfield: false },
+        resources: { showParentTextfield: true },
+        traderequests: { showParentTextfield: true }
+    }
     renderLoading() {
         return (
             <Card fluid>
@@ -218,11 +227,25 @@ class QueryManager extends Component {
         );
     }
 
+    changeSearchParams(obj) {
+        this.setState({ ...obj, entityList: null, name: "", parentName: "" }, () => {
+            this.handleSubmit();
+        });
+    }
+
     render() {
+
         const { entityList, type } = this.state;
         const columns = this.columnConfiguration[type];
         const header = this.headerConfiguration[type];
         const content = this.renderContent(entityList || [], columns);
+        const optionsArray = [
+            { text: "użytkownicy", value: "users" },
+            { text: "zasoby", value: "resources" },
+            { text: "pokoje", value: "rooms" },
+            { text: "atrybuty", value: "attributes" },
+            { text: "przekazania", value: "traderequests" }];
+        const fields = this.fieldsConfiguration[type];
 
         return (
             <>
@@ -232,6 +255,21 @@ class QueryManager extends Component {
                         <Form widths="equal">
                             <Form.Group>
                                 <Form.Input
+                                    fluid
+                                    label="Typ"
+                                    input={<Dropdown
+                                        fluid
+                                        selection
+                                        labeled
+                                        placeholder="wybierz typ"
+                                        value={this.state.type}
+                                        options={optionsArray}
+                                        onChange={(e, val) => {
+                                            this.changeSearchParams({ type: val.value });
+                                        }}
+                                    />}
+                                />
+                                <Form.Input
                                     label="Nazwa"
                                     type="text"
                                     placeholder="nazwa"
@@ -239,13 +277,22 @@ class QueryManager extends Component {
                                     value={this.state.name}
                                     onChange={(e) => this.handleChange(e)}
                                 />
+                                {fields?.showParentTextfield &&
+                                    < Form.Input
+                                        label="Właściciel"
+                                        type="text"
+                                        placeholder="właściciel"
+                                        name="parentName"
+                                        value={this.state.parentName}
+                                        onChange={(e) => this.handleChange(e)}
+                                    />}
                                 <Form.Button
                                     className="submit-button"
                                     label="Szukaj"
-                                    onClick={(e) => this.handleSubmit(e)}
+                                    onClick={() => this.handleSubmit()}
                                 >
                                     Szukaj
-                </Form.Button>
+                                </Form.Button>
                             </Form.Group>
                         </Form>
                     </Card.Content>
