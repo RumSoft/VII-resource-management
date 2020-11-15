@@ -40,7 +40,7 @@ export default class RequestList extends Component {
                     window.location = "/request/add";
                 }}
                 entities={requests}
-                entityName="requests"
+                entityName="traderequests"
                 entityMapFunc={(x) => (
                     <Card.Group>
                         <RequestRow
