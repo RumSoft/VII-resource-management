@@ -1,34 +1,26 @@
 import React, { Component } from "react";
 import { UserRow } from "../ListRows";
-import { NotificationService, UserService } from "../../Services";
+import {
+  Events,
+  EventService,
+  NotificationService,
+  UserService,
+} from "../../Services";
 import { Button, Confirm } from "semantic-ui-react";
 import "./index.scss";
 import { Link } from "react-router-dom";
 
 export default class UserList extends Component {
   state = {
-    users: null,
     isDeleteDialogOpen: false,
   };
-  componentDidMount() {
-    this.fetchUsers();
-  }
-
-  fetchUsers() {
-    UserService.getList().then((result) => {
-      const users = result && result.data;
-      this.setState({ users });
-    });
-  }
 
   deleteUserClicked(user) {
     console.log(user);
     UserService.deleteUser(user.id)
       .then(() => {
         NotificationService.success(`Usunięto użytkownika ${user.fullname}`);
-        this.setState({
-          users: this.state.users.filter((x) => x.id !== user.id),
-        });
+        EventService.Emit(Events.Dashboard_ReloadUsers);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się usunąć użytkownika");
