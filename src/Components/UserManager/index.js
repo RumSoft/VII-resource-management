@@ -117,6 +117,13 @@ export default class UserManager extends Component {
                             value={this.state.lastName}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["LastName"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["LastName"][0]}
+                            </Label>
+                        )}
                         <Form.Input
                             label="Adres e-mail"
                             fluid
@@ -127,6 +134,13 @@ export default class UserManager extends Component {
                             value={this.state.emailAddress}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["EmailAddress"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["EmailAddress"][0]}
+                            </Label>
+                        )}
                         <Button
                             style={{ display: "none" }} //super hack xD
                             color="green"
