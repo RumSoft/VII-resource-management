@@ -220,7 +220,7 @@ class QueryManager extends Component {
     }
 
     changeSearchParams(obj) {
-        this.setState({ ...obj }, () => {
+        this.setState({ ...obj, entityList: null }, () => {
             this.handleSubmit();
         });
     }
@@ -228,7 +228,6 @@ class QueryManager extends Component {
     render() {
 
         const { entityList, type } = this.state;
-        console.log(type)
         const columns = this.columnConfiguration[type];
         const header = this.headerConfiguration[type];
         const content = this.renderContent(entityList || [], columns);
