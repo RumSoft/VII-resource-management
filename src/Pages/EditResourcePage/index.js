@@ -18,7 +18,6 @@ export default class AddResurcePage extends Component {
         let id = new URLSearchParams(window.location.search.toLowerCase()).get(
             "resourceid"
         );
-        console.log(id);
         ResourceService.getResource(id).then((res) => {
             this.setState({ resource: res.data });
         });
@@ -32,6 +31,12 @@ export default class AddResurcePage extends Component {
             })
             .catch((e) => {
                 NotificationService.apiError(e, `Nie udało się zmienić danych zasobu ${res.name}`);
+                if (e.response.status === 418) {
+                    this.setState({ errors: e.response.data.errors });
+                }
+                else {
+                    this.setState({ errors: {} });
+                }
             });
     }
 
@@ -54,7 +59,11 @@ export default class AddResurcePage extends Component {
         return <>
             {redirect && <Redirect to="/dashboard" />}
             { resource && (
-                <ResourceManager onSave={(r, split) => split ? this.splitResource(r) : this.editResource(r)} edit resource={resource} />
+                <ResourceManager
+                    onSave={(r, split) => split ? this.splitResource(r) : this.editResource(r)}
+                    edit
+                    resource={resource}
+                    errors={this.state.errors} />
             )}
         </>
     }

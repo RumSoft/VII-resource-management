@@ -19,10 +19,13 @@ export default class AddResurcePage extends Component {
         this.setState({ redirect: true });
       })
       .catch((e) => {
-        NotificationService.apiError(
-          e,
-          `Nie udało się dodać danych zasobu ${res.name}`
-        );
+        NotificationService.apiError(e, `Nie udało się dodać danych zasobu ${res.name}`);
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       });
   }
 
@@ -30,7 +33,10 @@ export default class AddResurcePage extends Component {
     return (
       <>
         {this.state.redirect && <Redirect to="/dashboard" />}
-        <ResourceManager onSave={(res) => this.addResource(res)} />
+        <ResourceManager
+          onSave={(res) => this.addResource(res)}
+          errors={this.state.errors}
+        />
       </>
     );
   }

@@ -41,7 +41,6 @@ export default class LoginPanel extends Component {
       return <Redirect to={this.state.redirectUrl} />;
     }
     const errors = this.state.errors ?? {};
-    console.log(errors);
     return (
       <Card className="login-form" >
         <Card.Content>
