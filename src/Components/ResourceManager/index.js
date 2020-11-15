@@ -6,7 +6,17 @@ import {
   ResourceService,
 } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Checkbox, Dropdown, Input, Form, Button, Grid, Card, List, Confirm } from 'semantic-ui-react'
+import {
+  Checkbox,
+  Dropdown,
+  Input,
+  Form,
+  Button,
+  Grid,
+  Card,
+  List,
+  Confirm,
+} from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 
@@ -26,7 +36,7 @@ export default class ResourceManager extends Component {
       split: false,
       attributes: [],
       selectedAttributes: resource?.attributes.map((x) => x.id) || [],
-      isDeleteDialogOpen: false
+      isDeleteDialogOpen: false,
     };
   }
 
@@ -37,7 +47,7 @@ export default class ResourceManager extends Component {
 
     AttributeService.getList().then((res) => {
       this.setState({ attributes: res.data });
-    })
+    });
   }
 
   handleChange(event) {
@@ -46,7 +56,7 @@ export default class ResourceManager extends Component {
 
   handleDropdownChanged = (e, { value }) => {
     this.setState({ room: value });
-  }
+  };
 
   handleAttributeChanged(id) {
     const attrList = this.state.selectedAttributes;
@@ -64,13 +74,18 @@ export default class ResourceManager extends Component {
 
   handleSave(e) {
     e.preventDefault();
-    this.props.onSave({
-      id: this.state.id,
-      name: this.state.name,
-      room: this.state.room === -1 ? null : this.state.room,
-      quantity: this.state.split ? parseInt(this.state.splitquantity) : parseInt(this.state.quantity),
-      attributes: this.state.selectedAttributes,
-    }, this.state.split);
+    this.props.onSave(
+      {
+        id: this.state.id,
+        name: this.state.name,
+        room: this.state.room === -1 ? null : this.state.room,
+        quantity: this.state.split
+          ? parseInt(this.state.splitquantity)
+          : parseInt(this.state.quantity),
+        attributes: this.state.selectedAttributes,
+      },
+      this.state.split
+    );
   }
 
   handleDelete() {
@@ -94,9 +109,23 @@ export default class ResourceManager extends Component {
   render() {
     const isEdit = this.props.edit;
     const isSplit = this.state.split;
-    const roomsArr = [{ text: "bez pokoju", value: -1, content: (<div style={{ padding: "1rem" }}>bez pokoju</div>) }, ...this.state.rooms.map((x) => ({
-      ...x, text: x.name, value: x.id, content: (<div style={{ backgroundColor: x.color }}><div className="roomDropdownHover" >{x.name}</div></div>)
-    }))];
+    const roomsArr = [
+      {
+        text: "bez pokoju",
+        value: -1,
+        content: <div style={{ padding: "1rem" }}>bez pokoju</div>,
+      },
+      ...this.state.rooms.map((x) => ({
+        ...x,
+        text: x.name,
+        value: x.id,
+        content: (
+          <div style={{ backgroundColor: x.color }}>
+            <div className="roomDropdownHover">{x.name}</div>
+          </div>
+        ),
+      })),
+    ];
     let deleteButton, splitCheckbox;
 
     if (isEdit === true) {
@@ -106,10 +135,14 @@ export default class ResourceManager extends Component {
           floated="left"
           type="button"
           className="btn btn-danger btn-block"
-          onClick={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+          onClick={() =>
+            this.setState({
+              isDeleteDialogOpen: !this.state.isDeleteDialogOpen,
+            })
+          }
         >
           Usuń zasób
-        </Button >
+        </Button>
       );
       splitCheckbox = (
         <Checkbox
@@ -129,16 +162,16 @@ export default class ResourceManager extends Component {
 
     return (
       <div>
-        <Card className="resourcemanager" >
-          < Card.Content >
+        <Card fluid className="resourcemanager">
+          <Card.Content>
             <Card.Header as="h1">
-              {isEdit === true ? "Edytowanie" : "Dodawanie"} {isSplit === true && "części"} zasobu {this.state.oldname}
+              {isEdit === true ? "Edytowanie" : "Dodawanie"}{" "}
+              {isSplit === true && "części"} zasobu {this.state.oldname}
             </Card.Header>
+          </Card.Content>
 
-          </Card.Content >
-
-          < Card.Content >
-            <Grid columns="2">
+          <Card.Content>
+            <Grid columns="2" stackable divided>
               <Grid.Column>
                 {splitCheckbox}
                 <Form>
@@ -159,54 +192,64 @@ export default class ResourceManager extends Component {
                     <label>Pokój</label>
                     <Input
                       fluid
-                      input={<Dropdown
-                        fluid
-                        selection
-                        labeled
-                        placeholder={"Wybierz pokój"}
-                        value={this.state.room}
-                        options={roomsArr}
-                        onChange={this.handleDropdownChanged}
-                      />}
+                      input={
+                        <Dropdown
+                          fluid
+                          selection
+                          labeled
+                          placeholder={"Wybierz pokój"}
+                          value={this.state.room}
+                          options={roomsArr}
+                          onChange={this.handleDropdownChanged}
+                        />
+                      }
                     />
                   </Form.Field>
 
-                  {!isSplit && <Form.Field>
-                    <label>Ilość</label>
-                    <Input
-                      fluid
-                      name="quantity"
-                      type="number"
-                      value={this.state.quantity}
-                      onChange={(e) => this.handleChange(e)}
-                      min="1"
-                      step="1"
-                    />
-                  </Form.Field>}
-                  {isSplit && <Form.Field>
-                    <label>Ilość: {this.state.splitquantity}</label>
-                    <Slider
-                      color="blue"
-                      discrete
-                      value={this.state.splitquantity}
-                      settings={{
-                        start: parseInt(this.state.splitquantity),
-                        min: 1,
-                        max: parseInt(this.state.oldquantity),
-                        step: 1,
-                        onChange: value => { this.setState({ splitquantity: value }); }
-                      }}
-                    />
-                  </Form.Field>}
+                  {!isSplit && (
+                    <Form.Field>
+                      <label>Ilość</label>
+                      <Input
+                        fluid
+                        name="quantity"
+                        type="number"
+                        value={this.state.quantity}
+                        onChange={(e) => this.handleChange(e)}
+                        min="1"
+                        step="1"
+                      />
+                    </Form.Field>
+                  )}
+                  {isSplit && (
+                    <Form.Field>
+                      <label>Ilość: {this.state.splitquantity}</label>
+                      <Slider
+                        color="blue"
+                        discrete
+                        value={this.state.splitquantity}
+                        settings={{
+                          start: parseInt(this.state.splitquantity),
+                          min: 1,
+                          max: parseInt(this.state.oldquantity),
+                          step: 1,
+                          onChange: (value) => {
+                            this.setState({ splitquantity: value });
+                          },
+                        }}
+                      />
+                    </Form.Field>
+                  )}
                 </Form>
               </Grid.Column>
 
               <Grid.Column>
                 <List>
-
                   {this.state.attributes.map((x) => {
                     return (
-                      <List.Item key={x.id} style={{ backgroundColor: x.color }}>
+                      <List.Item
+                        key={x.id}
+                        style={{ backgroundColor: x.color }}
+                      >
                         <Checkbox
                           key={x.id}
                           label={x.name.substring(0, 50)}
@@ -219,7 +262,7 @@ export default class ResourceManager extends Component {
                 </List>
               </Grid.Column>
             </Grid>
-          </Card.Content >
+          </Card.Content>
           <Card.Content>
             <Button
               color="green"
@@ -229,23 +272,26 @@ export default class ResourceManager extends Component {
               onClick={(e) => this.handleSave(e)}
             >
               Zapisz zasób
-                </Button>
+            </Button>
 
             {deleteButton}
           </Card.Content>
-        </Card >
+        </Card>
 
-        < Confirm
+        <Confirm
           className="confirmDialog"
           open={this.state.isDeleteDialogOpen}
-          onCancel={() => this.setState({ isDeleteDialogOpen: !this.state.isDeleteDialogOpen })}
+          onCancel={() =>
+            this.setState({
+              isDeleteDialogOpen: !this.state.isDeleteDialogOpen,
+            })
+          }
           onConfirm={() => this.handleDelete()}
-          content={(`Czy usunąć zasób ${this.state.name}?`)}
+          content={`Czy usunąć zasób ${this.state.name}?`}
           cancelButton="Nie"
           confirmButton="Tak"
         />
-
-      </div >
+      </div>
     );
   }
 }
