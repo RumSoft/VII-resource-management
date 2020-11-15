@@ -25,7 +25,6 @@ import Navbar from "./Components/Navbar";
 import LogViewPage from "./Pages/LogViewPage";
 import { Events, EventService } from "./Services";
 import { Loader } from "semantic-ui-react";
-import "resize-sensor--react/build/resize-sensor.css";
 
 class App extends Component {
   constructor(props) {
