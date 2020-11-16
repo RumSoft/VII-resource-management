@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Card, Dropdown, Table } from "semantic-ui-react";
 import { LogService } from "../../Services";
 import qs from "query-string";
+import Title from "../Title";
 
 class LogViewPage extends Component {
   state = {
@@ -48,6 +49,7 @@ class LogViewPage extends Component {
 
     return (
       <>
+        <Title>Logi</Title>
         <Card>
           <Card.Content>
             <Dropdown

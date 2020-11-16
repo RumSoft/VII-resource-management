@@ -5,4 +5,9 @@ body {
 .login-form {
   min-width: 340px;
   margin: 150px auto !important;
+
+  .errorMessage {
+    margin-top: -10px !important;
+    margin-bottom: 12px;
+  }
 }

@@ -6,7 +6,8 @@ import {
   RoomService,
 } from "../../Services";
 import { RoomRow } from "../ListRows";
-import { Modal, Button, Input, Confirm } from "semantic-ui-react";
+import { Modal, Button, Input, Confirm, Label } from "semantic-ui-react";
+import { GithubPicker } from 'react-color';
 import "./index.scss";
 
 export default class RoomList extends Component {
@@ -15,6 +16,7 @@ export default class RoomList extends Component {
     isEdit: null, // 0 = add, 1 = edit
     newName: "",
     isDeleteDialogOpen: false,
+    color: "#e8e8e8"
   };
 
   handleChange(event) {
@@ -22,31 +24,46 @@ export default class RoomList extends Component {
   }
 
   addRoomClick() {
-    RoomService.addRoom(this.state.newName)
+    const { newName } = this.state;
+    const color = this.state.color !== "#e8e8e8" ? this.state.color : null;
+    const room = { name: newName, color: color }
+
+    RoomService.addRoom(room)
       .then(() => {
-        NotificationService.success(`Dodano pokój "${this.state.newName}"`);
+        NotificationService.success(`Dodano pokój "${newName}"`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać pokoju");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
   }
 
   changeRoomClicked() {
     let room = { ...this.state.passedRoom };
     room.name = this.state.newName;
+    room.color = this.state.color !== "#e8e8e8" ? this.state.color : null;
     RoomService.editRoom(room)
       .then(() => {
-        NotificationService.success(
-          `Pomyślnie zmieniono nazwę pokoju na ${room.name}`
-        );
+        NotificationService.success(`Pomyślnie zmieniono nazwę pokoju na ${room.name}`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się pokoju atrybutu");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
   }
 
   deleteRoomClicked(room) {
@@ -62,30 +79,55 @@ export default class RoomList extends Component {
   }
 
   //#region rendering
-  renderEditModal() {
+  renderModal() {
+    const errors = this.state.errors ?? {};
     return (
       <Modal
         open={this.state.isModalOpen}
         size="mini"
-        onClose={() => this.setState({ isModalOpen: false, newName: "" })}
+        closeOnDocumentClick={true}
+        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
+        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
       >
         <Modal.Header>
-          Podaj {this.state.isEdit && "nową"} nazwę pokoju{" "}
+          {this.state.isEdit ? "Edycja" : "Dodawanie nowego"} pokoju{" "}
           {this.state.isEdit && this.state.passedRoom.name}
         </Modal.Header>
+
         <Modal.Content>
+          <p className="fieldLabel"><b>Nazwa pokoju</b></p>
           <Input
+            fluid
             type="text"
             name="newName"
             placeholder="nowa nazwa"
             value={this.state.newName}
             onChange={(e) => this.handleChange(e)}
           />
+          {errors["Name"] && (
+            <Label
+
+              className="errorMessage"
+              basic color="red" pointing>
+              {errors["Name"][0]}
+            </Label>
+          )}
+          <p className="fieldLabel"><b>Kolor</b></p>
+          <GithubPicker
+            width="187px"
+            triangle="hide"
+            color={this.state.color ?? "#fff"}
+            colors={["#e8e8e8", "#d5deff", "#d9fffd", "#ceffc5", "#fff3b6", "#ffd5ad", "#ffb3b3"]}
+            onChangeComplete={(color) => this.setState({ color: color.hex })}
+          />
+          <p className="fieldLabel"><b>Podgląd</b></p>
+          <Label size="large" style={{ backgroundColor: this.state.color }}>{this.state.newName || "podgląd"}</Label>
         </Modal.Content>
+
         <Modal.Actions>
           <Button
             color="black"
-            onClick={() => this.setState({ isModalOpen: false, newName: "" })}
+            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
           >
             Anuluj
           </Button>
@@ -94,7 +136,6 @@ export default class RoomList extends Component {
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-              this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
                 this.state.isEdit
                   ? this.changeRoomClicked()
@@ -108,7 +149,7 @@ export default class RoomList extends Component {
     );
   }
 
-  renderEditConfirm() {
+  renderConfirm() {
     return (
       <Confirm
         className="confirmDialog"
@@ -140,6 +181,8 @@ export default class RoomList extends Component {
                 isEdit: true,
                 passedRoom: room,
                 newName: room.name,
+                color: room.color,
+                isColorPickerOpen: room.color !== null
               })
             }
             onDelete={(room) =>
@@ -165,9 +208,8 @@ export default class RoomList extends Component {
   render() {
     return (
       <>
-        {this.renderEditModal()}
-        {this.renderEditModal()}
-        {this.renderEditConfirm()}
+        {this.renderConfirm()}
+        {this.renderModal()}
         {this.renderContent()}
       </>
     );

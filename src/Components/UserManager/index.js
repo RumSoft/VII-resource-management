@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Card, Form, Button, Confirm } from 'semantic-ui-react'
+import { Card, Form, Button, Confirm, Label } from 'semantic-ui-react'
 
 import "./index.scss";
 
@@ -45,6 +45,7 @@ export default class UserManager extends Component {
 
     render() {
         const isEdit = this.props.edit;
+        const errors = this.props.errors ?? {};
         let deleteAndResetButton;
         if (isEdit === true) {
             deleteAndResetButton = <>
@@ -98,6 +99,13 @@ export default class UserManager extends Component {
                             value={this.state.firstName}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["FirstName"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["FirstName"][0]}
+                            </Label>
+                        )}
                         <Form.Input
                             label="Nazwisko"
                             fluid
@@ -108,6 +116,13 @@ export default class UserManager extends Component {
                             value={this.state.lastName}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["LastName"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["LastName"][0]}
+                            </Label>
+                        )}
                         <Form.Input
                             label="Adres e-mail"
                             fluid
@@ -118,6 +133,13 @@ export default class UserManager extends Component {
                             value={this.state.emailAddress}
                             onChange={(e) => this.handleChange(e)}
                         />
+                        {errors["EmailAddress"] && (
+                            <Label
+                                className="errorMessage"
+                                basic color="red" pointing>
+                                {errors["EmailAddress"][0]}
+                            </Label>
+                        )}
                         <Button
                             style={{ display: "none" }} //super hack xD
                             color="green"

@@ -4,7 +4,7 @@ import {
   RequestService,
   NotificationService,
 } from "../../Services";
-import { Modal, Button, Grid, Form, Radio, List } from "semantic-ui-react";
+import { Modal, Button, Grid, Form, List } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 import { ResourceRow, UserRow } from "../ListRows";
@@ -122,7 +122,7 @@ export default class CreateRequestModal extends Component {
                               user={x}
                               style={{
                                 backgroundColor:
-                                  this.state.selectedUser?.id == x.id &&
+                                  this.state.selectedUser?.id === x.id &&
                                   "rgba(0,0,0,0.1)",
                               }}
                             />
