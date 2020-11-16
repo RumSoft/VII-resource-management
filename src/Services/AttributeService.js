@@ -5,8 +5,8 @@ export default class AttributeService {
     return APIService.get("attribute");
   }
 
-  static addAttribute(attributeName) {
-    return APIService.post("attribute", { name: attributeName });
+  static addAttribute(attribute) {
+    return APIService.post("attribute", { name: attribute.name, color: attribute.color });
   }
 
   static deleteAttribute(id) {

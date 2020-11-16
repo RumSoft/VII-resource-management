@@ -7,6 +7,7 @@ import {
   NotificationService,
 } from "../../Services";
 import { Modal, Button, Input, Confirm, Label } from "semantic-ui-react";
+import { GithubPicker } from 'react-color';
 import "./index.scss";
 
 export default class AttributeList extends Component {
@@ -15,6 +16,7 @@ export default class AttributeList extends Component {
     isEdit: null, // 0 = add, 1 = edit
     newName: "",
     isDeleteDialogOpen: false,
+    color: "#e8e8e8"
   };
 
   handleChange(event) {
@@ -22,10 +24,14 @@ export default class AttributeList extends Component {
   }
 
   addAttributeClick() {
-    AttributeService.addAttribute(this.state.newName)
+    const { newName } = this.state;
+    const color = this.state.color !== "#e8e8e8" ? this.state.color : null;
+    const attribute = { name: newName, color: color }
+
+    AttributeService.addAttribute(attribute)
       .then(() => {
-        NotificationService.success(`Dodano atrybut "${this.state.newName}"`);
-        this.setState({ isModalOpen: false, errors: {}, newName: "" });
+        NotificationService.success(`Dodano atrybut "${newName}"`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
@@ -37,18 +43,18 @@ export default class AttributeList extends Component {
           this.setState({ errors: {} });
         }
       })
-
   }
 
   changeAttributeClick() {
     let attr = { ...this.state.passedAttribute };
     attr.name = this.state.newName;
+    attr.color = this.state.color !== "#e8e8e8" ? this.state.color : null;
     AttributeService.editAttribute(attr)
       .then(() => {
         NotificationService.success(
           `Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`
         );
-        this.setState({ isModalOpen: false, errors: {}, newName: "" });
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
@@ -99,18 +105,22 @@ export default class AttributeList extends Component {
     const errors = this.state.errors ?? {};
     return (
       <Modal
+        className="modalDialog"
         open={this.state.isModalOpen}
         size="mini"
         closeOnDocumentClick={true}
-        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
-        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
+        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
+        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
       >
         <Modal.Header>
-          Podaj {this.state.isEdit && "nową"} nazwę atrybutu{" "}
+          {this.state.isEdit ? "Edycja" : "Dodawanie nowego"} atrybutu{" "}
           {this.state.isEdit && this.state.passedAttribute.name}
         </Modal.Header>
+
         <Modal.Content>
+          <p className="fieldLabel"><b>Nazwa atrybutu</b></p>
           <Input
+            fluid
             type="text"
             name="newName"
             placeholder="nowa nazwa"
@@ -124,11 +134,23 @@ export default class AttributeList extends Component {
               {errors["Name"][0]}
             </Label>
           )}
+
+          <p className="fieldLabel"><b>Kolor</b></p>
+          <GithubPicker
+            width="187px"
+            triangle="hide"
+            color={this.state.color ?? "#fff"}
+            colors={["#e8e8e8", "#d5deff", "#d9fffd", "#ceffc5", "#fff3b6", "#ffd5ad", "#ffb3b3"]}
+            onChangeComplete={(color) => this.setState({ color: color.hex })}
+          />
+          <p className="fieldLabel"><b>Podgląd</b></p>
+          <Label size="large" style={{ backgroundColor: this.state.color }}>{this.state.newName || "podgląd"}</Label>
         </Modal.Content>
+
         <Modal.Actions>
           <Button
             color="black"
-            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
+            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
           >
             Anuluj
           </Button>
@@ -165,6 +187,8 @@ export default class AttributeList extends Component {
                 isEdit: true,
                 passedAttribute: attr,
                 newName: attr.name,
+                color: attr.color,
+                isColorPickerOpen: attr.color !== null
               })
             }
             key={x.id}

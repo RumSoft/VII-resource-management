@@ -5,8 +5,8 @@ export default class RoomService {
     return APIService.get("room");
   }
 
-  static addRoom(roomName) {
-    return APIService.post("room", { name: roomName });
+  static addRoom(room) {
+    return APIService.post("room", { name: room.name, color: room.color });
   }
 
   static editRoom(room) {
