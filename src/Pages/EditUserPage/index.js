@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import UserManager from "../../Components/UserManager";
+import Title from "../Title";
 
 export default class EditUserPage extends Component {
   constructor(props) {
@@ -34,8 +35,7 @@ export default class EditUserPage extends Component {
         NotificationService.apiError(e, "Edycja użytkownika nie powiodła się");
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
-        }
-        else {
+        } else {
           this.setState({ errors: {} });
         }
       });
@@ -45,6 +45,7 @@ export default class EditUserPage extends Component {
     const { user, redirect, errors } = this.state;
     return (
       <>
+        <Title>Edytuj użytkownika</Title>
         {redirect && <Redirect to="/dashboard" />}
         {user && (
           <UserManager

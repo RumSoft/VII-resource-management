@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { AuthService, NotificationService, UserService } from "../../Services";
 import { Redirect } from "react-router-dom";
-import { Card, Form, Button, Confirm } from 'semantic-ui-react'
+import { Card, Form, Button } from "semantic-ui-react";
 import "./index.scss";
 
 export default class NewPasswordPanel extends Component {
@@ -63,9 +63,7 @@ export default class NewPasswordPanel extends Component {
     return (
       <Card className="newpassword-form">
         <Card.Content>
-          <Card.Header as="h1">
-            Nowe hasło
-          </Card.Header>
+          <Card.Header as="h1">Nowe hasło</Card.Header>
         </Card.Content>
 
         <Card.Content>
@@ -105,9 +103,9 @@ export default class NewPasswordPanel extends Component {
             onClick={(e) => this.handleSubmit(e)}
           >
             Zaktualizuj hasło
-                </Button>
+          </Button>
         </Card.Content>
-      </Card >
+      </Card>
     );
   }
 }

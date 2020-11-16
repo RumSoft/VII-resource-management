@@ -1,7 +1,12 @@
 import React, { Component } from "react";
+import Title from "../Title";
 
 export default class AboutPage extends Component {
   render() {
-    return <div></div>;
+    return (
+      <>
+        <Title>O aplikacji</Title>
+      </>
+    );
   }
 }

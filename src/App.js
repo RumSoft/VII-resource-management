@@ -9,7 +9,6 @@ import {
   ErrorPage,
   HomePage,
   LoginPage,
-  TestPage,
   AddUserPage,
   EditUserPage,
   NewPasswordPage,
@@ -56,7 +55,6 @@ class App extends Component {
         <Route path="/" component={HomePage} exact />
         <Route path="/login" component={LoginPage} />
         <Route path="/newPassword" component={NewPasswordPage} />
-        <Route path="/test" component={TestPage} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/user/add" component={AddUserPage} />
         <Route path="/user/edit" component={EditUserPage} />

@@ -3,6 +3,7 @@ import UserPanel from "../../Components/UserPanel";
 import AdminPanel from "../../Components/AdminPanel";
 import { AuthService, Events, EventService } from "../../Services";
 import "./index.scss";
+import Title from "../Title";
 
 const role = "role";
 
@@ -22,6 +23,7 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
+        <Title>Panel</Title>
         <h1>Dashboard</h1>
         {this.state.role === "User" && <UserPanel />}
         {this.state.role === "Admin" && <AdminPanel />}

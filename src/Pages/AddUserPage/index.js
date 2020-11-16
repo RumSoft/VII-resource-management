@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { UserService, NotificationService } from "../../Services";
 import { Redirect } from "react-router-dom";
 import UserManager from "../../Components/UserManager";
+import Title from "../Title";
 
 export default class AddUserPage extends Component {
   constructor(props) {
@@ -24,8 +25,7 @@ export default class AddUserPage extends Component {
         NotificationService.apiError(e, "Nie udało się dodać użytkownika");
         if (e.response.status === 418) {
           this.setState({ errors: e.response.data.errors });
-        }
-        else {
+        } else {
           this.setState({ errors: {} });
         }
       });
@@ -38,6 +38,7 @@ export default class AddUserPage extends Component {
 
     return (
       <>
+        <Title>Dodaj użytkownika</Title>
         {this.state.redirect && <Redirect to="/dashboard" />}
         <UserManager
           onSave={(user) => this.addUser(user)}
