@@ -17,7 +17,6 @@ export default class AttributeList extends Component {
     newName: "",
     isDeleteDialogOpen: false,
     color: "#e8e8e8"
-
   };
 
   handleChange(event) {
@@ -104,7 +103,6 @@ export default class AttributeList extends Component {
 
   renderModal() {
     const errors = this.state.errors ?? {};
-
     return (
       <Modal
         className="modalDialog"
