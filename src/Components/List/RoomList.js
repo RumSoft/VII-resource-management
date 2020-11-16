@@ -83,6 +83,7 @@ export default class RoomList extends Component {
     const errors = this.state.errors ?? {};
     return (
       <Modal
+        className="modalDialog"
         open={this.state.isModalOpen}
         size="mini"
         closeOnDocumentClick={true}
