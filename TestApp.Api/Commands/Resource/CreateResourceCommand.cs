@@ -41,7 +41,7 @@ namespace TestApp.Api.Commands.Resource
                 {
                     Owner = user,
                     Quantity = input.Quantity,
-                    Name = input.Name,
+                    Name = input.Name.Cleanup(),
                     Room = _context.Rooms.Find(input.Room ?? -1),
                     Attributes = _context.Attributes.Where(x => (input.Attributes ?? new int[0]).Contains(x.Id)).ToList()
                 };
