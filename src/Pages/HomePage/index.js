@@ -5,6 +5,8 @@ import bgmovie2 from "./resmgr2.mp4";
 import bgmovie3 from "./resmgr3.mp4";
 import "./index.scss";
 import Title from "../Title";
+import { Image } from 'semantic-ui-react'
+import enderchest from "../../enderchest2.png"
 
 export default class HomePage extends Component {
   render() {
@@ -16,10 +18,16 @@ export default class HomePage extends Component {
       <>
         <Title>Strona główna</Title>
         <div className="home-page">
-          <h1>home</h1>
-          <p>logo tutaj</p>
-          <Link to="/dashboard">przejdź do programu</Link>
-          <p>info o programie</p>
+          <Image className="home-image" src={enderchest} size='small' centered></Image>
+          <div >
+            <h1 className="home-header">RumSoft's Resource Manager</h1>
+          </div>
+          <Link to="/dashboard" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <div className="home-text">
+              <b>Kliknij</b>, aby kontynuować
+            </div>
+          </Link>
+
           <div className="background-video-container">
             <video autoPlay muted>
               <source src={movie} type="video/mp4" />
