@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { UserRow } from "../ListRows";
+import { Button, Confirm, List } from "semantic-ui-react";
 import {
   Events,
   EventService,
   NotificationService,
   UserService,
 } from "../../Services";
-import { Button, Confirm } from "semantic-ui-react";
 import "./index.scss";
 import { Link } from "react-router-dom";
 
@@ -48,19 +48,23 @@ export default class UserList extends Component {
   renderContent() {
     return (
       <>
-        {this.props.users.map((x) => (
-          <UserRow key={x.id} user={x} />
-        ))}
-        <div className="list-row room-row">
-          <Button
-            color="green"
-            style={{ margin: "auto" }}
-            as={Link}
-            to="/user/add"
-          >
-            Dodaj użytkownika
-          </Button>
-        </div>
+        <List style={{ width: "100%", padding: "5px" }}>
+          {this.props.users.map((x) => (
+            <List.Item>
+              <UserRow key={x.id} user={x} isAdmin={"true"} />
+            </List.Item>
+          ))}{" "}
+          <List.Item>
+            <Button
+              color="green"
+              style={{ margin: "auto" }}
+              as={Link}
+              to="/user/add"
+            >
+              Dodaj użytkownika
+            </Button>
+          </List.Item>
+        </List>
       </>
     );
   }

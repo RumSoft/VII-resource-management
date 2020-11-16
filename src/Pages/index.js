@@ -7,6 +7,5 @@ export { default as EditUserPage } from "./EditUserPage";
 export { default as NewPasswordPage } from "./NewPasswordPage";
 export { default as AddResourcePage } from "./AddResourcePage";
 export { default as EditResourcePage } from "./EditResourcePage";
-export { default as AboutPage } from "./AboutPage";
 export { default as Title } from "./Title";
 export { default as QueryPage } from "./QueryPage";

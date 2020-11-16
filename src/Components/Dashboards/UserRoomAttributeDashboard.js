@@ -8,7 +8,7 @@ export default class UserRoomAttributeDashboard extends Component {
     return (
       <Grid divided>
         <Grid.Column mobile={16} computer={6}>
-          <Card fluid>
+          <Card fluid color="orange">
             <Card.Content>
               <h2>Użytkownicy</h2>
               <UserList users={this.props.users ?? []} />
@@ -16,7 +16,7 @@ export default class UserRoomAttributeDashboard extends Component {
           </Card>
         </Grid.Column>
         <Grid.Column mobile={16} computer={5}>
-          <Card fluid>
+          <Card fluid color="purple">
             <Card.Content>
               <h2>Pokoje</h2>
               <RoomList rooms={this.props.rooms ?? []} />
@@ -24,7 +24,7 @@ export default class UserRoomAttributeDashboard extends Component {
           </Card>
         </Grid.Column>
         <Grid.Column mobile={16} computer={5}>
-          <Card fluid>
+          <Card fluid color="red">
             <Card.Content>
               <h2>Atrybuty</h2>
               <AttributeList attributes={this.props.attributes ?? []} />
