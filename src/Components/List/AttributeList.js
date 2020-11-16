@@ -119,6 +119,7 @@ export default class AttributeList extends Component {
 
     return (
       <Modal
+        className="modalDialog"
         open={this.state.isModalOpen}
         size="mini"
         closeOnDocumentClick={true}
@@ -126,11 +127,14 @@ export default class AttributeList extends Component {
         onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" })}
       >
         <Modal.Header>
-          Podaj {this.state.isEdit && "nową"} nazwę atrybutu{" "}
+          {this.state.isEdit ? "Edycja" : "Dodawanie nowego"} atrybutu{" "}
           {this.state.isEdit && this.state.passedAttribute.name}
         </Modal.Header>
+
         <Modal.Content>
+          <p className="fieldLabel"><b>Nazwa atrybutu</b></p>
           <Input
+            fluid
             type="text"
             name="newName"
             placeholder="nowa nazwa"
@@ -144,9 +148,8 @@ export default class AttributeList extends Component {
               {errors["Name"][0]}
             </Label>
           )}
-          <p className="colorLabel">
-            Wybrano kolor: <b>{colorTable && colorTable["name"]}</b>
-          </p>
+
+          <p className="fieldLabel"><b>Kolor</b></p>
           <GithubPicker
             width="187px"
             triangle="hide"
@@ -154,6 +157,8 @@ export default class AttributeList extends Component {
             colors={["#ffffff", "#d5deff", "#d9fffd", "#ceffc5", "#fff3b6", "#ffd5ad", "#ffb3b3"]}
             onChangeComplete={(color) => this.setState({ color: color.hex })}
           />
+          <p className="fieldLabel"><b>Podgląd</b></p>
+          <Label size="large" style={{ backgroundColor: this.state.color }}>{this.state.newName || "podgląd"}</Label>
         </Modal.Content>
 
         <Modal.Actions>
