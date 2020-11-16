@@ -1,30 +1,39 @@
 @import "row.scss";
 
-.userRow{
+.userRow {
+    $heightInside: 50px;
+    
+    text-align: center;
+    margin: 0 !important;
+    padding: 10px !important;
+    width: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row !important;
 
-    width: 100% !important; 
-    height: 80px; 
-
-    .userAvatar{
-        padding-top: 10px;
-        padding-left: 25px;
-    }
-
-    .userProperietes{
+    .userProperietes {
         width: 50%;
-        padding-top: 25px;
-        padding-left: 40px;
-        font-size: 16px;
+        font-size: 14px;
+        flex: 1;
+        margin: auto;
+
+        p {
+            margin: 0 !important;
+        }
+
+        .userName {
+            font-weight: bold;
+            font-size: 18px;
+        }
     }
 
-    .userName{
-        font-weight: bold;
-        font-size: 22px;
+    .editButton {
+        margin: auto;
     }
 
-    .editButton{
-        padding-top: 15px;
-        padding-left: 80px;
+    .userAvatar {
+        height: $heightInside;
+        width: $heightInside;
+        margin: auto;
     }
-
 }

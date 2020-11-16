@@ -10,33 +10,33 @@ export default class UserRow extends Component {
   }
 
   render() {
-    const { firstName, lastName, emailAddress, id } = this.props.user;
+    const { firstName, lastName, emailAddress, id, role } = this.props.user;
     const { isAdmin } = this.props;
-    let content = "";
     console.log(isAdmin);
 
-    if (isAdmin) {
-      content = <Button
-        size="big"
-        square
-        as={Link}
-        to={`/user/edit?userId=${id}`}
-        icon="edit"
-        color="yellow" />
-    }
-
     return (
-      <Card className="userRow">
-        <div style={{ display: "inline-flex" }}>
-          <div className="userAvatar">
-            <Image src="http://placekitten.com/200/300" style={{ width: "60px", height: "60px" }} circular />
-          </div>
-          <div className="userProperietes">
-            <span><span className="userName">{firstName} {lastName}</span> <br></br> <span style={{ color: "gray" }}>{emailAddress}</span></span>
-          </div>
-          <div className="editButton">
-            {content}
-          </div>
+      <Card className="userRow" style={this.props.style}>
+        <div className="userAvatar">
+          <Image src="https://loremflickr.com/100/100/cats" circular />
+        </div>
+        <div className="userProperietes">
+          <p className="userName">
+            {firstName} {lastName}
+          </p>
+          <p className="emailAddress">{emailAddress}</p>
+        </div>
+        <div className="editButton">
+          {isAdmin && (
+            <Button
+              size="big"
+              square
+              as={Link}
+              to={`/user/edit?userId=${id}`}
+              icon="edit"
+              color="yellow"
+              style={{ visibility: role == "Admin" ? "Hidden" : "inherit" }}
+            />
+          )}
         </div>
       </Card>
     );

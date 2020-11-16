@@ -4,10 +4,10 @@ import {
   RequestService,
   NotificationService,
 } from "../../Services";
-import { Modal, Button, Grid, Form, Radio } from "semantic-ui-react";
+import { Modal, Button, Grid, Form, Radio, List } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
-import { ResourceRow } from "../ListRows";
+import { ResourceRow, UserRow } from "../ListRows";
 
 export default class CreateRequestModal extends Component {
   constructor(props) {
@@ -63,10 +63,11 @@ export default class CreateRequestModal extends Component {
         closeOnDocumentClick={true}
         onClose={() => this.handleClosing()}
       >
-        <Modal.Header>Tutaj będzie Trade Request</Modal.Header>
+        <Modal.Header>Przekaż zasób</Modal.Header>
         <Modal.Content>
-          <Grid columns="2">
-            <Grid.Column>
+          <Grid columns="2" divided>
+            <Grid.Column as={Form}>
+              <Form.Field>Wybrany zasób:</Form.Field>
               <div>
                 <ResourceRow isAdmin fluid resource={resource} />
               </div>
@@ -109,17 +110,26 @@ export default class CreateRequestModal extends Component {
                   )}
                 </Form.Field>
                 <Form.Field>
-                  {this.state.users
-                    .filter((x) => x.id !== resource?.owner.id)
-                    .map((x) => (
-                      <Radio
-                        key={x.id}
-                        name="selectedUser"
-                        checked={this.state.selectedUser === x}
-                        label={`${x.firstName} ${x.lastName} ${x.emailAddress}`}
-                        onChange={() => this.setState({ selectedUser: x })}
-                      />
-                    ))}
+                  <List>
+                    {this.state.users
+                      .filter((x) => x.id !== resource?.owner.id)
+                      .map((x) => (
+                        <List.Item>
+                          <div
+                            onClick={() => this.setState({ selectedUser: x })}
+                          >
+                            <UserRow
+                              user={x}
+                              style={{
+                                backgroundColor:
+                                  this.state.selectedUser?.id == x.id &&
+                                  "rgba(0,0,0,0.1)",
+                              }}
+                            />
+                          </div>
+                        </List.Item>
+                      ))}
+                  </List>
                 </Form.Field>
               </Form>
             </Grid.Column>

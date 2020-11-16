@@ -16,7 +16,6 @@ import {
   AddResourcePage,
   EditResourcePage,
   QueryPage,
-  AboutPage,
 } from "./Pages";
 
 import "./App.scss";
@@ -64,7 +63,6 @@ class App extends Component {
         <Route path="/resource/edit" component={EditResourcePage} />
         <Route path="/logs" component={LogViewPage} />
         <Route path="/query" component={QueryPage} />
-        <Route path="/about" component={AboutPage} />
         <Route component={ErrorPage} />
       </Switch>
     );
