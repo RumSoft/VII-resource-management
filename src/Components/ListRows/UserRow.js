@@ -11,7 +11,6 @@ export default class UserRow extends Component {
   render() {
     const { firstName, lastName, emailAddress, id, role } = this.props.user;
     const { isAdmin } = this.props;
-    console.log(isAdmin);
 
     return (
       <Card className="userRow" style={this.props.style}>

@@ -54,9 +54,6 @@ export default class Navbar extends Component {
   renderBottomMenu() {
     return (
       <>
-        <Menu.Item as={Link} to="/about">
-          <Icon name="info circle" />O aplikacji
-        </Menu.Item>
         {this.state.isLogged ? (
           <Menu.Item
             as="a"

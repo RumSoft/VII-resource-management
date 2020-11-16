@@ -10,7 +10,6 @@ export default class HomePage extends Component {
   render() {
     const bgmovies = [bgmovie1, bgmovie2, bgmovie3];
     const i = Math.floor(Math.random() * bgmovies.length);
-    console.log(i);
     const movie = bgmovies[i];
 
     return (

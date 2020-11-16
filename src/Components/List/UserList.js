@@ -16,7 +16,6 @@ export default class UserList extends Component {
   };
 
   deleteUserClicked(user) {
-    console.log(user);
     UserService.deleteUser(user.id)
       .then(() => {
         NotificationService.success(`Usunięto użytkownika ${user.fullname}`);
