@@ -1,4 +1,3 @@
-import { parseColor } from "@progress/kendo-drawing";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
@@ -34,7 +33,7 @@ export default class UserRow extends Component {
               to={`/user/edit?userId=${id}`}
               icon="edit"
               color="yellow"
-              style={{ visibility: role == "Admin" ? "Hidden" : "inherit" }}
+              style={{ visibility: role === "Admin" ? "Hidden" : "inherit" }}
             />
           )}
         </div>
