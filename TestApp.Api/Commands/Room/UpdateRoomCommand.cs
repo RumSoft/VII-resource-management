@@ -28,14 +28,16 @@ namespace TestApp.Api.Commands.Room
 
             try
             {
+                var name = input.Name.Cleanup();
+
                 var room = _context.Rooms.Find(input.Id);
                 if (room == null)
                     return BadRequest(ReturnMessages.Message_400_RoomNotFound);
 
-                if (_context.Rooms.Any(x => x.Name == input.Name && x.Id != input.Id))
+                if (_context.Rooms.Any(x => x.Name == name && x.Id != input.Id))
                     return BadRequest(ReturnMessages.Message_400_RoomAlreadyExists);
 
-                room.Name = input.Name.Cleanup();
+                room.Name = name;
                 room.Color = input.Color;
                 _context.Rooms.Update(room);
                 _context.SaveChanges();

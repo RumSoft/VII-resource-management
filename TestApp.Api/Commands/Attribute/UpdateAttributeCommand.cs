@@ -28,14 +28,16 @@ namespace TestApp.Api.Commands.Attribute
 
             try
             {
+                var name = input.Name.Cleanup();
+
                 var attribute = _context.Attributes.Find(input.Id);
                 if (attribute == null)
                     return BadRequest(ReturnMessages.Message_400_AttributeNotFound);
 
-                if (_context.Attributes.Any(x => x.Name == input.Name && x.Id != input.Id))
+                if (_context.Attributes.Any(x => x.Name == name && x.Id != input.Id))
                     return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
 
-                attribute.Name = input.Name.Cleanup();
+                attribute.Name = name;
                 attribute.Color = input.Color;
                 _context.Attributes.Update(attribute);
                 _context.SaveChanges();

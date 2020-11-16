@@ -27,12 +27,14 @@ namespace TestApp.Api.Commands.Attribute
 
             try
             {
-                if (_context.Attributes.Any(x => x.Name == input.Name))
+                var name = input.Name.Cleanup();
+
+                if (_context.Attributes.Any(x => x.Name == name))
                     return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
 
                 var attr = new Models.Attribute
                 {
-                    Name = input.Name.Cleanup(),
+                    Name = name,
                     Color = input.Color
                 };
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -27,12 +28,14 @@ namespace TestApp.Api.Commands.Room
 
             try
             {
-                if (_context.Rooms.Any(x => x.Name == input.Name))
+                var name = input.Name.Cleanup();
+
+                if (_context.Rooms.Any(x => x.Name == name))
                     return BadRequest(ReturnMessages.Message_400_RoomAlreadyExists);
 
                 var room = new Models.Room
                 {
-                    Name = input.Name.Cleanup(),
+                    Name = name,
                     Color = input.Color
                 };
 
