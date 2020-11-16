@@ -136,11 +136,9 @@ export default class RoomList extends Component {
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-              if (this.state.newName !== "") {
-                this.state.isEdit
-                  ? this.changeRoomClicked()
-                  : this.addRoomClick();
-              }
+              this.state.isEdit
+                ? this.changeRoomClicked()
+                : this.addRoomClick();
             }}
             positive
           />

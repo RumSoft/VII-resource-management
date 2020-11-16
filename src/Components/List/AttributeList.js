@@ -159,12 +159,9 @@ export default class AttributeList extends Component {
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-
-              if (this.state.newName !== "") {
-                this.state.isEdit
-                  ? this.changeAttributeClick()
-                  : this.addAttributeClick();
-              }
+              this.state.isEdit
+                ? this.changeAttributeClick()
+                : this.addAttributeClick();
             }}
             positive
           />
