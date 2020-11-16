@@ -6,7 +6,7 @@ import {
   EventService,
   NotificationService,
 } from "../../Services";
-import { Modal, Button, Input, Confirm, Label, Checkbox } from "semantic-ui-react";
+import { Modal, Button, Input, Confirm, Label } from "semantic-ui-react";
 import { GithubPicker } from 'react-color';
 import "./index.scss";
 
@@ -81,17 +81,6 @@ export default class AttributeList extends Component {
       .finally(() => this.setState({ isDeleteDialogOpen: false }));
   }
 
-  colorConfiguration = {
-    "#e8e8e8": { name: "brak koloru" },
-    "#d5deff": { name: "fioletowy" },
-    "#d9fffd": { name: "niebieski" },
-    "#ceffc5": { name: "zielony" },
-    "#fff3b6": { name: "żółty" },
-    "#ffd5ad": { name: "pomarańczowy" },
-    "#ffb3b3": { name: "czerwony" },
-  };
-
-
   renderConfirm() {
     return (
       <Confirm
@@ -115,7 +104,6 @@ export default class AttributeList extends Component {
 
   renderModal() {
     const errors = this.state.errors ?? {};
-    const colorTable = this.colorConfiguration[this.state.color];
 
     return (
       <Modal
