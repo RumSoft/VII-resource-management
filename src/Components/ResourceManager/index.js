@@ -16,6 +16,7 @@ import {
   Card,
   List,
   Confirm,
+  Label
 } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
@@ -26,7 +27,7 @@ export default class ResourceManager extends Component {
     const { resource } = this.props;
     this.state = {
       id: resource?.id || null,
-      name: resource?.name || [],
+      name: resource?.name || "",
       oldname: resource?.name || [],
       room: resource?.room?.id || -1, // -1 = no room
       rooms: [],
@@ -81,7 +82,7 @@ export default class ResourceManager extends Component {
         room: this.state.room === -1 ? null : this.state.room,
         quantity: this.state.split
           ? parseInt(this.state.splitquantity)
-          : parseInt(this.state.quantity),
+          : parseInt(this.state.quantity || 0),
         attributes: this.state.selectedAttributes,
       },
       this.state.split
@@ -94,7 +95,6 @@ export default class ResourceManager extends Component {
     ResourceService.deleteResource(id)
       .then(() => {
         NotificationService.success(`Usunięto zasób ${name}`);
-        // handleDeleteClick()
         this.setState({ redirect: true });
       })
       .catch((e) => {
@@ -109,6 +109,7 @@ export default class ResourceManager extends Component {
   render() {
     const isEdit = this.props.edit;
     const isSplit = this.state.split;
+    const errors = this.props.errors ?? {};
     const roomsArr = [
       {
         text: "bez pokoju",
@@ -186,6 +187,13 @@ export default class ResourceManager extends Component {
                       value={this.state.name}
                       onChange={(e) => this.handleChange(e)}
                     />
+                    {errors["Name"] && (
+                      <Label
+                        className="errorMessage"
+                        basic color="red" pointing>
+                        {errors["Name"][0]}
+                      </Label>
+                    )}
                   </Form.Field>
 
                   <Form.Field>
@@ -237,7 +245,15 @@ export default class ResourceManager extends Component {
                           },
                         }}
                       />
+
                     </Form.Field>
+                  )}
+                  {errors["Quantity"] && (
+                    <Label
+                      className="errorMessage"
+                      basic color="red" pointing>
+                      {errors["Quantity"][0]}
+                    </Label>
                   )}
                 </Form>
               </Grid.Column>

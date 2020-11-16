@@ -6,7 +6,7 @@ import {
   EventService,
   NotificationService,
 } from "../../Services";
-import { Modal, Button, Input, Confirm } from "semantic-ui-react";
+import { Modal, Button, Input, Confirm, Label } from "semantic-ui-react";
 import "./index.scss";
 
 export default class AttributeList extends Component {
@@ -25,12 +25,19 @@ export default class AttributeList extends Component {
     AttributeService.addAttribute(this.state.newName)
       .then(() => {
         NotificationService.success(`Dodano atrybut "${this.state.newName}"`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać atrybutu");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
+
   }
 
   changeAttributeClick() {
@@ -41,12 +48,18 @@ export default class AttributeList extends Component {
         NotificationService.success(
           `Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`
         );
+        this.setState({ isModalOpen: false, errors: {}, newName: "" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się edytować atrybutu");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
   }
 
   deleteAttributeClicked(attr) {
@@ -83,12 +96,14 @@ export default class AttributeList extends Component {
   }
 
   renderModal() {
+    const errors = this.state.errors ?? {};
     return (
       <Modal
         open={this.state.isModalOpen}
         size="mini"
         closeOnDocumentClick={true}
-        onClose={() => this.setState({ isModalOpen: false, newName: "" })}
+        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
+        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
       >
         <Modal.Header>
           Podaj {this.state.isEdit && "nową"} nazwę atrybutu{" "}
@@ -102,11 +117,18 @@ export default class AttributeList extends Component {
             value={this.state.newName}
             onChange={(e) => this.handleChange(e)}
           />
+          {errors["Name"] && (
+            <Label
+              className="errorMessage"
+              basic color="red" pointing>
+              {errors["Name"][0]}
+            </Label>
+          )}
         </Modal.Content>
         <Modal.Actions>
           <Button
             color="black"
-            onClick={() => this.setState({ isModalOpen: false, newName: "" })}
+            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
           >
             Anuluj
           </Button>
@@ -115,7 +137,7 @@ export default class AttributeList extends Component {
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-              this.setState({ isModalOpen: false });
+
               if (this.state.newName !== "") {
                 this.state.isEdit
                   ? this.changeAttributeClick()

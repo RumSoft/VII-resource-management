@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AuthService from "../../Services/AuthService";
 import { Redirect } from "react-router-dom";
 import { NotificationService } from "../../Services";
-import { Card, Form, Button } from 'semantic-ui-react'
+import { Card, Form, Button, Label } from 'semantic-ui-react'
 import "./index.scss";
 
 export default class LoginPanel extends Component {
@@ -25,8 +25,14 @@ export default class LoginPanel extends Component {
     AuthService.login({
       emailAddress: this.state.email,
       password: this.state.password,
-    }).catch((x) => {
-      NotificationService.apiError(x, "Nie udało się zalogować");
+    }).catch((e) => {
+      NotificationService.apiError(e, "Nie udało się zalogować");
+      if (e.response.status === 418) {
+        this.setState({ errors: e.response.data.errors });
+      }
+      else {
+        this.setState({ errors: {} });
+      }
     });
   }
 
@@ -34,7 +40,7 @@ export default class LoginPanel extends Component {
     if (AuthService.isLogged()) {
       return <Redirect to={this.state.redirectUrl} />;
     }
-
+    const errors = this.state.errors ?? {};
     return (
       <Card className="login-form" >
         <Card.Content>
@@ -55,7 +61,13 @@ export default class LoginPanel extends Component {
               value={this.state.email}
               onChange={(e) => this.handleChange(e)}
             />
-
+            {errors["EmailAddress"] && (
+              <Label
+                className="errorMessage"
+                basic color="red" pointing>
+                {errors["EmailAddress"][0]}
+              </Label>
+            )}
             <Form.Input
               fluid
               submit
@@ -66,7 +78,13 @@ export default class LoginPanel extends Component {
               value={this.state.password}
               onChange={(e) => this.handleChange(e)}
             />
-
+            {errors["Password"] && (
+              <Label
+                className="errorMessage"
+                basic color="red" pointing>
+                {errors["Password"][0]}
+              </Label>
+            )}
             <Button
               style={{ display: "none" }} //super hack xD
               color="green"

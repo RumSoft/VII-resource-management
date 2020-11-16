@@ -4,7 +4,7 @@ import {
   RequestService,
   NotificationService,
 } from "../../Services";
-import { Modal, Button, Grid, Form, Radio } from "semantic-ui-react";
+import { Modal, Button, Grid, Form, Radio, List } from "semantic-ui-react";
 import { Slider } from "react-semantic-ui-range";
 import "./index.scss";
 import { ResourceRow } from "../ListRows";
@@ -105,21 +105,25 @@ export default class CreateRequestModal extends Component {
                       </b>
                     </span>
                   ) : (
-                    "Wybierz użytkownika"
-                  )}
+                      "Wybierz użytkownika"
+                    )}
                 </Form.Field>
                 <Form.Field>
-                  {this.state.users
-                    .filter((x) => x.id !== resource?.owner.id)
-                    .map((x) => (
-                      <Radio
-                        key={x.id}
-                        name="selectedUser"
-                        checked={this.state.selectedUser === x}
-                        label={`${x.firstName} ${x.lastName} ${x.emailAddress}`}
-                        onChange={() => this.setState({ selectedUser: x })}
-                      />
-                    ))}
+                  <List>
+                    {this.state.users
+                      .filter((x) => x.id !== resource?.owner.id)
+                      .map((x) => (<List.Item>
+                        <Radio
+                          fluid
+                          key={x.id}
+                          name="selectedUser"
+                          checked={this.state.selectedUser === x}
+                          label={`${x.firstName} ${x.lastName} ${x.emailAddress}`}
+                          onChange={() => this.setState({ selectedUser: x })}
+                        />
+                      </List.Item>
+                      ))}
+                  </List>
                 </Form.Field>
               </Form>
             </Grid.Column>

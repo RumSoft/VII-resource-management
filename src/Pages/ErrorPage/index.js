@@ -1,8 +1,14 @@
 import React, { Component } from "react";
+import Title from "../Title";
 import "./index.scss";
 
 export default class ErrorPage extends Component {
   render() {
-    return <h1>Page not found!</h1>;
+    return (
+      <>
+        <Title>Błędzik</Title>
+        <h1>Strony nie odnaleziono!</h1>
+      </>
+    );
   }
 }

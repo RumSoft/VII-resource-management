@@ -6,7 +6,7 @@ import {
   RoomService,
 } from "../../Services";
 import { RoomRow } from "../ListRows";
-import { Modal, Button, Input, Confirm } from "semantic-ui-react";
+import { Modal, Button, Input, Confirm, Label } from "semantic-ui-react";
 import "./index.scss";
 
 export default class RoomList extends Component {
@@ -25,12 +25,18 @@ export default class RoomList extends Component {
     RoomService.addRoom(this.state.newName)
       .then(() => {
         NotificationService.success(`Dodano pokój "${this.state.newName}"`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "" });
         EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się dodać pokoju");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
   }
 
   changeRoomClicked() {
@@ -38,15 +44,19 @@ export default class RoomList extends Component {
     room.name = this.state.newName;
     RoomService.editRoom(room)
       .then(() => {
-        NotificationService.success(
-          `Pomyślnie zmieniono nazwę pokoju na ${room.name}`
-        );
+        NotificationService.success(`Pomyślnie zmieniono nazwę pokoju na ${room.name}`);
+        this.setState({ isModalOpen: false, errors: {}, newName: "" });
         EventService.Emit(Events.Dashboard_ReloadRooms);
       })
       .catch((e) => {
         NotificationService.apiError(e, "Nie udało się pokoju atrybutu");
+        if (e.response.status === 418) {
+          this.setState({ errors: e.response.data.errors });
+        }
+        else {
+          this.setState({ errors: {} });
+        }
       })
-      .finally(() => this.setState({ newName: "" }));
   }
 
   deleteRoomClicked(room) {
@@ -63,11 +73,14 @@ export default class RoomList extends Component {
 
   //#region rendering
   renderEditModal() {
+    const errors = this.state.errors ?? {};
     return (
       <Modal
         open={this.state.isModalOpen}
         size="mini"
-        onClose={() => this.setState({ isModalOpen: false, newName: "" })}
+        closeOnDocumentClick={true}
+        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
+        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
       >
         <Modal.Header>
           Podaj {this.state.isEdit && "nową"} nazwę pokoju{" "}
@@ -81,11 +94,18 @@ export default class RoomList extends Component {
             value={this.state.newName}
             onChange={(e) => this.handleChange(e)}
           />
+          {errors["Name"] && (
+            <Label
+              className="errorMessage"
+              basic color="red" pointing>
+              {errors["Name"][0]}
+            </Label>
+          )}
         </Modal.Content>
         <Modal.Actions>
           <Button
             color="black"
-            onClick={() => this.setState({ isModalOpen: false, newName: "" })}
+            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "" })}
           >
             Anuluj
           </Button>
@@ -94,7 +114,6 @@ export default class RoomList extends Component {
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-              this.setState({ isModalOpen: false });
               if (this.state.newName !== "") {
                 this.state.isEdit
                   ? this.changeRoomClicked()
@@ -165,7 +184,6 @@ export default class RoomList extends Component {
   render() {
     return (
       <>
-        {this.renderEditModal()}
         {this.renderEditModal()}
         {this.renderEditConfirm()}
         {this.renderContent()}
