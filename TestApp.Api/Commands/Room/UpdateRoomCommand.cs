@@ -32,10 +32,7 @@ namespace TestApp.Api.Commands.Room
                 if (room == null)
                     return BadRequest(ReturnMessages.Message_400_RoomNotFound);
 
-                if (room.Name.Equals(input.Name, StringComparison.InvariantCultureIgnoreCase))
-                    return Ok();
-
-                if (_context.Rooms.Any(x => x.Name == input.Name))
+                if (_context.Rooms.Any(x => x.Name == input.Name && x.Id != input.Id))
                     return BadRequest(ReturnMessages.Message_400_RoomAlreadyExists);
 
                 room.Name = input.Name.Cleanup();

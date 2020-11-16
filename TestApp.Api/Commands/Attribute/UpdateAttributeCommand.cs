@@ -32,7 +32,7 @@ namespace TestApp.Api.Commands.Attribute
                 if (attribute == null)
                     return BadRequest(ReturnMessages.Message_400_AttributeNotFound);
 
-                if (_context.Attributes.Any(x => x.Name == input.Name))
+                if (_context.Attributes.Any(x => x.Name == input.Name && x.Id != input.Id))
                     return BadRequest(ReturnMessages.Message_400_AttributeAlreadyExists);
 
                 attribute.Name = input.Name.Cleanup();
