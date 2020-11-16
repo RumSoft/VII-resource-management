@@ -16,7 +16,7 @@ export default class AttributeList extends Component {
     isEdit: null, // 0 = add, 1 = edit
     newName: "",
     isDeleteDialogOpen: false,
-    color: "#ffffff"
+    color: "#e8e8e8"
 
   };
 
@@ -26,13 +26,13 @@ export default class AttributeList extends Component {
 
   addAttributeClick() {
     const { newName } = this.state;
-    const color = this.state.color !== "#ffffff" ? this.state.color : null;
+    const color = this.state.color !== "#e8e8e8" ? this.state.color : null;
     const attribute = { name: newName, color: color }
 
     AttributeService.addAttribute(attribute)
       .then(() => {
         NotificationService.success(`Dodano atrybut "${newName}"`);
-        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" });
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
@@ -49,13 +49,13 @@ export default class AttributeList extends Component {
   changeAttributeClick() {
     let attr = { ...this.state.passedAttribute };
     attr.name = this.state.newName;
-    attr.color = this.state.color !== "#ffffff" ? this.state.color : null;
+    attr.color = this.state.color !== "#e8e8e8" ? this.state.color : null;
     AttributeService.editAttribute(attr)
       .then(() => {
         NotificationService.success(
           `Pomyślnie zmieniono nazwę atrybutu na ${attr.name}`
         );
-        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" });
+        this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" });
         EventService.Emit(Events.Dashboard_ReloadAttributes);
       })
       .catch((e) => {
@@ -82,7 +82,7 @@ export default class AttributeList extends Component {
   }
 
   colorConfiguration = {
-    "#ffffff": { name: "brak koloru" },
+    "#e8e8e8": { name: "brak koloru" },
     "#d5deff": { name: "fioletowy" },
     "#d9fffd": { name: "niebieski" },
     "#ceffc5": { name: "zielony" },
@@ -123,8 +123,8 @@ export default class AttributeList extends Component {
         open={this.state.isModalOpen}
         size="mini"
         closeOnDocumentClick={true}
-        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" })}
-        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" })}
+        onCancel={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
+        onClose={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
       >
         <Modal.Header>
           {this.state.isEdit ? "Edycja" : "Dodawanie nowego"} atrybutu{" "}
@@ -154,7 +154,7 @@ export default class AttributeList extends Component {
             width="187px"
             triangle="hide"
             color={this.state.color ?? "#fff"}
-            colors={["#ffffff", "#d5deff", "#d9fffd", "#ceffc5", "#fff3b6", "#ffd5ad", "#ffb3b3"]}
+            colors={["#e8e8e8", "#d5deff", "#d9fffd", "#ceffc5", "#fff3b6", "#ffd5ad", "#ffb3b3"]}
             onChangeComplete={(color) => this.setState({ color: color.hex })}
           />
           <p className="fieldLabel"><b>Podgląd</b></p>
@@ -164,7 +164,7 @@ export default class AttributeList extends Component {
         <Modal.Actions>
           <Button
             color="black"
-            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#ffffff" })}
+            onClick={() => this.setState({ isModalOpen: false, errors: {}, newName: "", color: "#e8e8e8" })}
           >
             Anuluj
           </Button>
