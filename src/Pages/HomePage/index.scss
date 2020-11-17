@@ -27,4 +27,18 @@
       min-width: 100%;
     }
   }
+
+  .home-header,
+  .home-text {
+    display: inline-block;
+    background-color: #e8e8e84f;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .home-header,
+  .home-text,
+  .home-image {
+    margin-bottom: 10px;
+  }
 }
