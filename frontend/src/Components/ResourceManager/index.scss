@@ -1,0 +1,33 @@
+body {
+  text-align: center;
+}
+.resourcemanager {
+  max-width: 800px !important;
+  margin: 150px auto !important;
+
+  .ui.form .field > label {
+    text-align: left;
+    margin-left: 0.8rem;
+  }
+  .ui.list .item {
+    text-align: left;
+  }
+  .ui.toggle.checkbox {
+    float: left;
+    margin-left: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .ui.selection.dropdown .menu > .item {
+    padding: 0 !important;
+  }
+  .roomDropdownHover {
+    padding: 1rem;
+  }
+  .roomDropdownHover:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .errorMessage {
+    max-width: none;
+  }
+}

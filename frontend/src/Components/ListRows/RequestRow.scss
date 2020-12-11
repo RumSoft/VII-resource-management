@@ -1,0 +1,20 @@
+@import "row.scss";
+
+.requestRow{
+    text-align: left;
+    overflow: hidden;
+    
+    .requestResource{
+        font-weight: bolder;
+    }
+
+    .requestQuantity{
+        color: lightgrey !important;
+        font-style: italic;
+    }
+
+    .ui.label {
+        margin: 2px;
+    }
+
+}

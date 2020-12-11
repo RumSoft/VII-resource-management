@@ -1,0 +1,46 @@
+{
+  "name": "testapp",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@progress/kendo-drawing": "^1.9.3",
+    "@progress/kendo-licensing": "^1.0.2",
+    "@progress/kendo-react-pdf": "^4.1.0",
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
+    "classnames": "^2.2.6",
+    "node-sass": "^4.14.1",
+    "query-string": "^6.13.7",
+    "react": "^16.13.1",
+    "react-color": "^2.19.3",
+    "react-content-loader": "^5.1.4",
+    "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "react-semantic-ui-range": "^0.7.0",
+    "react-toastify": "^6.0.9",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

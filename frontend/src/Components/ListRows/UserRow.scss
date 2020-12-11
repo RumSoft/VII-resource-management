@@ -1,0 +1,39 @@
+@import "row.scss";
+
+.userRow {
+    $heightInside: 50px;
+    
+    text-align: center;
+    margin: 0 !important;
+    padding: 10px !important;
+    width: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row !important;
+
+    .userProperietes {
+        width: 50%;
+        font-size: 14px;
+        flex: 1;
+        margin: auto;
+
+        p {
+            margin: 0 !important;
+        }
+
+        .userName {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+
+    .editButton {
+        margin: auto;
+    }
+
+    .userAvatar {
+        height: $heightInside;
+        width: $heightInside;
+        margin: auto;
+    }
+}

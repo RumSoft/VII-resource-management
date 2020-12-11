@@ -1,0 +1,41 @@
+.list {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  hr {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .title {
+    line-height: 2.5rem;
+  }
+
+  .transparent {
+    visibility: hidden;
+  }
+}
+.confirmDialog .ui.primary.button {
+  background-color: #db2828;
+}
+
+.quantity-slider {
+  margin-top: 2em;
+}
+
+.modalDialog {
+  p {
+    margin-left: 0.4rem;
+    margin-bottom: 5px;
+  }
+
+  input {
+    margin-bottom: 14px !important;
+  }
+
+  .github-picker {
+    margin-bottom: 14px;
+  }
+}
