@@ -352,6 +352,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+
 # dependencies
 /node_modules
 /.pnp
@@ -374,7 +375,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 package-lock.json
-.vs/TestApp/v16/TestStore/0/testlog.manifest
-
-.vs/*
-TestApp.Api/
