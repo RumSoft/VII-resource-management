@@ -1,0 +1,24 @@
+@import "row.scss";
+
+.resourceRow{
+    text-align: left;
+    overflow: hidden;
+
+    .resourceQuantity{
+        color: lightgrey !important;
+        font-style: italic;
+    }
+
+    .ui.label {
+        margin: 2px;
+        margin-top: 0px;
+    }
+
+    .attributesPanel {
+        margin-top: 5px;
+    }
+
+    .button{
+        font-size: 11px !important;
+    }
+}
